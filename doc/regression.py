@@ -19,7 +19,7 @@ def reg(x, y, n):
             Order of fitting polynomial.'''
     
     xb = np.c_[np.ones((len(x),1))]
-    for i in range(1,n):
+    for i in range(1,n+1):
         xb = np.c_[xb, x**i]
 
     beta = np.linalg.inv(xb.T.dot(xb)).dot(xb.T).dot(y)
