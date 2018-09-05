@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from random import random, seed
 from regression import reg, f
 
-from sklearn.linear_model import Ridge, LinearRegression
+from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 

@@ -1,7 +1,8 @@
-from random import random, seed
 import numpy as np
 import matplotlib.pyplot as plt
+from random import random, seed
 from regression import reg, f
+from tqdm import tqdm
 
 def reg_q(x, y, p, q, λ=0.1, η=0.0001, niter=10000):
     '''Regression, finding coefficients beta
@@ -30,18 +31,16 @@ def reg_q(x, y, p, q, λ=0.1, η=0.0001, niter=10000):
     niter:  Integer.
             Number of iterations in gradient descent.'''
     
-    # Creating X-matrix
+    # Setting up X-matrix
     xb = np.c_[np.ones((len(x), 1))]
     for i in range(1, p+1):
         xb = np.c_[xb, x**i]
 
     # Minimization using gradient descent
     beta = np.random.randn(p+1, 1)
-    
-    for iter in range(niter):
-        y_hat = xb.dot(beta)
-        e = y - y_hat           # Absolute error
-        beta += η*(xb.T.dot(e) + q*λ*np.power(beta, q-1))
+    for iter in tqdm(range(niter)):
+        e = y - xb.dot(beta)                    # Absolute error
+        beta += η*(2*xb.T.dot(e) - q*λ*np.power(abs(beta), q-1))
     
     return beta.flatten()[::-1]
 
@@ -50,7 +49,7 @@ def reg_q(x, y, p, q, λ=0.1, η=0.0001, niter=10000):
 if __name__ == '__main__':
     # Parameters
     npoints = 100
-    degree  = 2
+    degree  = 3
     x_max   = 2
     λ       = 2
 
@@ -63,7 +62,7 @@ if __name__ == '__main__':
     plt.plot(x, y, '.')
     plt.plot(x_vals, f(x_vals, reg_q(x, y, degree, 1, λ=λ)), label='Lasso, $q=1$')
     plt.plot(x_vals, f(x_vals, reg_q(x, y, degree, 2, λ=λ)), label='Ridge, $q=2$')
-    plt.plot(x_vals, f(x_vals, reg(x, y, degree)), label='Standard, $q=-\infty$')
+    plt.plot(x_vals, f(x_vals, reg(x, y, degree)), label='Standard')
     plt.title('Regression with $\lambda$={}'.format(λ))
     plt.legend()
     plt.grid()
