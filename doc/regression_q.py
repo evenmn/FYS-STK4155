@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from regression import reg, f
 
-def reg_q(x, y, p, q, λ=1, η=0.0001, niter=10000):
+def reg_q(x, y, p, q, λ=0.1, η=0.0001, niter=10000):
     '''Regression, finding coefficients beta
     
     Arguments:
@@ -30,34 +30,41 @@ def reg_q(x, y, p, q, λ=1, η=0.0001, niter=10000):
     niter:  Integer.
             Number of iterations in gradient descent.'''
     
-    n = len(x)
-    
     # Creating X-matrix
-    xb = np.c_[np.ones((n,1))]
-    for i in range(1,p+1):
+    xb = np.c_[np.ones((len(x), 1))]
+    for i in range(1, p+1):
         xb = np.c_[xb, x**i]
 
     # Minimization using gradient descent
-    beta = np.random.randn(p+1,1)
+    beta = np.random.randn(p+1, 1)
     
     for iter in range(niter):
         y_hat = xb.dot(beta)
         e = y - y_hat           # Absolute error
-        beta += η*(xb.T.dot(e) + q*λ*beta**(q-1))
+        beta += η*(xb.T.dot(e) + q*λ*np.power(beta, q-1))
     
     return beta.flatten()[::-1]
 
 
 
 if __name__ == '__main__':
-    x_vals = np.linspace(0,2,100)
-    x = 2*np.random.rand(100,1)
-    y = 4+3*x+np.random.randn(100,1)
+    # Parameters
+    npoints = 100
+    degree  = 2
+    x_max   = 2
+    λ       = 2
 
+    # Regression points
+    x_vals = np.linspace(0, x_max, 1000)
+    x      = x_max*np.random.rand(npoints,1)
+    y      = 4+3*x+np.random.randn(npoints,1)
+    
+    # Do regression and plot
     plt.plot(x, y, '.')
-    plt.plot(x_vals, f(x_vals, reg_q(x, y, 2, 1)), label='Lasso, $q=1$')
-    plt.plot(x_vals, f(x_vals, reg_q(x, y, 2, 2)), label='Ridge, $q=2$')
-    plt.plot(x_vals, f(x_vals, reg(x, y, 2)), label='Standard, $q=-\infty$')
+    plt.plot(x_vals, f(x_vals, reg_q(x, y, degree, 1, λ=λ)), label='Lasso, $q=1$')
+    plt.plot(x_vals, f(x_vals, reg_q(x, y, degree, 2, λ=λ)), label='Ridge, $q=2$')
+    plt.plot(x_vals, f(x_vals, reg(x, y, degree)), label='Standard, $q=-\infty$')
+    plt.title('Regression with $\lambda$={}'.format(λ))
     plt.legend()
     plt.grid()
     plt.show()
