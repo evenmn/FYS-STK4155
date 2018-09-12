@@ -39,7 +39,7 @@ def reg_2D(x, y, z, Px, Py):
 
     # Calculating beta-vector
     beta = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(z)
-    return beta.flatten()
+    return np.reshape(beta.flatten(), (Px,Py))
 
 
 
@@ -55,12 +55,13 @@ if __name__ == '__main__':
     Px = 5          # Polynomial order in x-direction
     Py = 5          # Polynomial order in y-direction
 
+    noise = normal(0,0.1,N)
+
     x = uniform(0,1,N)
     y = uniform(0,1,N)
-    z = FrankeFunction(x, y)
+    z = FrankeFunction(x, y) + noise
     
     beta = reg_2D(x, y, z, Px, Py)
-    beta = np.reshape(beta, (Px+1,Py+1))
     
     x_vals = y_vals = np.linspace(0,1,1000)
     X_vals, Y_vals = np.meshgrid(x_vals, y_vals)
@@ -81,3 +82,17 @@ if __name__ == '__main__':
     #Add a color bar which maps values to colors. 
     fig.colorbar(surf, shrink=0.5, aspect=5)
     plt.show()
+    
+    
+    # Confidence interval, beta
+    print(np.var(beta))
+    
+    
+    # Mean square error (MSE):
+    MSE = (z - f_2D(x, y, beta)).T.dot(z - f_2D(x, y, beta))/N
+    print(MSE)
+    
+    
+    # R2 score function
+    denominator = (y-np.mean(y)).T.dot(y-np.mean(y))
+    print(1-N*MSE/denominator)
