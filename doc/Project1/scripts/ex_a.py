@@ -39,7 +39,7 @@ def reg_2D(x, y, z, Px, Py):
 
     # Calculating beta-vector
     beta = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(z)
-    return np.reshape(beta.flatten(), (Px,Py))
+    return beta.flatten()
 
 
 
@@ -50,7 +50,7 @@ def f_2D(x, y, pol):
     
 
 if __name__ == '__main__':
-    N  = 1000        # Number of points
+    N  = 100        # Number of points
     D  = 2          # Dimension
     Px = 5          # Polynomial order in x-direction
     Py = 5          # Polynomial order in y-direction
@@ -60,6 +60,7 @@ if __name__ == '__main__':
     z = FrankeFunction(x, y)
     
     beta = reg_2D(x, y, z, Px, Py)
+    beta = np.reshape(beta, (Px+1,Py+1))
     
     x_vals = y_vals = np.linspace(0,1,1000)
     X_vals, Y_vals = np.meshgrid(x_vals, y_vals)
