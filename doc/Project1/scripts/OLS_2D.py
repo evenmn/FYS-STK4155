@@ -82,11 +82,15 @@ if __name__ == '__main__':
     
     #Plot the surface. 
     surf = ax.plot_surface(X_vals,Y_vals,predict,cmap=cm.coolwarm,linewidth=0,antialiased=False)
+    #surf = ax.plot_surface(X_vals,Y_vals,FrankeFunction(X_vals, Y_vals),cmap=cm.coolwarm,linewidth=0,antialiased=False)
 
     #Customize the z axis. 
     ax.set_zlim(-0.10,1.40)
     ax.zaxis.set_major_locator(LinearLocator(10))
     ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+    ax.set_xlabel('X axis')
+    ax.set_ylabel('Y axis')
+    ax.set_zlabel('Z axis')
 
     #Add a color bar which maps values to colors. 
     fig.colorbar(surf, shrink=0.5, aspect=5)

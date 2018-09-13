@@ -4,12 +4,12 @@
 A few general words about regression
 
 \subsubsection{Ordinary Least Square (OLS)} \label{sec:OLS}
-Suppose we have a set of points $\{(x_0, y_0), (x_1, y_1),\hdots, (x_{n-1}, y_{n-1})\}$, and we want to fit a p'th order polynomial to them. The most intuitive way would be to find coefficients $\vec{\beta}$ which minimize the error in
+Suppose we have a set of points $\{(x_1, y_1), (x_2, y_2),\hdots, (x_n, y_n)\}$, and we want to fit a p'th order polynomial to them. The most intuitive way would be to find coefficients $\vec{\beta}$ which minimize the error in
 \begin{align*}
-y_0&=\beta_0x_0^0+\beta_1x_0^1+\hdots+\beta_px_0^p+\varepsilon_0\\
 y_1&=\beta_0x_1^0+\beta_1x_1^1+\hdots+\beta_px_1^p+\varepsilon_1\\
+y_2&=\beta_0x_2^0+\beta_1x_2^1+\hdots+\beta_px_2^p+\varepsilon_2\\
 \vdots\\
-y_{n-1}&=\beta_0x_{n-1}^0+\beta_1x_{n-1}^1+\hdots+\beta_px_{n-1}^p+\varepsilon_{n-1},
+y_n&=\beta_0x_n^0+\beta_1x_n^1+\hdots+\beta_px_n^p+\varepsilon_n,
 \end{align*}
 which for OLS is defines as
 \begin{equation}
@@ -25,11 +25,26 @@ Q(\vec{\beta})=\sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2=(\vec{y}-\hat{X}\vec{\beta})^
 
 Instead of dealing with a set of equations, we can apply linear algebra. One can easily see that the equations above correspond to
 \begin{equation}
-\vec{y}=\hat{X}^T\vec{\beta}+\vec{\varepsilon}.
+\vec{y}=\hat{X}^T\vec{\beta}+\vec{\varepsilon},
+\label{eq:y_xb}
 \end{equation}
+with
+\begin{equation}
+\hat{X}=\begin{pmatrix}
+x_1^0&x_1^1&x_1^2&\hdots&x_1^p\\
+x_2^0&x_2^1&x_2^2&\hdots&x_2^p\\
+\vdots&\vdots&\vdots&\ddots&\vdots\\
+x_n^0&x_n^1&x_n^2&\hdots&x_n^p
+\end{pmatrix}
+\end{equation}
+and
+\begin{equation}
+\vec{\beta}=(\beta_0, \beta_1, \hdots, \beta_p).
+\end{equation}
+
 For a nonsingular matrix $\hat{X}$ (but not necessary symmetric) we can find the optimal $\vec{\beta}$ by solving
 \begin{equation}
-\vec{\beta}=(\hat{X}^T\hat{X})^{-1}\hat{X}^T\vec{\beta},
+\vec{\beta}=(\hat{X}^T\hat{X})^{-1}\hat{X}^T\vec{y},
 \end{equation}
 which again corresponds to minimizing the cost function,
 \begin{equation}
@@ -85,16 +100,55 @@ such that $q=2$ corresponds to the Ridge method and $q=1$ is associated with Las
 We can use the same approach as above when dealing with regression of higher order, since the problem is to fit a function to points, no matter how many components they have. We will first take a look at how we can fit a 2D polynomial to some terrain data, before we briefly describe how to fit a function of arbitrary order to points.
 
 \subsubsection{Terrain} \label{sec:terrain}
-A set of data points $\{(x_0, y_0, z_0), (x_1, y_1, z_1),\hdots, (x_{n-1}, y_{n-1},z_{n-1})\}$ gives some coordinates in space, which for instance can describe the terrain. 
-Mention the Franke Function 
+A set of data points $\{(x_1, y_1, z_1), (x_2, y_2, z_2),\hdots, (x_n, y_n,z_n)\}$ gives some coordinates in space, which for instance can describe the terrain. The system of linear equations to solve can then be lined up as 
+\begin{align*}
+z_1&=\beta_0x_1^0y_1^0+\beta_1x_1^1y_1^0+\beta_2x_1^0y_1^1+\hdots+\beta_px_1^py_1^p+\varepsilon_1\\
+z_2&=\beta_0x_2^0y_2^0+\beta_1x_2^1y_2^0+\beta_2x_2^0y_2^1+\hdots+\beta_px_2^py_2^p+\varepsilon_2\\
+\vdots\\
+z_n&=\beta_0x_n^0y_n^0+\beta_1x_n^1y_n^0+\beta_2x_n^0y_n^1+\hdots+\beta_px_n^py_n^p+\varepsilon_n,
+\end{align*}
+when fitting a polynomial of p'th order. In general the order associated with x-direction do not need to be the same as the order associated with y-direction. 
+
+We can set up a similar equation as for the first order case, presented in equation \eqref{eq:y_xb}, but we will now (typically) have $\vec{z}$ on the left hand side and $\hat{X}$ will contain both x- and y-coordinates:
+\begin{equation}
+\vec{z}=\hat{X}^T\vec{\beta}.
+\end{equation}
+The coordinate matrix $\hat{X}$ will now looks like
+\begin{equation}
+\hat{X}=
+\begin{pmatrix}
+x_1^0y_1^0&x_1^1y_1^0&x_1^0y_1^1&x_1^1y_1^1&\hdots&x_1^py_1^p\\
+x_2^0y_2^0&x_2^1y_2^0&x_2^0y_2^1&x_2^1y_2^1&\hdots&x_2^py_2^p\\
+\vdots&\vdots&\vdots&\vdots&\ddots&\vdots\\
+x_n^0y_n^0&x_n^1y_n^0&x_n^0y_n^1&x_n^1y_n^1&\hdots&x_n^py_n^p
+\end{pmatrix}
+\end{equation}
+and we can again use the OLS method to find $\vec{\beta}$, i.e, calculating
+\begin{equation}
+\vec{\beta}=(\hat{X}^T\hat{X})^{-1}\hat{X}^T\vec{z}.
+\end{equation}
+Similarly we can use ridge and lasso regression in the same way as when fitting 1D polynomials. 
+
+In this project one we will actually deal with terrain data. Firstly we implement some regression tools which fit a 2D function to points in space. To verify the implementation, we pick points from a known function such that we know the result. The specific verification function used is the Franke Function, which looks like
 
 \begin{align*}
 f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4} - \frac{(9y-2)^2}{4}\right)}+\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \\
-&+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} -\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) }.
+&+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} -\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) },
 \end{align*}
+and is a smooth 2D function as one can see in figure \eqref{fig:franke}.
 
+ \begin{figure} [H]
+ 	\centering
+ 	\includegraphics[scale=0.8]{../plots/franke.png}
+ 	\caption{The Franke function in the interval $x\in[0,1]$, $y\in[0,1]$, $z\in[0, 1.2]$.}
+ 	\label{fig:franke}
+ \end{figure}
+
+Secondly we use the verified regression tools to fit a polynomial to real terrain data.
+NEED TO ADD A SENTENCE OR TWO HERE
 
 \subsubsection{Higher order}
+There should be no surprise that we can extend the theory above to even higher orders. 
 Although we stick to 2D regression in this project, I add this section for completeness. 
 
 
