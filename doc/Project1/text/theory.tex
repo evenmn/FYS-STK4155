@@ -4,7 +4,7 @@
 A few general words about regression
 
 \subsubsection{Ordinary Least Square (OLS)} \label{sec:OLS}
-Image that we have a set of points $\{(x_0, y_0), (x_1, y_1),\hdots, (x_{n-1}, y_{n-1})\}$, and we want to fit a p'th order polynomial to them. The most intuitive way would be to find coefficients $\vec{\beta}$ which minimize the error in
+Suppose we have a set of points $\{(x_0, y_0), (x_1, y_1),\hdots, (x_{n-1}, y_{n-1})\}$, and we want to fit a p'th order polynomial to them. The most intuitive way would be to find coefficients $\vec{\beta}$ which minimize the error in
 \begin{align*}
 y_0&=\beta_0x_0^0+\beta_1x_0^1+\hdots+\beta_px_0^p+\varepsilon_0\\
 y_1&=\beta_0x_1^0+\beta_1x_1^1+\hdots+\beta_px_1^p+\varepsilon_1\\
@@ -15,22 +15,77 @@ which for OLS is defines as
 \begin{equation}
 \text{MSE}=\sum_i\varepsilon_i^2
 \end{equation}
+NEED TO REWRITE THIS + COST FUNCTION
 
+Standard cost function
 
 \begin{equation}
-\vec{y}=\hat{X}^T\vec{\beta}+\vec{\varepsilon}
+Q(\vec{\beta})=\sum_{i=0}^{n-1}(y_i-\tilde{y}_i)^2=(\vec{y}-\hat{X}\vec{\beta})^T(\vec{y}-\hat{X}\vec{\beta})
 \end{equation}
-Confidence interval of $\hat{\beta}$: Var($\hat{\beta}$).
+
+Instead of dealing with a set of equations, we can apply linear algebra. One can easily see that the equations above correspond to
+\begin{equation}
+\vec{y}=\hat{X}^T\vec{\beta}+\vec{\varepsilon}.
+\end{equation}
+For a nonsingular matrix $\hat{X}$ (but not necessary symmetric) we can find the optimal $\vec{\beta}$ by solving
+\begin{equation}
+\vec{\beta}=(\hat{X}^T\hat{X})^{-1}\hat{X}^T\vec{\beta},
+\end{equation}
+which again corresponds to minimizing the cost function,
+\begin{equation}
+\vec{\beta}=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2\bigg\}.
+\end{equation}
+
+CONFIDENCE INTERVAL of $\hat{\beta}$: Var($\hat{\beta}$).
+
+This works perfectly when all rows in $\hat{X}$ are linearly independent, but this will generally not be the case for large data sets. If we are not able to diagonalize the matrix, we will not be able to calculate $(\hat{X}^T\hat{X})^{-1}$, so we need to do something smart. 
+
+Fortunately there is a simple trick we can do to make all matrices diagonalizable; we can add a diagonal matrix to the initial matrix. 
+
 
 \subsubsection{Ridge regression} \label{sec:ridge}
-Avoid singularities (OLS breaks down if one of the diagonal elements is zero), add penalty $\lambda$.
+Ridge regression is a widely used method that can handle singularities in matrices. The idea is to modify the standard cost function by adding a small term,
+\begin{equation}
+Q^{\text{ridge}}(\vec{\beta})=\sum_{i=1}^N(y_i-\tilde{y_i})^2+\lambda||\vec{\beta}||_2^2,
+\end{equation}
+where $\lambda$ is the so-called \textit{penalty} and $||\vec{v}||_2$ is defined as
+\begin{equation}
+||\vec{v}||_2=\sqrt{\vec{v}^T\vec{v}}=\Big(\sum_{i=1}^Nv_i^2\Big)^{1/2}.
+\end{equation}
+This will eliminate the singularity problem.
+
+Further we find the optimal $\vec{\beta}$ values by minimizing the function 
+\begin{equation}
+\vec{\beta}^{\text{ridge}}=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j^2\bigg\}, 
+\end{equation}
+or we could simply solve the equation
+\begin{equation}
+\vec{\beta}^{\text{ridge}}=(\hat{X}^T\hat{X}+\lambda I)^{-1}\hat{X}^T\vec{\beta}.
+\end{equation}
+In the latter equation we can easily see why this solves our problem.
 
 \subsubsection{Lasso regression} \label{sec:lasso}
+The idea behind Lasso regression is similar to the idea behind Ridge regression, and they differ only by the exponent factor in the last term. The modified cost function now writes
+\begin{equation}
+Q^{\text{lasso}}(\vec{\beta})=\sum_{i=1}^N(y_i-\tilde{y_i})^2+\lambda||\vec{\beta}||_2,
+\end{equation}
+and to find the optimal coefficients $\vec{\beta}$, we need to minimize
+\begin{equation}
+\vec{\beta}^{\text{lasso}}=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j\bigg\}.
+\end{equation}
 
+\subsubsection{General form}
+We can generalize the models above to a minimization problem where we have a $q$ in the last exponent, 
+\begin{equation}
+\vec{\beta}^q=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j^q\bigg\},
+\end{equation}
+such that $q=2$ corresponds to the Ridge method and $q=1$ is associated with Lasso regression. It can also be interesting to try other $q$-values.
 
 \subsection{Higher order regression} \label{sec:higher_reg}
+We can use the same approach as above when dealing with regression of higher order, since the problem is to fit a function to points, no matter how many components they have. We will first take a look at how we can fit a 2D polynomial to some terrain data, before we briefly describe how to fit a function of arbitrary order to points.
 
 \subsubsection{Terrain} \label{sec:terrain}
+A set of data points $\{(x_0, y_0, z_0), (x_1, y_1, z_1),\hdots, (x_{n-1}, y_{n-1},z_{n-1})\}$ gives some coordinates in space, which for instance can describe the terrain. 
 Mention the Franke Function 
 
 \begin{align*}
