@@ -43,9 +43,18 @@ def reg_2D(x, y, z, Px, Py):
 
 
 
-def f_2D(x, y, pol):
+def f_2D(x, y, beta):
     '''Polyval'''
-    return np.polynomial.polynomial.polyval2d(x, y, pol)
+    
+    if isinstance(x, np.ndarray):
+        z = np.zeros(shape=x.shape)
+    else:
+        z = 0
+        
+    for i in range(beta.shape[0]):
+        for j in range(beta.shape[1]):
+            z += beta[i,j]*np.multiply(np.power(x,i), np.power(y,j))
+    return z
     
     
 
@@ -55,7 +64,7 @@ if __name__ == '__main__':
     Px = 5          # Polynomial order in x-direction
     Py = 5          # Polynomial order in y-direction
 
-    noise = normal(0,0.1,N)
+    noise = normal(0,0.0,N)
 
     x = uniform(0,1,N)
     y = uniform(0,1,N)
@@ -82,6 +91,19 @@ if __name__ == '__main__':
     #Add a color bar which maps values to colors. 
     fig.colorbar(surf, shrink=0.5, aspect=5)
     plt.show()
+    
+    
+    # 1D plot
+    y_const = 0.5
+    z = FrankeFunction(x, y_const) + noise
+    
+    plt.plot(x, z, '.', label='Points')
+    plt.plot(x_vals, f_2D(x_vals, y_const, beta), label='Fitted')
+    plt.plot(x_vals, FrankeFunction(x_vals, y_const), label='Franke')
+    plt.legend(loc='best')
+    plt.show()
+    
+    
     
     
     # Confidence interval, beta

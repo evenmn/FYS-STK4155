@@ -56,11 +56,11 @@ if __name__ == "__main__":
     Px = 5          # Polynomial order in x-direction
     Py = 5          # Polynomial order in y-direction
 
-    noise = normal(0,0.1,N)
+    noise = normal(0,0.0,N)
 
     x = uniform(0,1,N)
     y = uniform(0,1,N)
-    z = FrankeFunction(x, y) + noise
+    z = FrankeFunction(x, y) #+ noise
     
     beta = reg_q_2D(x, y, z, Px, Py, 1)         # Ridge
     
@@ -82,4 +82,14 @@ if __name__ == "__main__":
 
     #Add a color bar which maps values to colors. 
     fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.show()
+    
+    # 1D plot
+    y_const = 0.5
+    z = FrankeFunction(x, y_const) + noise
+    
+    plt.plot(x, z, '.', label='Points')
+    plt.plot(x_vals, f_2D(x_vals, y_const, beta), label='Fitted')
+    plt.plot(x_vals, FrankeFunction(x_vals, y_const), label='Franke')
+    plt.legend(loc='best')
     plt.show()
