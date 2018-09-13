@@ -4,7 +4,7 @@ from random import random, seed
 from regression import reg, f
 from tqdm import tqdm
 
-def reg_q(x, y, p, q, λ=0.1, η=0.0001, niter=10000):
+def reg_q(x, y, p, q, λ=0.1, η=0.0001, niter=100000):
     '''Regression, finding coefficients beta
     
     Arguments:
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     npoints = 100
     degree  = 3
     x_max   = 2
-    λ       = 2
+    λ       = 0.1
 
     # Regression points
     x_vals = np.linspace(0, x_max, 1000)
@@ -63,6 +63,18 @@ if __name__ == '__main__':
     plt.plot(x_vals, f(x_vals, reg_q(x, y, degree, 1, λ=λ)), label='Lasso, $q=1$')
     plt.plot(x_vals, f(x_vals, reg_q(x, y, degree, 2, λ=λ)), label='Ridge, $q=2$')
     plt.plot(x_vals, f(x_vals, reg(x, y, degree)), label='Standard')
+    plt.title('Regression with $\lambda$={}'.format(λ))
+    plt.legend()
+    plt.grid()
+    plt.show()
+    
+    
+    plt.plot(x, y, '.')
+    plt.plot(x_vals, f(x_vals, reg_q(x, y, degree, 2, λ=λ, niter=100)), '--', label='Ridge, $n_{iter}=100$')
+    plt.plot(x_vals, f(x_vals, reg_q(x, y, degree, 2, λ=λ, niter=1000)), '--', label='Ridge, $n_{iter}=1000$')
+    plt.plot(x_vals, f(x_vals, reg_q(x, y, degree, 2, λ=λ, niter=10000)), '--', label='Ridge, $n_{iter}=10000$')
+    plt.plot(x_vals, f(x_vals, reg_q(x, y, degree, 2, λ=λ, niter=100000)), '--', label='Ridge, $n_{iter}=100000$')
+    plt.plot(x_vals, f(x_vals, reg(x, y, degree)), label='Standard', linewidth=2)
     plt.title('Regression with $\lambda$={}'.format(λ))
     plt.legend()
     plt.grid()
