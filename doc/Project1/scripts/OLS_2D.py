@@ -64,7 +64,7 @@ if __name__ == '__main__':
     Px = 5          # Polynomial order in x-direction
     Py = 5          # Polynomial order in y-direction
 
-    noise = normal(0,0.0,N)
+    noise = normal(0,0.1,N)
 
     x = uniform(0,1,N)
     y = uniform(0,1,N)

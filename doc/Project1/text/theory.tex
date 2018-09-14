@@ -153,6 +153,32 @@ Although we stick to 2D regression in this project, I add this section for compl
 
 
 \subsection{Error analysis}
+When dealing with data sets, we always want to know how much the data points vary from each other, in other words we want to calculate the variance of the data. Often we are studying multiple data sets at the same time, ...
+
+Sample variance:
+\begin{equation}
+\sigma_x^2=\frac{1}{N}\sum_{i=1}^N(x_i-\bar{\mu})^2
+\end{equation}
+Sample mean:
+\begin{equation}
+\bar{\mu}=\sum_{i=1}^Nx_i
+\end{equation}
+Sample mean and distribution mean are not necessarly the same, could point it our by show an example on both (perhaps by using Franke function?).
+Mean value in one data set $\alpha$:
+\begin{equation}
+\bar{\mu}_{\alpha}=\frac{1}{N}\sum_{k=1}^NX_{\alpha,k}
+\end{equation}
+Total sample mean of $M$ data sets:
+\begin{equation}
+\bar{\mu}_M=\frac{1}{M}\sum_{\alpha=1}^M\bar{\mu}_{\alpha}=\frac{1}{MN}\sum_{\alpha=1}^M\sum_{k=1}^NX_{\alpha,k}
+\end{equation}
+NEED TO DECIDE WHETHER I USE MU OR X.
+
+The total variance will then be a sum over the single set variances plus the cross terms:
+\begin{equation}
+\sigma_M^2=\frac{\sigma^2}{N}+\frac{2}{MN^2}\sum_{\alpha=1}^M\sum_{k<l}^N(X_{\alpha,k}-\bar{\mu}_M)(X_{\alpha,l}-\bar{\mu}_M).
+\end{equation}
+The last term is called the covariance, and is a measure on how much the data set are related. If they are totally independent, the covariance is zero. For large data sets this term is computational expensive to calculate, and we will rather use resampling techniques to estimate the variance. A few resampling techniques are presented in the Method section.
 
 Cost function (loss function) 
 
