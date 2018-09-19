@@ -92,7 +92,8 @@ def f(x, pol):
     
     
 if __name__ == '__main__':
-    x_vals     = np.linspace(0,2,100)
+
+    # --- Simple running example ---
     x          = 2*np.random.rand(100,1)
     y          = 4+3*x+np.random.randn(100,1)
     
@@ -106,6 +107,8 @@ if __name__ == '__main__':
     #print(beta_ridge)
     #print(beta_lasso)
 
+    x_vals = np.linspace(0,2,100)
+    
     plt.plot(x, y, '.')
     plt.plot(x_vals, f(x_vals, beta_ols), label='OLS')
     plt.plot(x_vals, f(x_vals, beta_ridge), label='ridge')

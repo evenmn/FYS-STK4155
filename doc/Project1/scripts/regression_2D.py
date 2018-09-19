@@ -115,7 +115,7 @@ class Reg_2D():
 
 
 def polyval(x, y, beta):
-    '''Polyval'''
+    '''Polyval 2D'''
     
     if isinstance(x, np.ndarray):
         z = np.zeros(shape=x.shape)
@@ -130,6 +130,8 @@ def polyval(x, y, beta):
     
 
 if __name__ == '__main__':
+
+    # --- Simple running example ---
     N  = 100        # Number of points
     D  = 2          # Dimension
     Px = 5          # Polynomial order in x-direction
@@ -167,7 +169,7 @@ if __name__ == '__main__':
     
     #Plot the surface. 
     surf = ax.plot_surface(X_vals,Y_vals,predict,cmap=cm.coolwarm,linewidth=0,antialiased=False)
-    #surf = ax.plot_surface(X_vals,Y_vals,FrankeFunction(X_vals, Y_vals),cmap=cm.coolwarm,linewidth=0,antialiased=False)
+    surf1 = ax.plot_surface(X_vals,Y_vals,FrankeFunction(X_vals, Y_vals),cmap=cm.coolwarm,linewidth=0,antialiased=False)
 
     #Customize the z axis. 
     ax.set_zlim(-0.10,1.40)
@@ -191,19 +193,3 @@ if __name__ == '__main__':
     plt.plot(x_vals, FrankeFunction(x_vals, y_const), label='Franke')
     plt.legend(loc='best')
     plt.show()
-    
-    
-    
-    
-    # Confidence interval, beta
-    print(np.var(beta_ols))
-    
-    
-    # Mean square error (MSE):
-    MSE = (z - polyval(x, y, beta_ols)).T.dot(z - polyval(x, y, beta_ols))/N
-    print(MSE)
-    
-    
-    # R2 score function
-    denominator = (y-np.mean(y)).T.dot(y-np.mean(y))
-    print(1-N*MSE/denominator)
