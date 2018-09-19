@@ -29,34 +29,30 @@ In fact there are multiple techniques for doing this, where the most complicated
 Perhaps the simplest and most intuitive method for finding the minimum is the gradient descent method (GD), which reads
 \begin{equation}
 \label{eq:GD}
-\alpha^+=\alpha - \eta\cdot\frac{d\langle E(\alpha)\rangle}{d\alpha}.
+\beta_i^{\text{new}}=\beta_i - \eta\cdot\frac{\partial Q(\beta_i)}{\partial\beta_i}
 \end{equation}
-where $\alpha^+$ is the updated $\alpha$ and $\eta$ is a step size. The idea is that one finds the gradient of the energy with respect to a certain $\alpha$, and moves in the direction which minimizes the energy. This is repeated until one has found an energy minimum, where the energy minimum is defined as either where $\frac{d\langle E(\alpha)\rangle}{d\alpha}$ is smaller than a given tolerance, or the energy fluctuates around a value are smaller than a tolerance, and thus changes minimally.
+where $\beta_i^{\text{new}}$ is the updated $\beta$ and $\eta$ is a step size, in machine learning often refered to as the learning rate. The idea is to find the gradient of the cost function $Q(\vec{\beta})$ with respect to a certain $\beta_i$, and move in the direction which minimizes the cost function. This is repeated until a minimum is found, defined by either
+\begin{equation}
+\frac{\partial Q(\beta_i)}{\partial\beta_i}<\varepsilon
+\end{equation}
+or that the change in $\beta_i$ for the past $x$ steps is small. 
 \par 
 \vspace{3mm}
 
-To implement equation \ref{eq:GD}, we need an expression for the derivative of $E$ with respect to alpha:
-
+Before we can implement equation \eqref{eq:GD}, we need an expression for the derivative of $Q$ with respect to $\beta_i$. The general form of the cost function as discussed in section \ref{sec:general} reads
 \begin{equation}
-	\label{eq:E_L_der_wrt_alpha}
-	\bar{E_{\alpha}} = \frac{d \langle E (\alpha) \rangle}{d \alpha}.
+Q(\vec{\beta},\lambda,q)=\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j^q,
+\label{eq:cost_gen}
 \end{equation}
-By using the expression for the expectation value for the energy $ \langle E (\alpha) \rangle$ in equation \ref{eq:exp_EL} 
-
+and its derivative with respect to $\beta_k$ is
 \begin{equation}
-	\label{eq:exp_EL}
-	\langle E (\alpha) \rangle = \frac{ \langle \psi_T(\alpha) | H | \psi_T(\alpha)  \rangle}{ \langle \psi_T(\alpha)  |  \psi_T(\alpha)  \rangle }
+\frac{\partial Q(\vec{\beta},\lambda,q)}{\partial\beta_k}=-2\sum_i^n\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)x_{ik}+q\lambda\beta_k^{q-1}.
+\label{eq:der_cost_gen}
 \end{equation}
-and applying the chain rule of differentiation, it can be shown that equation \ref{eq:E_L_der_wrt_alpha} is equal to equation \ref{eq:E_L_der_wrt_alpha_expression}
-
+The vectorized version looks like
 \begin{equation}
-	\label{eq:E_L_der_wrt_alpha_expression}
-	\bar{E_{\alpha}} = 2 \bigg[\langle E_L (\alpha)  \frac{ \bar{\psi_{\alpha}}}{\psi_{\alpha}}\rangle - \langle E_L (\alpha) \rangle \langle \frac{\bar{\psi_{\alpha}}}{\psi_{\alpha}} \rangle\bigg]
-\end{equation}
-where
-
-\begin{equation}
-	\bar{\psi_{\alpha}} = \frac{d \psi (\alpha)}{d \alpha}.
+\frac{\partial Q(\vec{\beta},\lambda,q)}{\partial\vec{\beta}}=-2\hat{X}^T(\vec{y}-\hat{X}\vec{\beta})+q\lambda\vec{\beta}^{q-1}
+\label{eq:der_cost_gen_vec}
 \end{equation}
 
 The algorithm of this minimization method is thus as follows:
@@ -64,16 +60,16 @@ The algorithm of this minimization method is thus as follows:
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
 
+initialize beta
 for(max number of iterations with minimizing)
 	
-	do M Monte Carlo cycles
-	calculate E and dE/dalpha 
+	calculate gradient
 	
-	Check if dE/dalpha < eps or alpha fluctuation over the last 5 steps is < eps
+	Check if dQ/dbeta < eps or beta fluctuation over the last 5 steps is < eps
 	
 	
-		if yes, print optimal alpha and break loop
-		if no, continue to next iteration
+		if yes, break loop
+		if no, update beta such that Q is minimized
 
 
 \end{lstlisting}

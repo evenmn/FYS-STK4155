@@ -89,7 +89,7 @@ and to find the optimal coefficients $\vec{\beta}$, we need to minimize
 \vec{\beta}^{\text{lasso}}=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j\bigg\}.
 \end{equation}
 
-\subsubsection{General form}
+\subsubsection{General form} \label{sec:general}
 We can generalize the models above to a minimization problem where we have a $q$ in the last exponent, 
 \begin{equation}
 \vec{\beta}^q=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j^q\bigg\},
