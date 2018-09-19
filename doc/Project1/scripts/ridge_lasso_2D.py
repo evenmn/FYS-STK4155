@@ -10,7 +10,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm 
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
-def reg_q_2D(x, y, z, Px, Py, q, λ=0.1, η=0.0001, niter=10000):
+def reg_q_2D(x, y, z, Px, Py, q, λ=0, η=0.0001, niter=1000000):
     '''Regression, finding coefficients beta
     
     Arguments:

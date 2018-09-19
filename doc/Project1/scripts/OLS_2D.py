@@ -93,7 +93,7 @@ if __name__ == '__main__':
     ax.set_zlabel('Z axis')
 
     #Add a color bar which maps values to colors. 
-    fig.colorbar(surf, shrink=0.5, aspect=5)
+    fig.colorbar(surf, shrink=0.5, aspect=5, orientation="horizontal")
     plt.show()
     
     

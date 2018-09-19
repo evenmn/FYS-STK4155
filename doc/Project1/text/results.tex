@@ -1,6 +1,7 @@
 \section{Results} \label{sec:results}
 
-FRANKE
+
+\subsection{Visualization of graphes}
 
  \begin{figure} [H]
  	\centering
@@ -8,13 +9,19 @@ FRANKE
  	\caption{The Franke function in the interval $x\in[0,1]$, $y\in[0,1]$, $z\in[0, 1.2]$.}
  	\label{fig:franke}
  \end{figure}
- 
- 
-OLS WITHOUT NOISE
 
- \begin{figure} [H]
- 	\centering
- 	\includegraphics[scale=0.8]{../plots/OLS.png}
- 	\caption{Fitting the Franke function using OLS.}
- 	\label{fig:franke}
- \end{figure}
+ 
+ 
+\begin{figure} [H]%
+    \centering
+    \subfloat[OLS without noise]{{\includegraphics[width=8cm]{../plots/OLS.png} }}%
+    \subfloat[OLS with noise]{{\includegraphics[width=8cm]{../plots/OLS_noise.png} }}\\
+
+    \subfloat[Ridge without noise]{{\includegraphics[width=8cm]{../plots/franke.png} }}%
+    \subfloat[Ridge with noise]{{\includegraphics[width=8cm]{../plots/franke.png} }}\\
+    
+    \subfloat[Lasso without noise]{{\includegraphics[width=8cm]{../plots/franke.png} }}%
+    \subfloat[Lasso with noise]{{\includegraphics[width=8cm]{../plots/franke.png} }}
+    \caption{Fitted polynomial by OLS, Ridge and Lasso with and without noise.}%
+    \label{fig:example}%
+\end{figure}
