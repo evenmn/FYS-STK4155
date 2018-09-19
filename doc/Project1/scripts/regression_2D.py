@@ -49,6 +49,7 @@ class Reg_2D():
         Py = self.Py
 
         # Setting up x-matrix
+        N = len(x)
         Px = Px+1; Py = Py+1
         X = np.zeros([N, Px*Py])
         for i in range(N):
@@ -61,7 +62,7 @@ class Reg_2D():
         return np.reshape(beta.flatten(), (Px,Py))
 
 
-    def reg_q(self, q, λ=0.1, η=0.0001, niter=1000000):
+    def reg_q(self, q, λ=0.1, η=0.0001, niter=100000):
         '''Regression, finding coefficients beta
         
         Arguments:
@@ -86,27 +87,46 @@ class Reg_2D():
         Py = self.Py 
 
         # Setting up x-matrix
+        N = len(x)
         Px = Px+1; Py = Py+1
         X = np.zeros([N, Px*Py])
         for i in range(N):
             for j in range(Px):
                 for k in range(Py):
                     X[i,Py*j+k] = x[i]**j*y[i]**k
-        
 
         # Minimization using gradient descent
         beta = np.random.randn(Px*Py, 1)
+        beta = beta[:,0]
 
         for iter in tqdm(range(niter)):
-            e = y - X.dot(beta).T                    # Absolute error
-            beta += η*(2*X.T.dot(e.T) - q*λ*np.power(abs(beta), q-1))
+            e = y - X.dot(beta)                    # Absolute error
+            beta += η*(2*X.T.dot(e) - q*λ*np.power(abs(beta), q-1))
         
         return np.reshape(beta.flatten(), (Px,Py))
         
         
-    def ridge(self, λ=0.1, η=0.0001, niter=1000000):
+    def ridge(self, λ=0.1):
         '''Ridge regression'''
-        return Reg_2D.reg_q(self, 2, λ, η, niter)
+        
+        x = self.x
+        y = self.y
+        z = self.z
+        Px = self.Px
+        Py = self.Py
+
+        # Setting up x-matrix
+        N = len(x)
+        Px = Px+1; Py = Py+1
+        X = np.zeros([N, Px*Py])
+        for i in range(N):
+            for j in range(Px):
+                for k in range(Py):
+                    X[i,Py*j+k] = x[i]**j*y[i]**k
+
+        # Calculating beta-vector
+        beta = np.linalg.inv(X.T.dot(X)+λ*np.eye(Px*Py)).dot(X.T).dot(z)
+        return np.reshape(beta.flatten(), (Px,Py))
         
         
     def lasso(self, λ=0.1, η=0.0001, niter=1000000):

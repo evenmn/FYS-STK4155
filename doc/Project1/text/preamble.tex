@@ -18,6 +18,7 @@
 \usepackage{titlesec}
 \usepackage{comment}
 \usepackage{subfig}
+\usepackage{geometry}
 
 %biblatex
 \iffalse
@@ -45,10 +46,11 @@ sorting=ynt
 
 %tikz
 \setcounter{secnumdepth}{4}
-\usetikzlibrary{through, shapes, calc, shapes, arrows, positioning}
+\usetikzlibrary{through, shapes, calc, shapes, arrows, positioning, er}
 \tikzstyle{neuron}=[draw,circle,minimum size=20pt,inner sep=0pt, fill=white]
 \tikzstyle{stateTransition}=[thick]
 \tikzstyle{learned}=[text=red]
+
 
 %specific reused text
 \newcommand{\mdate}{\today}

@@ -1,7 +1,8 @@
 \section{Results} \label{sec:results}
 
-
-\subsection{Visualization of graphes}
+\subsection{Franke function}
+First we will take a look at how good our linear regression is...
+\subsubsection{Visualization of graphes}
 
  \begin{figure} [H]
  	\centering
@@ -11,17 +12,26 @@
  \end{figure}
 
  
- 
+\newgeometry{left=2cm,right=2cm,top=1cm}
 \begin{figure} [H]%
     \centering
-    \subfloat[OLS without noise]{{\includegraphics[width=8cm]{../plots/OLS.png} }}%
-    \subfloat[OLS with noise]{{\includegraphics[width=8cm]{../plots/OLS_noise.png} }}\\
+    \subfloat[OLS without noise]{{\includegraphics[width=9cm]{../plots/OLS.png} }}%
+    \subfloat[OLS with noise]{{\includegraphics[width=9cm]{../plots/OLS_noise.png} }}\\
 
-    \subfloat[Ridge without noise]{{\includegraphics[width=8cm]{../plots/franke.png} }}%
-    \subfloat[Ridge with noise]{{\includegraphics[width=8cm]{../plots/franke.png} }}\\
+    \subfloat[Ridge without noise]{{\includegraphics[width=9cm]{../plots/Ridge.png} }}%
+    \subfloat[Ridge with noise]{{\includegraphics[width=9cm]{../plots/Ridge_noise.png} }}\\
     
-    \subfloat[Lasso without noise]{{\includegraphics[width=8cm]{../plots/franke.png} }}%
-    \subfloat[Lasso with noise]{{\includegraphics[width=8cm]{../plots/franke.png} }}
-    \caption{Fitted polynomial by OLS, Ridge and Lasso with and without noise.}%
+    \subfloat[Lasso without noise]{{\includegraphics[width=9cm]{../plots/franke.png} }}%
+    \subfloat[Lasso with noise]{{\includegraphics[width=9cm]{../plots/franke.png} }}
+    \caption{Fitted polynomial by OLS, Ridge and Lasso with and without noise. For these plots, we used a low penalty of $\lambda=1e-15$.}%
     \label{fig:example}%
 \end{figure}
+
+\restoregeometry
+
+\subsubsection{Error}
+
+
+\subsection{Real data}
+
+
