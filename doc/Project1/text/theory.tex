@@ -37,7 +37,7 @@ x_2^0&x_2^1&x_2^2&\hdots&x_2^p\\
 x_n^0&x_n^1&x_n^2&\hdots&x_n^p
 \end{pmatrix}
 \end{equation}
-and
+as the \textit{design} matrix and
 \begin{equation}
 \vec{\beta}=(\beta_0, \beta_1, \hdots, \beta_p).
 \end{equation}
@@ -113,7 +113,7 @@ We can set up a similar equation as for the first order case, presented in equat
 \begin{equation}
 \vec{z}=\hat{X}^T\vec{\beta}.
 \end{equation}
-The coordinate matrix $\hat{X}$ will now look like
+The design matrix $\hat{X}$ will now look like
 \begin{equation}
 \hat{X}=
 \begin{pmatrix}
@@ -127,25 +127,27 @@ and we can again use the OLS method to find $\vec{\beta}$, i.e, calculating
 \begin{equation}
 \vec{\beta}=(\hat{X}^T\hat{X})^{-1}\hat{X}^T\vec{z}.
 \end{equation}
-Similarly we can use ridge and lasso regression in the same way as when fitting 1D polynomials. 
+Similarly, we can use Ridge and Lasso regression in the same way as when fitting 1D polynomials. 
 
-In this project one we will actually deal with terrain data. Firstly we implement some regression tools which fit a 2D function to points in space. To verify the implementation, we pick points from a known function such that we know the result. The specific verification function used is the Franke Function, which looks like
+In this project we will actually deal with terrain data. Firstly, we implement some regression tools which fit a 2D function to points in space. To verify the implementation, we pick points from a known function such that we know the result. The specific verification function used is the Franke Function, which looks like
 
 \begin{align*}
 f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4} - \frac{(9y-2)^2}{4}\right)}+\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \\
 &+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} -\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) },
 \end{align*}
-and is a smooth 2D function as one can see in figure \eqref{fig:franke}.
+and is a smooth 2D function as one can see in figure \eqref{fig:data}, part (a).
 
- \begin{figure} [H]
- 	\centering
- 	\includegraphics[scale=0.8]{../plots/franke.png}
- 	\caption{The Franke function in the interval $x\in[0,1]$, $y\in[0,1]$, $z\in[0, 1.2]$.}
- 	\label{fig:franke}
+\newgeometry{left=2cm,right=2cm,top=1cm} 
+ \begin{figure} [H]%
+    \centering
+    \subfloat[Franke function]{{\includegraphics[width=9cm]{../plots/franke.png} }}%
+    \subfloat[Lombok terrain]{{\includegraphics[width=9cm]{../plots/lombok.png} }}
+    \caption{CAPTION}%
+    \label{fig:data}%
  \end{figure}
+\restoregeometry
 
-Secondly we use the verified regression tools to fit a polynomial to real terrain data.
-NEED TO ADD A SENTENCE OR TWO HERE
+Secondly, we use the verified regression tools to fit a polynomial to real terrain data. The data is taken from United States Geological Survey (USGS) \url{https://earthexplorer.usgs.gov/}, and for investigation we picked the volcanic island of Lombok in Indonesia. Despite the island's small extent, it houses the second highest volcano in Indonesia which makes the terrain data interesting. See part (b) of figure \eqref{fig:data} for terrain data.
 
 \subsubsection{Higher order}
 There should be no surprise that we can extend the theory above to even higher orders. 

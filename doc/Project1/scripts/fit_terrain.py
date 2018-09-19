@@ -19,10 +19,10 @@ y = np.linspace(0, terrain.shape[1]-1, terrain.shape[0])
 
 X, Y = np.meshgrid(x, y)
 
-order5 = Reg_2D(X, Y, terrain, Px, Py)
-beta_ols = order5.ols()
+#order5 = Reg_2D(X, Y, terrain, Px, Py)
+#beta_ols = order5.ols()
 
-stop
+#stop
 
 # Show the terrain
 plt.figure()
