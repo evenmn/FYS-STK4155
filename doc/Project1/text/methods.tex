@@ -1,24 +1,46 @@
 \section{Methods} \label{sec:methods}
 
 \subsection{Resampling techniques} \label{sec:resampling}
-A resampling technique is..
-There are plenty of resampling techniques, and we have already went through several of them in this course:
+A resampling technique is a way of estimating the variance of data sets without calculating the covariance. As we saw in section section \ref{sec:error_analysis}, the true covariance is given by a double loop which we will avoid calculating if possible. There are different ways of doing this, and we have already went through several of them in this course:
 \begin{itemize}
-\item{Validation set approaches}
-\item{Leave one out validation}
 \item{Jackknife resampling}
 \item{K-fold validation}
 \item{Bootstrap method}
 \item{Blocking method}.
 \end{itemize}
-For this particular project we have been focusing on the bootstrap and the k-fold validation methods, so here I will cover them only
+
+For this particular project we have been focusing on the bootstrap and the K-fold validation methods, so only they will be covered here.
 
 \subsubsection{Bootstrap method} \label{sec:bootstrap}
+When we construct a data set, we usually draw samples from a probability density function (PDF) and get a set of samples $\vec{x}$. If we draw a large number of samples, the sample variance will approach the variance of the PDF. The bootstrap method turns this upside down, and tries to estimate the PDF given a set data set, because if we know the PDF, we know in principle everything about the data set. 
+
+The assumption we need to make, is that the relative frequency of $x_i$ equals $p(x_i)$, which is reasonable (for instance, think about how the histogram looks like when we draw samples from a normal distribution). In this project the vector that we want to find, $\vec{\beta}(x,y)$, is a function of two set of variables. Fortunetely they are independent of eachother, so we can safely apply the independent bootstrap on them separately. The independent bootstraps goes as
+\begin{enumerate}
+\item Draw $n$ samplings from the data set $\vec{x}$ with replacement and denote the new data set as $\vec{x}^*=\{x_1,x_2,\hdots,x_n\}$
+\item Compute $\vec{\beta}(\vec{x}^*)\equiv\vec{\beta}^*$
+\item Repeat the procedure above $K$ times
+\item The average value of all $K$ $\vec{\beta}^*$'s are stored in a new vector $\vec{\bar{\beta}}^*$
+\item Finally, the variance of $\vec{\bar{\beta}}^*$ should correspond to the sample variance
+\end{enumerate}
+\cite{BootstrapEfron}
+[Efron, B. Bootstrap Methods: Another Look at the Jackknife. Ann. Statist. 7 (1979), no. 1, 1--26. doi:10.1214/aos/1176344552. ]
+
+The implementation could look something like this
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+def bootstrap(data, K=1000):
+    dataVec = np.zeros(K)
+    for k in range(K):
+        dataVec[k] = np.average(np.random.choice(data, len(data)))
+    Avg = np.average(dataVec)
+    Var = np.var(dataVec)
+    Std = np.std(dataVec)
+    
+    return Avg, Var, Std
+\end{lstlisting}
 
 \subsubsection{K-fold validation method} \label{sec:kfold}
 
-
-\subsection{Singular Value Decomposition (SVD)} \label{sec:svd}
 
 \subsection{Minimization methods} \label{sec:minimization}
 When the interaction term is excluded, we know which $\alpha$ that corresponds to the energy minimum, and it is in principle no need to try different $\alpha$'s. However, sometimes we have no idea where to search for the minimum point, and we need to try various $\alpha$ values to determine the lowest energy. If we do not know where to start searching, this can be a time consuming activity. Would it not be nice if the program could do this for us?
@@ -60,16 +82,10 @@ The algorithm of this minimization method is thus as follows:
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
 
-initialize beta
-for(max number of iterations with minimizing)
-	
-	calculate gradient
-	
-	Check if dQ/dbeta < eps or beta fluctuation over the last 5 steps is < eps
-	
-	
-		if yes, break loop
-		if no, update beta such that Q is minimized
+while dbeta > epsilon:
+	e = y - X.dot(beta)
+    debeta = 2*X.T.dot(e) - q*\lambda*np.power(abs(beta), q-1)
+    beta += \eta*dbeta
 
 
 \end{lstlisting}

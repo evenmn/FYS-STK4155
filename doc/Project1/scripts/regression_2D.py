@@ -59,6 +59,9 @@ class Reg_2D():
 
         # Calculating beta-vector
         beta = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(z)
+        
+        print((z-X.dot(beta)).T.dot(z-X.dot(beta)))
+        
         return np.reshape(beta.flatten(), (Px,Py))
 
 
@@ -102,6 +105,9 @@ class Reg_2D():
         for iter in tqdm(range(niter)):
             e = y - X.dot(beta)                    # Absolute error
             beta += η*(2*X.T.dot(e) - q*λ*np.power(abs(beta), q-1))
+            print(beta)
+            
+            #print(np.linalg.norm(e.T.dot(e) + λ*np.power(abs(beta), q)))
         
         return np.reshape(beta.flatten(), (Px,Py))
         
