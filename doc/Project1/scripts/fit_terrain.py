@@ -2,6 +2,7 @@ import numpy as np
 from scipy.misc import imread
 import matplotlib.pyplot as plt
 from regression_2D import *
+from time import clock
 
 # Matplotlib stuff
 from mpl_toolkits.mplot3d import Axes3D
@@ -19,10 +20,21 @@ y = np.linspace(0, terrain.shape[1]-1, terrain.shape[0])
 
 X, Y = np.meshgrid(x, y)
 
-#order5 = Reg_2D(X, Y, terrain, Px, Py)
-#beta_ols = order5.ols()
+X_flatten = X.flatten()
+Y_flatten = Y.flatten()
+Z_flatten = terrain.flatten()
 
-#stop
+factor = 10
+X_flatten = X_flatten[::factor]
+Y_flatten = Y_flatten[::factor]
+Z_flatten = Z_flatten[::factor]
+
+start = clock()
+order5 = Reg_2D(X_flatten, Y_flatten, Z_flatten, Px, Py)
+beta_ols = order5.ols()
+end = clock()
+print(end-start)
+print(beta_ols)
 
 # Show the terrain
 plt.figure()
@@ -32,6 +44,9 @@ plt.xlabel('X')
 plt.ylabel('Y')
 plt.show()
 
+plt.imshow(polyval(X, Y, beta_ols))
+plt.show()
+stop
 # PLOT
 
 fig = plt.figure() 
