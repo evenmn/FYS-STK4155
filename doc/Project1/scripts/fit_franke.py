@@ -19,10 +19,14 @@ order5 = Reg_2D(x, y, z, Px, Py)
 
 beta_ols = order5.ols()
 beta_ridge = order5.ridge(λ=1e-15)
-#beta_lasso = order5.lasso()
+beta_lasso = order5.lasso()
 
-#print(beta_ols)
-#print(beta_ridge)
+print(beta_ols)
+
+stop
+
+print(beta_ridge)
+print(beta_lasso)
 
 #fig1 = plt.figure()
 #plt.imshow(beta_ols)

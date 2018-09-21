@@ -1,6 +1,6 @@
 \section{Theory} \label{sec:theory}
 
-\subsection{Regression} \label{sec:regression}
+\subsection{Linear regression} \label{sec:regression}
 A few general words about regression
 
 \subsubsection{Ordinary Least Square (OLS)} \label{sec:OLS}
@@ -137,24 +137,22 @@ f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4} - \frac{(9y-2)^2}{4}\right)}
 \end{align*}
 and is a smooth 2D function as one can see in figure \eqref{fig:data}, part (a).
 
-\newgeometry{left=2cm,right=2cm,top=1cm} 
  \begin{figure} [H]%
     \centering
-    \subfloat[Franke function]{{\includegraphics[width=9cm]{../plots/franke.png} }}%
-    \subfloat[Lombok terrain]{{\includegraphics[width=9cm]{../plots/lombok.png} }}
-    \caption{CAPTION}%
+    \subfloat[Franke function]{{\includegraphics[width=8cm]{../plots/franke.png} }}%
+    \subfloat[Lombok terrain]{{\includegraphics[width=8cm]{../plots/lombok.png} }}
+    \caption{The two data sets we are going to fit polynomials to.}%
     \label{fig:data}%
  \end{figure}
-\restoregeometry
 
 Secondly, we use the verified regression tools to fit a polynomial to real terrain data. The data is taken from United States Geological Survey (USGS) \url{https://earthexplorer.usgs.gov/}, and for investigation we picked the volcanic island of Lombok in Indonesia. Despite the island's small extent, it houses the second highest volcano in Indonesia which makes the terrain data interesting. See part (b) of figure \eqref{fig:data} for terrain data.
 
 \subsubsection{Higher order}
 There should be no surprise that we can extend the theory above to even higher orders. 
-Although we stick to 2D regression in this project, I add this section for completeness. 
+Although we stick to 2D regression in this project, we add this section for completeness. 
 
 
-\subsection{Error analysis}
+\subsection{Error analysis} \label{error_analysis}
 When dealing with data sets, we always want to know how much the data points vary from each other, in other words we want to calculate the variance of the data. Often we are studying multiple data sets at the same time, ...
 
 Sample variance:
