@@ -104,10 +104,10 @@ class Reg_2D():
 
         for iter in tqdm(range(niter)):
             e = y - X.dot(beta)                    # Absolute error
-            beta += η*(2*X.T.dot(e) - q*λ*np.power(abs(beta), q-1))
+            beta += η*(2*X.T.dot(e))# - q*λ*np.power(abs(beta), q-1))
             print(beta)
             
-            #print(np.linalg.norm(e.T.dot(e) + λ*np.power(abs(beta), q)))
+            #print(np.linalg.norm(e.T.dot(e)))# + λ*np.power(abs(beta), q)))
         
         return np.reshape(beta.flatten(), (Px,Py))
         

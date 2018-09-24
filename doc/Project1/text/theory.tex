@@ -1,5 +1,6 @@
 \section{Theory} \label{sec:theory}
-
+Regression analysis are widely used in different fields of natural sciences, data science and economics to mention some. The simplest form is the linear regression, which is intuitive and easy to work with. 
+ 
 \subsection{Linear regression} \label{sec:regression}
 A few general words about regression
 
@@ -96,7 +97,7 @@ We can generalize the models above to a minimization problem where we have a $q$
 \end{equation}
 such that $q=2$ corresponds to the Ridge method and $q=1$ is associated with Lasso regression. It can also be interesting to try other $q$-values.
 
-\subsection{Higher order regression} \label{sec:higher_reg}
+\subsection{Multivariate linear regression} \label{sec:higher_reg}
 We can use the same approach as above when dealing with regression of higher order, since the problem is to fit a function to points, no matter how many components they have. We will first take a look at how we can fit a 2D polynomial to some terrain data, before we briefly describe how to fit a function of arbitrary order to points.
 
 \subsubsection{Terrain} \label{sec:terrain}
@@ -152,7 +153,7 @@ There should be no surprise that we can extend the theory above to even higher o
 Although we stick to 2D regression in this project, we add this section for completeness. 
 
 
-\subsection{Error analysis} \label{error_analysis}
+\subsection{Error analysis} \label{sec:error_analysis}
 When dealing with data sets, we always want to know how much the data points vary from each other, in other words we want to calculate the variance of the data. Often we are studying multiple data sets at the same time, ...
 
 Sample variance:
