@@ -126,7 +126,7 @@ class Reg_2D():
         return np.reshape(beta.flatten(), (Px,Py))
         
         
-    def lasso(self, λ=0.01, η=0.0001, niter=1000000):
+    def lasso(self, λ=1e-15, η=0.001, niter=1000000):
         '''Lasso regression'''
         return Reg_2D.reg_q(self, 1, λ, η, niter)
 
@@ -150,43 +150,20 @@ if __name__ == '__main__':
 
     # --- Simple running example ---
     N  = 100        # Number of points
-    D  = 2          # Dimension
-    Px = 5          # Polynomial order in x-direction
-    Py = 5          # Polynomial order in y-direction
-
-    noise = normal(0,0.1,N)
 
     x = uniform(0,1,N)
     y = uniform(0,1,N)
-    z = FrankeFunction(x, y) + noise
+    z = FrankeFunction(x, y)
     
-    order5 = Reg_2D(x, y, z, Px, Py)
+    order5 = Reg_2D(x, y, z, Px=5, Py=5)
     
     beta_ols = order5.ols()
     beta_ridge = order5.ridge()
     beta_lasso = order5.lasso()
     
-    
-    #print(beta_lasso)
-    #print(beta_ridge)
-    #print(beta_ols)
-    
-    #stop
-    
-    #plt.imshow(beta_ols)
-    #plt.show()
-    
-    #plt.imshow(beta_ridge)
-    #plt.show()
-    
-    #plt.imshow(beta_lasso)
-    #plt.show()
-    
-    
     x_vals = y_vals = np.linspace(0,1,1000)
     X_vals, Y_vals = np.meshgrid(x_vals, y_vals)
-    predict = polyval(X_vals, Y_vals, beta_ridge)
-    predict2 = polyval(X_vals, Y_vals, beta_lasso)
+    predict = polyval(X_vals, Y_vals, beta_lasso)
     
     # PLOT
     fig = plt.figure() 
@@ -194,8 +171,6 @@ if __name__ == '__main__':
     
     #Plot the surface. 
     surf = ax.plot_surface(X_vals,Y_vals,predict,cmap=cm.coolwarm,linewidth=0,antialiased=False)
-    #surf1 = ax.plot_surface(X_vals,Y_vals,FrankeFunction(X_vals, Y_vals),cmap=cm.magma,linewidth=0,antialiased=False)
-    surf2 = ax.plot_surface(X_vals,Y_vals,predict2,cmap=cm.magma,linewidth=0,antialiased=False)
 
     #Customize the z axis. 
     ax.set_zlim(-0.10,1.40)
@@ -212,7 +187,7 @@ if __name__ == '__main__':
     
     # 1D plot
     y_const = 0.5
-    z = FrankeFunction(x, y_const) + noise
+    z = FrankeFunction(x, y_const)
     
     plt.plot(x, z, '.', label='Points')
     plt.plot(x_vals, polyval(x_vals, y_const, beta_ridge), label='Fitted')

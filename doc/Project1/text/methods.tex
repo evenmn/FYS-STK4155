@@ -60,30 +60,29 @@ or that the change in $\beta_i$ for the past $x$ steps is small.
 \par 
 \vspace{3mm}
 
-Before we can implement equation \eqref{eq:GD}, we need an expression for the derivative of $Q$ with respect to $\beta_i$. The general form of the cost function as discussed in section \ref{sec:general} reads
+Before we can implement equation \eqref{eq:GD}, we need an expression for the derivative of $Q$ with respect to $\beta_i$. The general form of the cost function, as discussed in section \ref{sec:general}, reads
 \begin{equation}
-Q(\vec{\beta},\lambda,q)=\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j^q,
+Q(\vec{\beta},\lambda,q)=\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p|\beta_j|^q,
 \label{eq:cost_gen}
 \end{equation}
 and its derivative with respect to $\beta_k$ is
 \begin{equation}
-\frac{\partial Q(\vec{\beta},\lambda,q)}{\partial\beta_k}=-2\sum_i^n\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)x_{ik}+q\lambda\beta_k^{q-1}.
+\frac{\partial Q(\vec{\beta},\lambda,q)}{\partial\beta_k}=-2\sum_i^n\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)x_{ik}+\frac{\beta_k}{|\beta_k|}q\lambda|\beta_k|^{q-1}.
 \label{eq:der_cost_gen}
 \end{equation}
 The vectorized version looks like
 \begin{equation}
-\frac{\partial Q(\vec{\beta},\lambda,q)}{\partial\vec{\beta}}=-2\hat{X}^T(\vec{y}-\hat{X}\vec{\beta})+q\lambda\vec{\beta}^{q-1}
+\frac{\partial Q(\vec{\beta},\lambda,q)}{\partial\vec{\beta}}=-2\hat{X}^T(\vec{y}-\hat{X}\vec{\beta})+\frac{\vec{\beta}}{|\vec{\beta}|}q\lambda|\vec{\beta}|^{q-1}
 \label{eq:der_cost_gen_vec}
 \end{equation}
-
-The algorithm of this minimization method is thus as follows:
+where all operations are element wise. The algorithm of this minimization method is thus as follows:
 
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
 
 while dbeta > epsilon:
-	e = y - X.dot(beta)
-    debeta = 2*X.T.dot(e) - q*\lambda*np.power(abs(beta), q-1)
+	e = z - X.dot(beta)
+    debeta = 2*X.T.dot(e) -np.sign(beta)*q*\lambda*np.power(abs(beta), q-1)
     beta += \eta*dbeta
 
 

@@ -12,9 +12,6 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 # Load the terrain
 terrain = imread('../data/s09_e116_1arc_v3.tif')
 
-# 
-Px = Py = 5
-
 x = np.linspace(0, terrain.shape[1]-1, terrain.shape[1])
 y = np.linspace(0, terrain.shape[1]-1, terrain.shape[0])
 
@@ -30,7 +27,7 @@ Y_flatten = Y_flatten[::factor]
 Z_flatten = Z_flatten[::factor]
 
 start = clock()
-order5 = Reg_2D(X_flatten, Y_flatten, Z_flatten, Px, Py)
+order5 = Reg_2D(X_flatten, Y_flatten, Z_flatten, Px=5, Py=5)
 beta_ols = order5.ols()
 end = clock()
 print(end-start)

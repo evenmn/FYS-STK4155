@@ -5,30 +5,18 @@ from franke import FrankeFunction
 from regression_2D import *
 
 N  = 100        # Number of points
-D  = 2          # Dimension
-Px = 5          # Polynomial order in x-direction
-Py = 5          # Polynomial order in y-direction
-
 noise = normal(0,0.1,N)
 
 x = uniform(0,1,N)
 y = uniform(0,1,N)
 z = FrankeFunction(x, y) + noise
 
-order5 = Reg_2D(x, y, z, Px, Py)
+order5 = Reg_2D(x, y, z, Px=5, Py=5)
 
 beta_ols = order5.ols()
-#beta_ridge = order5.ridge(λ=1e-15)
-beta_lasso = order5.lasso()
+beta_ridge = order5.ridge(λ=1e-15)
+beta_lasso = order5.lasso(λ=1e-15)
 
-#print(beta_ols)
-
-
-
-#print(beta_ridge)
-print(beta_lasso)
-
-stop
 
 #fig1 = plt.figure()
 #plt.imshow(beta_ols)
@@ -51,7 +39,6 @@ ax = fig.gca(projection='3d')
 
 #Plot the surface. 
 surf = ax.plot_surface(X_vals,Y_vals,predict,cmap=cm.coolwarm,linewidth=0,antialiased=False)
-#surf1 = ax.plot_surface(X_vals,Y_vals,FrankeFunction(X_vals, Y_vals),cmap=cm.coolwarm,linewidth=0,antialiased=False)
 
 #Customize the z axis. 
 ax.set_zlim(-0.10,1.40)

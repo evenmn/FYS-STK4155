@@ -87,13 +87,13 @@ Q^{\text{lasso}}(\vec{\beta})=\sum_{i=1}^N(y_i-\tilde{y_i})^2+\lambda||\vec{\bet
 \end{equation}
 and to find the optimal coefficients $\vec{\beta}$, we need to minimize
 \begin{equation}
-\vec{\beta}^{\text{lasso}}=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j\bigg\}.
+\vec{\beta}^{\text{lasso}}=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p|\beta_j|\bigg\}.
 \end{equation}
 
 \subsubsection{General form} \label{sec:general}
 We can generalize the models above to a minimization problem where we have a $q$ in the last exponent, 
 \begin{equation}
-\vec{\beta}^q=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j^q\bigg\},
+\vec{\beta}^q=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p|\beta_j|^q\bigg\},
 \end{equation}
 such that $q=2$ corresponds to the Ridge method and $q=1$ is associated with Lasso regression. It can also be interesting to try other $q$-values.
 
@@ -103,10 +103,10 @@ We can use the same approach as above when dealing with regression of higher ord
 \subsubsection{Terrain} \label{sec:terrain}
 A set of data points $\{(x_1, y_1, z_1), (x_2, y_2, z_2),\hdots, (x_n, y_n,z_n)\}$ gives some coordinates in space, which for instance can describe the terrain. The system of linear equations to solve can then be lined up as 
 \begin{align*}
-z_1&=\beta_0x_1^0y_1^0+\beta_1x_1^1y_1^0+\beta_2x_1^0y_1^1+\hdots+\beta_px_1^py_1^p+\varepsilon_1\\
-z_2&=\beta_0x_2^0y_2^0+\beta_1x_2^1y_2^0+\beta_2x_2^0y_2^1+\hdots+\beta_px_2^py_2^p+\varepsilon_2\\
+z_1&=\beta_0x_1^0y_1^0+\beta_1x_1^1y_1^0+\beta_2x_1^0y_1^1+\hdots+\beta_{p^2}x_1^py_1^p+\varepsilon_1\\
+z_2&=\beta_0x_2^0y_2^0+\beta_1x_2^1y_2^0+\beta_2x_2^0y_2^1+\hdots+\beta_{p^2}x_2^py_2^p+\varepsilon_2\\
 \vdots\\
-z_n&=\beta_0x_n^0y_n^0+\beta_1x_n^1y_n^0+\beta_2x_n^0y_n^1+\hdots+\beta_px_n^py_n^p+\varepsilon_n,
+z_n&=\beta_0x_n^0y_n^0+\beta_1x_n^1y_n^0+\beta_2x_n^0y_n^1+\hdots+\beta_{p^2}x_n^py_n^p+\varepsilon_n,
 \end{align*}
 when fitting a polynomial of p'th order. In general the order associated with x-direction do not need to be the same as the order associated with y-direction. 
 
@@ -146,12 +146,31 @@ and is a smooth 2D function as one can see in figure \eqref{fig:data}, part (a).
     \label{fig:data}%
  \end{figure}
 
-Secondly, we use the verified regression tools to fit a polynomial to real terrain data. The data is taken from United States Geological Survey (USGS) \url{https://earthexplorer.usgs.gov/}, and for investigation we picked the volcanic island of Lombok in Indonesia. Despite the island's small extent, it houses the second highest volcano in Indonesia which makes the terrain data interesting. See part (b) of figure \eqref{fig:data} for terrain data.
+Secondly, we use the verified regression tools to fit a polynomial to real terrain data. The data is taken from United States Geological Survey (USGS) \url{https://earthexplorer.usgs.gov/}, and for investigation we picked the volcanic island of Lombok. Despite the island's small extent, it houses the second highest volcano in Indonesia which makes the terrain data interesting. See part (b) of figure \eqref{fig:data} for terrain data.
 
 \subsubsection{Higher order}
 There should be no surprise that we can extend the theory above to even higher orders. 
 Although we stick to 2D regression in this project, we add this section for completeness. 
 
+Suppose now that we have a data set of $n$ points in $d$ dimensions, \\ $\{(x_1^1, x_1^2, \hdots, x_1^d), (x_2^1, x_2^2,\hdots, x_2^d),\hdots, (x_n^1, x_n^2,\hdots,x_n^d)\}$, where the superscript indicates in which dimension the coordinate is, and the subscript is the coordinate number. We want to fit the points with a polynomial of degree $p\in\mathbb{R}^d$, where we assume that the fitting polynomial has the same degree in all direction, which makes the notation neater, but is not essential. To be more specific, we want polynomial coefficients $\vec{\beta}=(\beta_0, \beta_1, \hdots, \beta_{p^d})$ that minimizes the error in 
+\begin{align*}
+x_1^d&=\beta_0(x_1^1)^0(x_1^2)^0\hdots(x_1^d)^0 +\beta_1(x_1^1)^1(x_1^2)^0\hdots(x_1^d)^0+\hdots+\beta_{p^d}(x_1^1)^p(x_1^2)^p\hdots(x_1^d)^p+\varepsilon_1\\
+x_2^d&=\beta_0(x_2^1)^0(x_2^2)^0\hdots(x_2^d)^0 +\beta_1(x_2^1)^1(x_2^2)^0\hdots(x_2^d)^0+\hdots+\beta_{p^d}(x_2^1)^p(x_2^2)^p\hdots(x_2^d)^p+\varepsilon_2\\
+\vdots\\
+x_n^d&=\beta_0(x_n^1)^0(x_n^2)^0\hdots(x_n^d)^0 +\beta_1(x_n^1)^1(x_n^2)^0\hdots(x_n^d)^0+\hdots+\beta_{p^d}(x_n^1)^p(x_n^2)^p\hdots(x_n^d)^p+\varepsilon_n.
+\end{align*}
+This gives a design matrix
+
+\begin{equation}
+\hat{X}=
+\begin{pmatrix}
+(x_1^1)^0(x_1^2)^0\hdots(x_1^d)^0&\hdots& (x_1^1)^1(x_1^2)^0\hdots(x_1^d)^0&\hdots&(x_1^1)^p(x_1^2)^p\hdots(x_1^d)^p\\
+(x_2^1)^0(x_2^2)^0\hdots(x_2^d)^0&\hdots& (x_2^1)^1(x_2^2)^0\hdots(x_2^d)^0&\hdots&(x_2^1)^p(x_2^2)^p\hdots(x_2^d)^p\\
+\vdots&\vdots&\vdots&\ddots&\vdots\\
+(x_n^1)^0(x_n^2)^0\hdots(x_n^d)^0&\hdots& (x_n^1)^1(x_n^2)^0\hdots(x_n^d)^0&\hdots&(x_n^1)^p(x_n^2)^p\hdots(x_n^d)^p,
+\end{pmatrix}
+\end{equation}
+and we can find the optimal $\vec{\beta}$ in the same way as above. 
 
 \subsection{Error analysis} \label{sec:error_analysis}
 When dealing with data sets, we always want to know how much the data points vary from each other, in other words we want to calculate the variance of the data. Often we are studying multiple data sets at the same time, ...
@@ -164,7 +183,7 @@ Sample mean:
 \begin{equation}
 \bar{\mu}=\sum_{i=1}^Nx_i
 \end{equation}
-Sample mean and distribution mean are not necessarly the same, could point it our by show an example on both (perhaps by using Franke function?).
+Sample mean and distribution mean are not necessarily the same, could point it our by show an example on both (perhaps by using Franke function?).
 Mean value in one data set $\alpha$:
 \begin{equation}
 \bar{\mu}_{\alpha}=\frac{1}{N}\sum_{k=1}^NX_{\alpha,k}
