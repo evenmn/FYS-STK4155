@@ -35,27 +35,37 @@ class Reg_2D():
         self.x = x
         self.y = y
         self.z = z
-        self.Px = Px
-        self.Py = Py
+        self.Px = Px+1
+        self.Py = Py+1
 
 
-    def ols(self):
-        '''Regression, finding coefficients beta'''
+    def set_up_X(self):
+        '''Set up the design matrix'''
         
         x = self.x
         y = self.y
-        z = self.z
         Px = self.Px
         Py = self.Py
 
         # Setting up x-matrix
         N = len(x)
-        Px = Px+1; Py = Py+1
         X = np.zeros([N, Px*Py])
         for i in range(N):
             for j in range(Px):
                 for k in range(Py):
                     X[i,Py*j+k] = x[i]**j*y[i]**k
+                    
+        return X
+
+
+    def ols(self):
+        '''Ordinary Least Square (OLS)'''
+        
+        z = self.z
+        Px = self.Px
+        Py = self.Py
+        
+        X = Reg_2D.set_up_X(self)
 
         # Calculating beta-vector
         beta = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(z)
@@ -66,7 +76,7 @@ class Reg_2D():
 
 
     def reg_q(self, q, λ=0.1, η=0.0001, niter=100000):
-        '''Regression, finding coefficients beta
+        '''Regression with penalty
         
         Arguments:
         ----------
@@ -83,59 +93,40 @@ class Reg_2D():
         niter:  Integer.
                 Number of iterations in gradient descent.'''
                 
-        x = self.x
-        y = self.y
         z = self.z
         Px = self.Px
         Py = self.Py 
 
-        # Setting up x-matrix
-        N = len(x)
-        Px = Px+1; Py = Py+1
-        X = np.zeros([N, Px*Py])
-        for i in range(N):
-            for j in range(Px):
-                for k in range(Py):
-                    X[i,Py*j+k] = x[i]**j*y[i]**k
+        X = Reg_2D.set_up_X(self)
 
         # Minimization using gradient descent
         beta = np.random.randn(Px*Py, 1)
         beta = beta[:,0]
 
         for iter in tqdm(range(niter)):
-            e = y - X.dot(beta)                    # Absolute error
-            beta += η*(2*X.T.dot(e))# - q*λ*np.power(abs(beta), q-1))
-            print(beta)
+            e = z - X.dot(beta)                    # Absolute error
+            beta += η*(2*X.T.dot(e) - np.sign(beta)*q*λ*np.power(abs(beta), q-1))
             
-            #print(np.linalg.norm(e.T.dot(e)))# + λ*np.power(abs(beta), q)))
+            #print(np.sum(np.linalg.norm(e.T.dot(e)) + λ*np.power(abs(beta), q)))
         
         return np.reshape(beta.flatten(), (Px,Py))
         
         
-    def ridge(self, λ=0.1):
+    def ridge(self, λ=0.01):
         '''Ridge regression'''
         
-        x = self.x
-        y = self.y
         z = self.z
         Px = self.Px
         Py = self.Py
 
-        # Setting up x-matrix
-        N = len(x)
-        Px = Px+1; Py = Py+1
-        X = np.zeros([N, Px*Py])
-        for i in range(N):
-            for j in range(Px):
-                for k in range(Py):
-                    X[i,Py*j+k] = x[i]**j*y[i]**k
+        X = Reg_2D.set_up_X(self)
 
         # Calculating beta-vector
         beta = np.linalg.inv(X.T.dot(X)+λ*np.eye(Px*Py)).dot(X.T).dot(z)
         return np.reshape(beta.flatten(), (Px,Py))
         
         
-    def lasso(self, λ=0.1, η=0.0001, niter=1000000):
+    def lasso(self, λ=0.01, η=0.0001, niter=1000000):
         '''Lasso regression'''
         return Reg_2D.reg_q(self, 1, λ, η, niter)
 
@@ -175,6 +166,13 @@ if __name__ == '__main__':
     beta_ridge = order5.ridge()
     beta_lasso = order5.lasso()
     
+    
+    #print(beta_lasso)
+    #print(beta_ridge)
+    #print(beta_ols)
+    
+    #stop
+    
     #plt.imshow(beta_ols)
     #plt.show()
     
@@ -187,7 +185,8 @@ if __name__ == '__main__':
     
     x_vals = y_vals = np.linspace(0,1,1000)
     X_vals, Y_vals = np.meshgrid(x_vals, y_vals)
-    predict = polyval(X_vals, Y_vals, beta_ols)
+    predict = polyval(X_vals, Y_vals, beta_ridge)
+    predict2 = polyval(X_vals, Y_vals, beta_lasso)
     
     # PLOT
     fig = plt.figure() 
@@ -195,7 +194,8 @@ if __name__ == '__main__':
     
     #Plot the surface. 
     surf = ax.plot_surface(X_vals,Y_vals,predict,cmap=cm.coolwarm,linewidth=0,antialiased=False)
-    surf1 = ax.plot_surface(X_vals,Y_vals,FrankeFunction(X_vals, Y_vals),cmap=cm.coolwarm,linewidth=0,antialiased=False)
+    #surf1 = ax.plot_surface(X_vals,Y_vals,FrankeFunction(X_vals, Y_vals),cmap=cm.magma,linewidth=0,antialiased=False)
+    surf2 = ax.plot_surface(X_vals,Y_vals,predict2,cmap=cm.magma,linewidth=0,antialiased=False)
 
     #Customize the z axis. 
     ax.set_zlim(-0.10,1.40)
@@ -215,7 +215,7 @@ if __name__ == '__main__':
     z = FrankeFunction(x, y_const) + noise
     
     plt.plot(x, z, '.', label='Points')
-    plt.plot(x_vals, polyval(x_vals, y_const, beta_ols), label='Fitted')
+    plt.plot(x_vals, polyval(x_vals, y_const, beta_ridge), label='Fitted')
     plt.plot(x_vals, FrankeFunction(x_vals, y_const), label='Franke')
     plt.legend(loc='best')
     plt.show()

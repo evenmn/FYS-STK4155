@@ -51,7 +51,7 @@ if __name__ == '__main__':
     npoints = 100
     degree  = 3
     x_max   = 2
-    λ       = 0.1
+    λ       = 0.5
 
     # Regression points
     x_vals = np.linspace(0, x_max, 1000)
