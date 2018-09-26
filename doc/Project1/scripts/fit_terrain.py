@@ -28,7 +28,7 @@ Z_flatten = Z_flatten[::factor]
 
 start = clock()
 order5 = Reg_2D(X_flatten, Y_flatten, Z_flatten, Px=5, Py=5)
-beta_ols = order5.ols()
+beta_ols = order5.ridge()
 end = clock()
 print(end-start)
 print(beta_ols)

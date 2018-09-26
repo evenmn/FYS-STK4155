@@ -1,10 +1,12 @@
 \section{Results} \label{sec:results}
+Here the results will be presented. We start taking a look at how good our linear regression is, by fitting a polynomial to points drawn from a known PDF. Thereafter we will see how good the regression is when using real terrain data. To give a intuition on how good the fit is, we will in both cases how 3D plots of the graphs using various methods, and then present the error analysis. 
 
 \subsection{Franke function}
-First we will take a look at how good our linear regression is...
-\subsubsection{Visualization of graphes}
+Below one can find the results of the regression on Franke function
 
- \begin{figure} [H]
+\subsubsection{Visualization of graphes}
+In figure \eqref{fig:franke} one can find a 3D visualization of the Franke function, for easier comparison with the fitted graphs presented in figure \eqref{fig:franke_plots}. The data sets were composed drawing random $x$'s and $y$'s in the interval $x,y\in[0,1]$ from a uniform distribution, and the corresponding $z$-values where obtained from the Franke function. Further, we added noise produced by $\mathcal{N}(0, \sigma^2=0.1)$ and compared with the undisturbed data set. For Lasso and Ridge, we used a penalty $\lambda=1e-15$, and for Lasso we also used gradient descent for minimization. On that occasion, the learning rate was set to $\eta=0.001$ with niter$=1000000$ as the number of iterations. 
+ \begin{figure} [h]
  	\centering
  	\includegraphics[scale=0.8]{../plots/franke.png}
  	\caption{The Franke function in the interval $x\in[0,1]$, $y\in[0,1]$, $z\in[0, 1.2]$.}
@@ -59,5 +61,5 @@ First we will take a look at how good our linear regression is...
     \label{fig:example}%
 \end{figure}
 
-
+\subsubsection{Error}
 
