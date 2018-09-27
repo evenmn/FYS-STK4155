@@ -122,7 +122,7 @@ class Reg_2D():
         return np.reshape(beta.flatten(), (Px,Py))
         
         
-    def lasso(self, λ=1e-15, η=0.001, niter=1000000):
+    def lasso(self, λ=1e-15, η=0.001, niter=10000000):
         '''Lasso regression'''
         return Reg_2D.reg_q(self, 1, λ, η, niter)
 
