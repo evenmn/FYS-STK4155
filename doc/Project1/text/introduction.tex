@@ -1,3 +1,6 @@
 \section{Introduction} \label{sec:introduction}
-Should write some motivating words about how much regression is used in different fields etc..
-Fit polynomial to the volcanic island of Lombok, Indonesia.
+The linear regression was developed hundreds of years ago, and have been used in a large number of fields after that. With this project we examine how good the method is for fitting polynomials to real terrain data, and to see if more complicated regression methods are needed or not. To challenge the method, we chose terrain data from the volcanic island of Lombok, Indonesia, where the contour lines are quite dense. 
+
+We developed our own software for ordinary least square (OLS), Ridge and Lasso linear regression, where the latter was based on minimization using gradient descent (GD). To verify the implementation, we tested it on data from the Franke function where we knew what the result should be. Further, the error was analyzed in order to decide which method that gave the best result, and all data was resampled using the bootstrap method to find the correct sampling variance. 
+
+For the results, see section \textit{Results} \eqref{sec:results}, which again is discussed in section \textit{Discussion} \eqref{sec:discussion}. The background theory can be found in section \textit{Theory} \eqref{sec:theory}, and all methods and techniques are presented in the section \textit{Methods} \eqref{sec:methods}. For code structure and implementation, see section \textit{Code} \eqref{sec:code}, and finally, the conclusion is found in section \eqref{sec:conclusion} with the same name.
