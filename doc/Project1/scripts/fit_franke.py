@@ -18,6 +18,10 @@ beta_ridge = order5.ridge(λ=1e-15)
 beta_lasso = order5.lasso(λ=1e-15)
 beta_ridge2 = order5.reg_q(q=2)
 
+test_ols(x, y, z, Px, Py, beta_ols)
+test_ridge(x, y, z, Px, Py, beta_ridge)
+test_lasso(x, y, z, Px, Py, beta_lasso)
+test_ridge(x, y, z, Px, Py, beta_ridge2)
 
 #fig1 = plt.figure()
 #plt.imshow(beta_ols)
