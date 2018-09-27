@@ -39,6 +39,7 @@ class Reg_2D():
         self.Py = Py+1
 
 
+
     def set_up_X(self):
         '''Set up the design matrix'''
         
@@ -58,6 +59,7 @@ class Reg_2D():
         return X
 
 
+
     def ols(self):
         '''Ordinary Least Square (OLS)'''
         
@@ -73,7 +75,8 @@ class Reg_2D():
         return np.reshape(beta.flatten(), (Px,Py))
 
 
-    def reg_q(self, q, λ=1e-15, η=0.0001, niter=1000000):
+
+    def reg_q(self, q, λ=1e-15, η=1e-3, niter=1e6):
         '''Regression with penalty
         
         Arguments:
@@ -101,14 +104,15 @@ class Reg_2D():
         beta = np.random.randn(Px*Py, 1)
         beta = beta[:,0]
 
-        for iter in tqdm(range(niter)):
+        for iter in tqdm(range(int(niter))):
             e = z - X.dot(beta)                    # Absolute error
             beta += η*(2*X.T.dot(e) - np.sign(beta)*q*λ*np.power(abs(beta), q-1))
         
         return np.reshape(beta.flatten(), (Px,Py))
         
         
-    def ridge(self, λ=0.01):
+        
+    def ridge(self, λ=1e-15):
         '''Ridge regression'''
         
         z = self.z
@@ -122,9 +126,11 @@ class Reg_2D():
         return np.reshape(beta.flatten(), (Px,Py))
         
         
-    def lasso(self, λ=1e-15, η=0.001, niter=10000000):
+        
+    def lasso(self, λ=1e-15, η=1e-3, niter=1e6):
         '''Lasso regression'''
         return Reg_2D.reg_q(self, 1, λ, η, niter)
+
 
 
 def polyval(x, y, beta):
@@ -139,6 +145,7 @@ def polyval(x, y, beta):
         for j in range(beta.shape[1]):
             z += beta[i,j]*np.multiply(np.power(x,i), np.power(y,j))
     return z
+    
     
     
 
@@ -178,15 +185,4 @@ if __name__ == '__main__':
 
     #Add a color bar which maps values to colors. 
     fig.colorbar(surf, shrink=0.5, aspect=5)
-    plt.show()
-    
-    
-    # 1D plot
-    y_const = 0.5
-    z = FrankeFunction(x, y_const)
-    
-    plt.plot(x, z, '.', label='Points')
-    plt.plot(x_vals, polyval(x_vals, y_const, beta_ridge), label='Fitted')
-    plt.plot(x_vals, FrankeFunction(x_vals, y_const), label='Franke')
-    plt.legend(loc='best')
     plt.show()

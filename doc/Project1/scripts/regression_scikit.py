@@ -66,7 +66,7 @@ class Reg_scikit():
         return np.reshape(reg.coef_, (Px,Py))
         
         
-    def ridge(self, λ=0.01):
+    def ridge(self, λ=1e-3):
         '''Ridge regression'''
         
         z = self.z
@@ -81,7 +81,7 @@ class Reg_scikit():
         return np.reshape(reg.coef_, (Px,Py))
         
         
-    def lasso(self, λ=0.01):
+    def lasso(self, λ=1e-3):
         '''Ridge regression'''
         
         z = self.z
