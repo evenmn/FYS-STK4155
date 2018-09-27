@@ -31,6 +31,22 @@ In figure \eqref{fig:franke} one can find a 3D visualization of the Franke funct
 
 \restoregeometry
 
+\begin{figure} [H]%
+	\centering
+	\subfloat[OLS self]{{\includegraphics[width=3cm]{../plots/beta_ols_visualize.png} }}%
+	\subfloat[Ridge self]{{\includegraphics[width=3cm]{../plots/beta_ridge_visualize.png} }}%
+	\subfloat[Lasso self]{{\includegraphics[width=3cm]{../plots/beta_lasso_visualize.png} }}%
+	\subfloat[Ridge2 self]{{\includegraphics[width=3cm]{../plots/beta_ridge2_visualize.png} }}\\
+	
+	\subfloat[OLS scikit]{{\includegraphics[width=3cm]{../plots/beta_ols_test_new_visualize.png} }}%
+	\subfloat[Ridge scikit]{{\includegraphics[width=3cm]{../plots/beta_ridge_test_visualize.png} }}%
+	\subfloat[Lasso scikit]{{\includegraphics[width=3cm]{../plots/beta_lasso_test_visualize.png} }}%
+	\subfloat[Ridge scikit]{{\includegraphics[width=3cm]{../plots/beta_ridge_test_visualize.png} }}
+	
+	\caption{}%
+	\label{fig:beta_plots}%
+\end{figure}
+
 \subsubsection{Error}
 
 \begin{table} [H]
@@ -61,7 +77,7 @@ First we will take a look at how good our linear regression is...
  	\centering
  	\includegraphics[scale=0.8]{../plots/franke.png}
  	\caption{The Franke function in the interval $x\in[0,1]$, $y\in[0,1]$, $z\in[0, 1.2]$.}
- 	\label{fig:franke}
+ 	\label{fig:franke2}
  \end{figure}
 
  
