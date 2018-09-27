@@ -2,7 +2,7 @@
 Regression analysis are widely used in different fields of natural sciences, data science and economics to mention some. The simplest form is the linear regression, which is intuitive and easy to work with. 
  
 \subsection{Linear regression} \label{sec:regression}
-A few general words about regression
+In linear regression, the dependent variable $y_i$ is a linear combination of the parameters
 
 \subsubsection{Ordinary Least Square (OLS)} \label{sec:OLS}
 Suppose we have a set of points $\{(x_1, y_1), (x_2, y_2),\hdots, (x_n, y_n)\}$, and we want to fit a p'th order polynomial to them. The most intuitive way would be to find coefficients $\vec{\beta}$ which minimize the error in
@@ -172,7 +172,7 @@ This gives a design matrix
 \end{equation}
 and we can find the optimal $\vec{\beta}$ in the same way as above. 
 
-\subsection{Error analysis} \label{sec:error_analysis}
+\subsection{Some statistics} \label{sec:statistics}
 When dealing with data sets, we always want to know how much the data points vary from each other, in other words we want to calculate the variance of the data. Often we are studying multiple data sets at the same time, ...
 
 Sample variance:
@@ -201,12 +201,3 @@ The total variance will then be a sum over the single set variances plus the cro
 The last term is called the covariance, and is a measure on how much the data set are related. If they are totally independent, the covariance is zero. For large data sets this term is computational expensive to calculate, and we will rather use resampling techniques to estimate the variance. A few resampling techniques are presented in the Method section.
 
 Cost function (loss function) 
-
-Different methods to estimate error:
-\begin{itemize}
-\item{Absolute error}
-\item{Relative error}
-\item{Mean square error (MSE)}
-\item{R$^2$ score function}
-\end{itemize}
-

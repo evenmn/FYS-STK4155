@@ -14,7 +14,7 @@ For this particular project we have been focusing on the bootstrap and the K-fol
 \subsubsection{Bootstrap method} \label{sec:bootstrap}
 When we construct a data set, we usually draw samples from a probability density function (PDF) and get a set of samples $\vec{x}$. If we draw a large number of samples, the sample variance will approach the variance of the PDF. The bootstrap method turns this upside down, and tries to estimate the PDF given a set data set, because if we know the PDF, we know in principle everything about the data set. 
 
-The assumption we need to make, is that the relative frequency of $x_i$ equals $p(x_i)$, which is reasonable (for instance, think about how the histogram looks like when we draw samples from a normal distribution). In this project the vector that we want to find, $\vec{\beta}(x,y)$, is a function of two set of variables. Fortunetely they are independent of eachother, so we can safely apply the independent bootstrap on them separately. The independent bootstraps goes as
+The assumption we need to make, is that the relative frequency of $x_i$ equals $p(x_i)$, which is reasonable (for instance, think about how the histogram looks like when we draw samples from a normal distribution). In this project the vector that we want to find, $\vec{\beta}(x,y)$, is a function of two set of variables. Fortunately, they are independent of eachother, so we can safely apply the independent bootstrap on them separately. The independent bootstraps goes as
 \begin{enumerate}
 \item Draw $n$ samplings from the data set $\vec{x}$ with replacement and denote the new data set as $\vec{x}^*=\{x_1,x_2,\hdots,x_n\}$
 \item Compute $\vec{\beta}(\vec{x}^*)\equiv\vec{\beta}^*$
@@ -37,9 +37,12 @@ def bootstrap(data, K=1000):
     
     return Avg, Var, Std
 \end{lstlisting}
+which is strongly inspired by the lecture notes [NEED REFERENCE]
+
+It is also worth to mention that we should hold back a small part of the original data set for testing, since we need to test the model on data that it has not seen before. This is an usual practice. 
 
 \subsubsection{K-fold validation method} \label{sec:kfold}
-
+K-fold validation is a method that has more describing name than many of its fellow methods. First we divide the data set into a test data set and a training data set. The training data set is then again divided into a validation set and a training set, where we...
 
 \subsection{Minimization methods} \label{sec:minimization}
 When the interaction term is excluded, we know which $\alpha$ that corresponds to the energy minimum, and it is in principle no need to try different $\alpha$'s. However, sometimes we have no idea where to search for the minimum point, and we need to try various $\alpha$ values to determine the lowest energy. If we do not know where to start searching, this can be a time consuming activity. Would it not be nice if the program could do this for us?
@@ -79,11 +82,42 @@ where all operations are element wise. The algorithm of this minimization method
 
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
-
 while dbeta > epsilon:
 	e = z - X.dot(beta)
     debeta = 2*X.T.dot(e) -np.sign(beta)*q*\lambda*np.power(abs(beta), q-1)
     beta += \eta*dbeta
-
-
 \end{lstlisting}
+
+\subsection{Error analysis} \label{sec:error_analysis}
+Different methods to estimate error:
+\begin{itemize}
+	\item{Absolute error}
+	\item{Relative error}
+	\item{Mean square error (MSE)}
+	\item{R$^2$ score function}
+\end{itemize}
+In this report we will study only the MSE and R$^2$ score function.
+
+\subsubsection{Mean Square Error (MSE)} \label{sec:MSE}
+We study the MSE in order to find out how the cost function is reduced, because it is basically the standard cost function, used in OLS. 
+\begin{equation}
+\text{MSE}(\vec{y},\tilde{\vec{y}})=\frac{1}{N}\sum_{i=1}^N(y_i-\tilde{y})^2
+\end{equation}
+This quantity is also called \textit{least squares}, and is one of the most used methods for estimating the error. Compared to least absolute value, the points far away from the fitted line are weighted stronger. 
+
+\subsubsection{R$^2$ score function} \label{sec:R2}
+The R$^2$ score function is a measure of how close the data are to the fitted regression line, and is a widely used quantity within statistics. [http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit]
+
+It is defined by how much of the variation that is not explained by the model, i.e, 
+\begin{equation*}
+\text{R}^2=1-\frac{\text{Explained variation}}{\text{Total variation}}
+\end{equation*}
+where the explained variation is the MSE and the total variation is given by
+\begin{equation*}
+\text{Total variation}=\frac{1}{N}\sum_{i=1}^N(y_i-\bar{y})^2.
+\end{equation*}
+
+The fraction is always between 0 and 1, it is 0 if the model does not explain any of the variations and 1 if it explains all variations. In that manner, the higher fraction the better score. Since we subtract it from 1 in the total definition, we should fight for a low R$^2$ score. It is in entirety given by
+\begin{equation}
+R^2(\vec{y},\tilde{\vec{y}})=1-\frac{\sum_{i=1}^N(y_i-\tilde{y})^2}{\sum_{i=1}^N(y_i-\bar{y})^2}.
+\end{equation}

@@ -16,6 +16,7 @@ order5 = Reg_2D(x, y, z, Px=5, Py=5)
 beta_ols = order5.ols()
 beta_ridge = order5.ridge(λ=1e-15)
 beta_lasso = order5.lasso(λ=1e-15)
+beta_ridge2 = order5.reg_q(q=2)
 
 
 #fig1 = plt.figure()
@@ -64,24 +65,23 @@ plt.legend(loc='best')
 plt.show()
 
 
-
-
-# Confidence interval, beta
-print(np.var(beta_ols))
-print(np.var(beta_ridge))
-
-
 # Mean square error (MSE):
 MSE_ols = (z - polyval(x, y, beta_ols)).T.dot(z - polyval(x, y, beta_ols))/N
 MSE_ridge = (z - polyval(x, y, beta_ridge)).T.dot(z - polyval(x, y, beta_ridge))/N
+MSE_lasso = (z - polyval(x, y, beta_lasso)).T.dot(z - polyval(x, y, beta_lasso))/N
+MSE_ridge2 = (z - polyval(x, y, beta_ridge2)).T.dot(z - polyval(x, y, beta_ridge2))/N
 print(MSE_ols)
 print(MSE_ridge)
+print(MSE_lasso)
+print(MSE_ridge2)
 
 
 # R2 score function
 denominator = (y-np.mean(y)).T.dot(y-np.mean(y))
 print(1-N*MSE_ols/denominator)
 print(1-N*MSE_ridge/denominator)
+print(1-N*MSE_lasso/denominator)
+print(1-N*MSE_ridge2/denominator)
 
 '''
 N  = 100        # Number of points

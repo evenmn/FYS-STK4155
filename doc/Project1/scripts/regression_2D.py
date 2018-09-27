@@ -70,12 +70,10 @@ class Reg_2D():
         # Calculating beta-vector
         beta = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(z)
         
-        print((z-X.dot(beta)).T.dot(z-X.dot(beta)))
-        
         return np.reshape(beta.flatten(), (Px,Py))
 
 
-    def reg_q(self, q, λ=0.1, η=0.0001, niter=100000):
+    def reg_q(self, q, λ=1e-15, η=0.0001, niter=1000000):
         '''Regression with penalty
         
         Arguments:
@@ -106,8 +104,6 @@ class Reg_2D():
         for iter in tqdm(range(niter)):
             e = z - X.dot(beta)                    # Absolute error
             beta += η*(2*X.T.dot(e) - np.sign(beta)*q*λ*np.power(abs(beta), q-1))
-            
-            #print(np.sum(np.linalg.norm(e.T.dot(e)) + λ*np.power(abs(beta), q)))
         
         return np.reshape(beta.flatten(), (Px,Py))
         

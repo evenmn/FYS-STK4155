@@ -33,6 +33,25 @@ In figure \eqref{fig:franke} one can find a 3D visualization of the Franke funct
 
 \subsubsection{Error}
 
+\begin{table} [H]
+	\caption{Write table text here.  \vspace{2mm}}
+	\begin{tabularx}{\textwidth}{l|XX|XX} \hline\hline
+		\label{tab:franke_error}
+		& \multicolumn{2}{c}{\textbf{MSE}}&\multicolumn{2}{c}{\textbf{R2}}\\ \hline
+		&self&scikit&self&scikit\\ \hline \\
+		OLS & 0.07853 & 0.86104 & 0.05386 & 1.7483\\
+		Ridge & 0.07852 & 0.86410 & 0.05406 & 1.6904 \\
+		Lasso & 0.07704 & 0.86231 & 0.07187 & 1.6492 \\
+		RidgeGD & 0.07523 & 0.91850 & 0.09362 & 1.3217 \\ \hline
+	\end{tabularx}
+\end{table}
+
+
+-Vary $\lambda$ and the noise\\
+-MSE and R2\\
+-Resampling
+
+
 
 \subsection{Real data}
 First we will take a look at how good our linear regression is...
