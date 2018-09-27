@@ -46,6 +46,7 @@ beta_ols_test_new[0,0] = 0
 
 betas = ["beta_ols_test_new", "beta_ols", "beta_ridge_test", "beta_ridge", \
          "beta_lasso_test", "beta_lasso", "beta_ridge_test", "beta_ridge2"]
+'''
 for beta in betas:
     beta_mat = eval(beta)
 
@@ -53,9 +54,29 @@ for beta in betas:
     plt.imshow(beta_mat)
     plt.savefig("../plots/{}_visualize.png".format(beta))
 
-    plot_3D(beta_mat, show_plot=False)
+    #plot_3D(beta_mat, show_plot=False)
     
     print("\n---{}---".format(beta))
     print("MSE: ", MSE(x, y, z, beta_mat))
     print("R2: ", R2(x, y, z, beta_mat))
+plt.show()
+'''
+
+# === lambda vs R2 ===
+lambda_list = [10**i for i in np.linspace(-8,5)]
+R2_ridge = []
+R2_lasso = []
+
+for lamb in lambda_list:
+    beta_ = order5.ridge(lamb)
+    R2_ridge.append(R2(x, y, z, beta_))
+    
+    #beta__ = order5.lasso(lamb)
+    #R2_lasso.append(R2(x, y, z, beta__))
+    
+plt.semilogx(lambda_list, R2_ridge, label='Ridge')
+#plt.semilogx(lambda_list, R2_lasso, label='Lasso')
+plt.xlabel('$\lambda$')
+plt.ylabel('$R^2$-score')
+plt.legend(loc='best')
 plt.show()
