@@ -9,10 +9,10 @@ from error_tools import *
 
 # === Constants ===
 N = 100                         # Number of sampling points
-λ = 1e-1                        # Penalty
+λ = 1e-10                        # Penalty
 η = 0.0001                      # Learning rate
 σ2 = 0.1                        # Variance used in noise
-niter = 1e5                     # Number of iterations used in Gradient Descent
+niter = 1e6                     # Number of iterations used in Gradient Descent
 
 noise = normal(0,σ2,N)          # Noise
 
@@ -46,7 +46,7 @@ beta_ols_test_new[0,0] = 0
 
 betas = ["beta_ols_test_new", "beta_ols", "beta_ridge_test", "beta_ridge", \
          "beta_lasso_test", "beta_lasso", "beta_ridge_test", "beta_ridge2"]
-'''
+
 for beta in betas:
     beta_mat = eval(beta)
 
@@ -59,9 +59,9 @@ for beta in betas:
     print("\n---{}---".format(beta))
     print("MSE: ", MSE(x, y, z, beta_mat))
     print("R2: ", R2(x, y, z, beta_mat))
-plt.show()
-'''
+#plt.show()
 
+'''
 # === lambda vs R2 ===
 lambda_list = [10**i for i in np.linspace(-8,5)]
 R2_ridge = []
@@ -80,3 +80,4 @@ plt.xlabel('$\lambda$')
 plt.ylabel('$R^2$-score')
 plt.legend(loc='best')
 plt.show()
+'''

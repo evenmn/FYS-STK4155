@@ -4,6 +4,7 @@ from sklearn.linear_model import LinearRegression, Ridge, Lasso
 
 
 class Reg_scikit():
+
     def __init__(self, x, y, z, Px, Py):
         '''
         Arguments:
@@ -12,7 +13,7 @@ class Reg_scikit():
         x:      Numpy array.
                 X-component of all points.
                 
-        y:      Numpy array.
+        y:      Numpy array.Sample mean and distribution mean are not necessarily the same, could point it our by showSample mean and distribution mean are not necessarily the same, could point it our by show an example on both (perhaps by using Franke function?). anSample mean and distribution mean are not necessarily the same, could point it our by show an example on both (perhaps by using Franke function?). example on both (perhaps by using Franke function?).
                 Y-component of all points.
                 
         z:      Numpy array.
@@ -67,7 +68,7 @@ class Reg_scikit():
         
         
     def ridge(self, λ=1e-3):
-        '''Ridge regression'''
+        '''Test of ridge regression'''
         
         z = self.z
         Px = self.Px
@@ -76,13 +77,13 @@ class Reg_scikit():
         X = Reg_scikit.set_up_X(self)
         
         reg = Ridge(alpha=λ)
-        reg.fit (X, z) 
+        reg.fit(X, z) 
         
         return np.reshape(reg.coef_, (Px,Py))
         
         
     def lasso(self, λ=1e-3):
-        '''Ridge regression'''
+        '''Test of lasso regression'''
         
         z = self.z
         Px = self.Px
@@ -91,6 +92,6 @@ class Reg_scikit():
         X = Reg_scikit.set_up_X(self)
         
         reg = Lasso(alpha=λ)
-        reg.fit (X, z) 
+        reg.fit(X, z) 
         
         return np.reshape(reg.coef_, (Px,Py))
