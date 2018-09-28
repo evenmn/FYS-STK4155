@@ -81,14 +81,31 @@ for lamb in lambda_list:
     beta_ = order5.ridge(lamb)
     R2_ridge.append(R2(x, y, z, beta_))
     
-    beta__ = order5_scikit.lasso(lamb)
-    R2_lasso.append(R2(x, y, z, beta__))
+    #beta__ = order5.lasso(lamb)
+    #R2_lasso.append(R2(x, y, z, beta__))
     
-print(R2_lasso)
     
 plt.semilogx(lambda_list, R2_ridge, label='Ridge')
-plt.semilogx(lambda_list, R2_lasso, label='Lasso')
+#plt.semilogx(lambda_list, R2_lasso, label='Lasso')
 plt.xlabel('$\lambda$')
 plt.ylabel('$R^2$-score')
 plt.legend(loc='best')
+plt.grid()
+plt.show()
+
+
+# === noise vs R2 ===
+R2_ols = []
+var = []
+for i in np.linspace(-6,-1, 100):
+    var.append(10**i)
+    noise = normal(0,var[-1],N)         # Noise
+    z = FrankeFunction(x, y) + noise
+    
+    R2_ols.append(R2(x, y, z, beta_ols))
+    
+plt.semilogx(var, R2_ols)
+plt.xlabel('$\sigma^2$ in noise')
+plt.ylabel('$R^2$-score')
+plt.grid()
 plt.show()
