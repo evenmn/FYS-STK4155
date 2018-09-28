@@ -13,7 +13,7 @@ class Reg_scikit():
         x:      Numpy array.
                 X-component of all points.
                 
-        y:      Numpy array.Sample mean and distribution mean are not necessarily the same, could point it our by showSample mean and distribution mean are not necessarily the same, could point it our by show an example on both (perhaps by using Franke function?). anSample mean and distribution mean are not necessarily the same, could point it our by show an example on both (perhaps by using Franke function?). example on both (perhaps by using Franke function?).
+        y:      Numpy array.
                 Y-component of all points.
                 
         z:      Numpy array.
@@ -62,7 +62,6 @@ class Reg_scikit():
         
         reg = LinearRegression()
         reg.fit (X, z) 
-        #LinearRegression(copy_X=True, fit_intercept=True, n_jobs=None, normalize=False)
         
         return np.reshape(reg.coef_, (Px,Py))
         

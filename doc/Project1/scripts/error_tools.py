@@ -16,7 +16,8 @@ def MSE(x, y, z, beta):
 def R2(x, y, z, beta):
     '''R2 score function'''
     e = z - polyval(x, y, beta)
-    f = y - np.mean(y)
+    f = y - np.average(y)
+    
     return 1 - e.T.dot(e)/f.T.dot(f)
     
     

@@ -39,10 +39,18 @@ def bootstrap(data, K=1000):
 \end{lstlisting}
 which is strongly inspired by the lecture notes [NEED REFERENCE]
 
-It is also worth to mention that we should hold back a small part of the original data set for testing, since we need to test the model on data that it has not seen before. This is a usual practice. 
+It is also worth to mention that we should hold back a small part of the original data set for testing, since we need to test the model on data that it has not seen before.
 
 \subsubsection{K-fold validation method} \label{sec:kfold}
-K-fold validation is a method that has more describing name than many of its fellow methods. First we divide the data set into a test data set and a training data set. The training data set is then again divided into a validation set and a training set, where we...
+K-fold validation is a method that has more describing name than many of its fellow methods. The idea is to make the most use of our data by splitting it into $k$ folds and training $k$ times on it. Every time we train, we leave out one of the folds, which gonna be our validation data. This validation data needs to be different every time, and we are therefore restricted to $k$ unique training sessions. A typical overview looks like this:
+\begin{itemize}
+	\item Split data set into $k$ equally sized folds
+	\item Use the $k-1$ first folds as training data, and leave the $k$'th fold for validation
+	\item Use the $k-2$ first folds plus the $k$-th fold as training data, and leave the $(k-1)$'th fold for validation
+	\item Continue until all folds are used as training data
+\end{itemize}
+
+[https://ml.berkeley.edu/blog/2017/07/13/tutorial-4/]
 
 \subsection{Minimization methods} \label{sec:minimization}
 Suppose we have a very simple model trying to fit a straight line to data points. In that cause, we could manually vary the coefficients and find a line that fits the points quite good. However, when the model gets more complicated, this can be a time consuming activity. Would it not be good if the program could do this for us?
@@ -84,6 +92,6 @@ where all operations are element wise. The algorithm of this minimization method
 \begin{lstlisting}
 while dbeta > epsilon:
 	e = z - X.dot(beta)
-    debeta = 2*X.T.dot(e) -np.sign(beta)*q*\lambda*np.power(abs(beta), q-1)
-    beta += \eta*dbeta
+    debeta = 2*X.T.dot(e) -np.sign(beta)*q*lambda*np.power(abs(beta), q-1)
+    beta += eta*dbeta
 \end{lstlisting}
