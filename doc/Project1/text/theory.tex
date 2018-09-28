@@ -174,7 +174,7 @@ where the sample mean is given by
 \begin{equation}
 \bar{y}=\sum_{i=1}^Ny_i.
 \end{equation}
-We will stress that sample mean is not necessarily the same as the distribution mean, but the sample mean will approximate the distribution mean for large data sets. 
+We will stress that sample mean is not necessarily the same as the distribution mean, but the sample mean will approximate the distribution mean for large data sets, known as the \textit{central limit theorem}. NEED REFERENCE
 
 Often we are studying multiple data sets at the same time, and want to estimate the total variance. The sample mean of one data set $\alpha$ is still given by
 \begin{equation}
@@ -229,14 +229,29 @@ The R$^2$ score function is a measure of how close the data are to the fitted re
 
 It is defined by how much of the variation that is not explained by the model, i.e, 
 \begin{equation*}
-\text{R}^2=1-\frac{\text{Explained variation}}{\text{Total variation}}
+\text{R}^2=\frac{\text{Explained variation}}{\text{Total variation}}
 \end{equation*}
-where the explained variation is the MSE and the total variation is given by
+where the explained variation is the difference between the variance and the MSE and the total variation is given by
 \begin{equation*}
 \text{Total variation}=\frac{1}{N}\sum_{i=1}^N(y_i-\bar{y})^2.
 \end{equation*}
 
-The fraction is always between 0 and 1, it is 0 if the model does not explain any of the variations and 1 if it explains all variations. In that manner, the higher fraction the better score. Since we subtract it from 1 in the total definition, we should fight for a low R$^2$ score. It is in entirety given by
+The R$^2$-score is always between 0 and 1, it is 0 if the model does not explain any of the variations and 1 if it explains all variations. In that manner, we should fight for a high R2-score. It is in entirety given by
 \begin{equation}
 R^2(\vec{y},\tilde{\vec{y}})=1-\frac{\sum_{i=1}^N(y_i-\tilde{y})^2}{\sum_{i=1}^N(y_i-\bar{y})^2}.
 \end{equation}
+
+\subsubsection{Confidence interval} \label{sec:confidence}
+The confidence interval is the interval that you are within with a probability given by the confidence level. The confidence interval (CI) means
+\begin{equation}
+\text{CI}=\bar{y}\pm z^*\frac{\sigma}{\sqrt{N}}
+\end{equation}
+where $\bar{y}$ is the sample mean, $\sigma$ is the standard deviation of the PDF, $N$ is the number of points and $z^*$ is directly related to the confidence level and can be found in statistics tables. 
+
+As an example, assume that you flip a coin N times and count number of heads. Before you start, you want to know how many heads you will count with a 95\% confidence. The procedure for calculating the CI is then
+\begin{enumerate}
+	\item Calculate the sample mean of your data set
+	\item Find $z^*$ from a table. For 95\% confidence, $z^*=1.96$
+	\item Calculate the standard deviation of the PDF. The clue in this example, is that the PDF is approximating a binomial distribution when $N$ increases, with a known $\sigma$ [https://www.sumproduct.com/thought/simulation-stimulation] 
+	\item Plug into the formula above
+\end{enumerate}

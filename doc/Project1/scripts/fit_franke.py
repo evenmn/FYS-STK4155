@@ -39,8 +39,7 @@ print("\n Doing Lasso regression..."); beta_lasso = order5.lasso(λ, η, niter)
 print("\n Doing Ridge regression..."); beta_ridge2 = order5.reg_q(2, λ, η, niter)
 
 
-print(np.var(beta_ols.flatten()))
-stop
+#print(np.var(beta_ols.flatten()))
 
 # === Call scikit regression functions ===
 order5_scikit = Reg_scikit(x, y, z, Px=5, Py=5)
@@ -58,7 +57,7 @@ beta_lasso_test[0,0] = beta_lasso[0,0]
 betas = ["beta_ols_test", "beta_ols", "beta_ridge_test", "beta_ridge", \
          "beta_lasso_test", "beta_lasso", "beta_ridge_test", "beta_ridge2"]
 
-'''
+
 for beta in betas:
     beta_mat = eval(beta)
 
@@ -73,22 +72,23 @@ for beta in betas:
     print("MSE: ", MSE(x, y, z, beta_mat))
     print("R2: ", R2(x, y, z, beta_mat))
 plt.show()
-'''
+
 
 # === lambda vs R2 ===
-lambda_list = [10**i for i in np.linspace(-8,2,10)]
+lambda_list = []
 R2_ridge = []
 R2_lasso = []
 
-for lamb in lambda_list:
-    beta_ = order5.ridge(lamb)
+for i in np.linspace(-8,2,100):
+    lambda_list.append(10**i)
+    beta_ = order5.ridge(lambda_list[-1])
     R2_ridge.append(R2(x, y, z, beta_))
     
-    #beta__ = order5.lasso(lamb)
+    #beta__ = order5.lasso(lambda_list[-1])
     #R2_lasso.append(R2(x, y, z, beta__))
     
     
-plt.semilogx(lambda_list, R2_ridge, label='Ridge')
+plt.semilogx(lambda_list, R2_ridge, label='Ridge', linewidth=2)
 #plt.semilogx(lambda_list, R2_lasso, label='Lasso')
 plt.xlabel('$\lambda$')
 plt.ylabel('$R^2$-score')
@@ -101,14 +101,14 @@ plt.show()
 # === noise vs R2 ===
 R2_ols = []
 var = []
-for i in np.linspace(-6,-0.5, 100):
+for i in np.linspace(-6,-0.7, 100):
     var.append(10**i)
     noise = normal(0,var[-1],N)         # Noise
     z = FrankeFunction(x, y) + noise
     
     R2_ols.append(R2(x, y, z, beta_ols))
     
-plt.semilogx(var, R2_ols)
+plt.semilogx(var, R2_ols, linewidth=2)
 plt.xlabel('$\sigma^2$ in noise')
 plt.ylabel('$R^2$-score')
 plt.grid()
