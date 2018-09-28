@@ -39,6 +39,9 @@ print("\n Doing Lasso regression..."); beta_lasso = order5.lasso(λ, η, niter)
 print("\n Doing Ridge regression..."); beta_ridge2 = order5.reg_q(2, λ, η, niter)
 
 
+print(np.var(beta_ols.flatten()))
+stop
+
 # === Call scikit regression functions ===
 order5_scikit = Reg_scikit(x, y, z, Px=5, Py=5)
 
@@ -91,13 +94,14 @@ plt.xlabel('$\lambda$')
 plt.ylabel('$R^2$-score')
 plt.legend(loc='best')
 plt.grid()
+plt.savefig('../plots/lambda_R2score.png')
 plt.show()
 
 
 # === noise vs R2 ===
 R2_ols = []
 var = []
-for i in np.linspace(-6,-1, 100):
+for i in np.linspace(-6,-0.5, 100):
     var.append(10**i)
     noise = normal(0,var[-1],N)         # Noise
     z = FrankeFunction(x, y) + noise
@@ -108,4 +112,5 @@ plt.semilogx(var, R2_ols)
 plt.xlabel('$\sigma^2$ in noise')
 plt.ylabel('$R^2$-score')
 plt.grid()
+plt.savefig('../plots/var_R2score.png')
 plt.show()
