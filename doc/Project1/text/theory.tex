@@ -255,3 +255,9 @@ As an example, assume that you flip a coin N times and count number of heads. Be
 	\item Calculate the standard deviation of the PDF. The clue in this example, is that the PDF is approximating a binomial distribution when $N$ increases, with a known $\sigma$ [https://www.sumproduct.com/thought/simulation-stimulation] 
 	\item Plug into the formula above
 \end{enumerate}
+
+So, how can we make us of this in project 1? To predict which coefficients we could get from the regression, it could be useful to calculate their CI. This is possible, since we can find their variance from the analytical formula
+\begin{equation}
+\text{Var}(\vec{\beta})=(\hat{X}^T\hat{X})^{-1}\sigma^2
+\end{equation}
+where the $\sigma^2$ is the sample variance of the points.
