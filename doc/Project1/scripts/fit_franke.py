@@ -14,7 +14,7 @@ N = 1000                        # Number of sampling points
 λ = 1e-5                       # Penalty
 η = 0.0001                      # Learning rate
 σ = 0.1                         # Standard deviation used in noise
-niter = 1e6                     # Number of iterations used in Gradient Descent
+niter = 1e4                     # Number of iterations used in Gradient Descent
 
 noise = normal(0,σ*σ,N)         # Noise
 
@@ -24,7 +24,7 @@ x = uniform(0,1,N)
 y = uniform(0,1,N)
 z = FrankeFunction(x, y) + noise
 
-
+'''
 # === Calculating Confidence Intervals (CI) ===
 order5 = Reg_2D(x, y, z, Px=5, Py=5)
 
@@ -33,7 +33,7 @@ X = order5.set_up_X()*var_z
 
 var_beta = np.linalg.inv(X.T.dot(X))*var_z
 var_beta = np.diag(var_beta)
-
+'''
 
 # === Call self-built regression functions ===
 order5 = Reg_2D(x, y, z, Px=5, Py=5)
@@ -64,8 +64,8 @@ betas = ["beta_ols_test", "beta_ols", "beta_ridge_test", "beta_ridge", \
 for beta in betas:
     beta_mat = eval(beta)
     
-    print('Confidence interval')
-    print(beta_mat.flatten()-var_beta, beta_mat.flatten()+var_beta)
+    #print('Confidence interval')
+    #print(beta_mat.flatten()-var_beta, beta_mat.flatten()+var_beta)
 
     fig = plt.figure()
     plt.imshow(beta_mat, cmap=cm.coolwarm)
@@ -73,7 +73,7 @@ for beta in betas:
     cbar.ax.tick_params(labelsize=22)
     plt.savefig("../plots/{}_visualize.png".format(beta))
 
-    #plot_3D(beta_mat, show_plot=False)
+    plot_3D(beta_mat, show_plot=False)
     
     print("\n---{}---".format(beta))
     print("MSE: ", MSE(x, y, z, beta_mat))

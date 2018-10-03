@@ -5,6 +5,8 @@ from regression_2D import *
 from regression_scikit import *
 from resampling import *
 from error_tools import *
+from franke import *
+from numpy.random import normal, uniform
 
 from time import clock
 
@@ -13,6 +15,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm 
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 
+#np.set_printoptions(threshold=np.nan)
 
 # === Constants ===
 N = 1000                        # Number of sampling points
@@ -22,23 +25,16 @@ niter = 1e5                     # Number of iterations used in Gradient Descent
 
 
 # === Load the terrain ===
-#terrain = imread('../data/s09_e116_1arc_v3.tif')
-terrain = imread('../data/SRTM_data_Norway_1.tif')
+terrain = imread('../data/s09_e116_1arc_v3.tif')
 
-x = np.linspace(0, 10*terrain.shape[1]-1, terrain.shape[1])
-y = np.linspace(0, 10*terrain.shape[1]-1, terrain.shape[0])
+x = np.int_(uniform(0, terrain.shape[1]-1, N))          # Random x-indices
+y = np.int_(uniform(0, terrain.shape[0]-1, N))          # Random y-indices
+z = terrain[x,y]                                        # Random z-indices
 
-X, Y = np.meshgrid(x, y)
+x = x/terrain.shape[1]                                  # Normalize x
+y = y/terrain.shape[0]                                  # Normalize y
+z = z/np.max(z)                                         # Normalize z
 
-X_flatten = X.flatten()
-Y_flatten = Y.flatten()
-Z_flatten = terrain.flatten()
-
-
-factor = 100
-x = X_flatten[::factor]
-y = Y_flatten[::factor]
-z = Z_flatten[::factor]
 
 # === Resample ===
 #avg_x, var_x, std_x = bootstrap(x)
@@ -49,17 +45,10 @@ z = Z_flatten[::factor]
 order5 = Reg_2D(x, y, z, Px=5, Py=5)
 
 beta_ols = order5.ols()
-
-order5_scikit = Reg_scikit(x, y, z, Px=5, Py=5)
-
-beta_ols_test = order5_scikit.ols()
-'''
 beta_ridge = order5.ridge(λ)
 print("\n Doing Lasso regression..."); beta_lasso = order5.lasso(λ, η, niter)
 print("\n Doing Ridge regression..."); beta_ridge2 = order5.reg_q(2, λ, η, niter)
 
-
-#print(np.var(beta_ols.flatten()))
 
 # === Call scikit regression functions ===
 order5_scikit = Reg_scikit(x, y, z, Px=5, Py=5)
@@ -73,15 +62,15 @@ beta_ridge_test = order5_scikit.ridge(λ)
 beta_ols_test[0,0] = beta_ols[0,0]
 beta_ridge_test[0,0] = beta_ridge[0,0]
 beta_lasso_test[0,0] = beta_lasso[0,0]
-'''
-betas = ["beta_ols_test", "beta_ols"] #, "beta_ridge_test", "beta_ridge", "beta_lasso_test", "beta_lasso", "beta_ridge_test", "beta_ridge2"]
+
+betas = ["beta_ols_test", "beta_ols", "beta_ridge_test", "beta_ridge", "beta_lasso_test", "beta_lasso", "beta_ridge_test", "beta_ridge2"]
 
 
 for beta in betas:
     beta_mat = eval(beta)
 
-    fig = plt.figure()
-    plt.imshow(beta_mat, cmap=cm.coolwarm)
+    #fig = plt.figure()
+    #plt.imshow(beta_mat, cmap=cm.coolwarm)
     #plt.savefig("../plots/{}_visualize.png".format(beta))
     #plt.colorbar()
 
