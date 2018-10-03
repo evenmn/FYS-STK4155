@@ -2,7 +2,7 @@
 Regression analysis are widely used in different fields of natural sciences, data science and economics to mention some. The simplest form is the linear regression, which is intuitive and easy to work with. 
  
 \subsection{Linear regression} \label{sec:regression}
-In linear regression, the dependent variable $y_i$ is a linear combination of the parameters. \cite{hastie01statisticallearning}
+In linear regression, the dependent variable $y_i$ is a linear combination of the parameters. \cite{Hastie}
 
 \subsubsection{Ordinary Least Square (OLS)} \label{sec:OLS}
 Suppose we have a set of points $\{(x_1, y_1), (x_2, y_2),\hdots, (x_n, y_n)\}$, and we want to fit a p'th order polynomial to them. The most intuitive way would be to find coefficients $\vec{\beta}$ which minimize the error in
@@ -139,7 +139,7 @@ and is a smooth 2D function as one can see in figure \eqref{fig:data}, part (a).
     \label{fig:data}%
  \end{figure}
 
-Secondly, we use the verified regression tools to fit a polynomial to real terrain data. The data is taken from United States Geological Survey (USGS) \url{https://earthexplorer.usgs.gov/}, and for investigation we picked the volcanic island of Lombok. Despite the island's small extent, it houses the second highest volcano in Indonesia which makes the terrain data interesting. See part (b) of figure \eqref{fig:data} for terrain data.
+Secondly, we use the verified regression tools to fit a polynomial to real terrain data. The data is taken from United States Geological Survey (USGS) \cite{USGS},  and for investigation we picked the volcanic island of Lombok. Despite the island's small extent, it houses the second highest volcano in Indonesia which makes the terrain data interesting. See part (b) of figure \eqref{fig:data} for terrain data.
 
 \subsubsection{Higher order}
 There should be no surprise that we can extend the theory above to even higher orders. 
@@ -174,7 +174,7 @@ where the sample mean is given by
 \begin{equation}
 \bar{y}=\sum_{i=1}^Ny_i.
 \end{equation}
-We will stress that sample mean is not necessarily the same as the distribution mean, but the sample mean will approximate the distribution mean for large data sets, known as the \textit{central limit theorem}. NEED REFERENCE
+We will stress that sample mean is not necessarily the same as the distribution mean, but the sample mean will approximate the distribution mean for large data sets, known as the \textit{central limit theorem}. \cite{StatMek}
 
 Often we are studying multiple data sets at the same time, and want to estimate the total variance. The sample mean of one data set $\alpha$ is still given by
 \begin{equation}
@@ -189,57 +189,6 @@ The total variance will then be a sum over the single set variances plus the cro
 \sigma_M^2=\frac{1}{M}\sum_{\alpha=1}^M\frac{\sigma_{\alpha}^2}{N}+\frac{2}{MN^2}\sum_{\alpha=1}^M\sum_{i<j}^N(y_{\alpha,i}-\bar{y}_M)(y_{\alpha,j}-\bar{y}_M).
 \end{equation}
 The last term is called the covariance, and is a measure of how much the data set are related. If they are totally independent, the covariance is zero. For large data sets this term is computational expensive to calculate, and we will rather use resampling techniques to estimate the variance. A few resampling techniques are presented in the Method section.
-
-\subsection{Error analysis} \label{sec:error_analysis}
-Different methods to estimate error:
-\begin{itemize}
-	\item{Absolute error}
-	\item{Relative error}
-	\item{Mean square error (MSE)}
-	\item{R$^2$ score function}
-\end{itemize}
-In this report we will study only the MSE and R$^2$ score function.
-
-\subsubsection{Mean Square Error (MSE)} \label{sec:MSE}
-The most popular error estimation method is the mean square error, also called least squares. \cite{hastie01statisticallearning} We study the MSE in order to find out how the cost function is reduced, because it is basically the standard cost function, used in OLS. 
-\begin{equation}
-\text{MSE}(\vec{\beta})=\frac{1}{N}\sum_{i=1}^N(y_i-\tilde{y}(\vec{\beta}))^2
-\end{equation}
-Compared to least absolute value, the points far away from the fitted line are weighted stronger. We will also study a quantity called bias, which is just the sum over differences between the model and all points,
-\begin{equation}
-\text{bias}(\vec{\beta})=\frac{1}{N}\sum_{i=1}^N(y_i-\tilde{y}(\vec{\beta})).
-\end{equation}
-As one can see, the bias can both be positive and negative, where a large positive bias indicates underfitting and a large negative bias indicates overfitting. [https://ml.berkeley.edu/blog/2017/07/13/tutorial-4/] It can be shown that the MSE is a sum of the bias squared and the variance,
-\begin{equation}
-\text{MSE}(\vec{\beta})=\text{bias}(\vec{\beta})^2+\sigma^2, 
-\end{equation}
-and based on this we can show that the optimal complexity of our model (which is neither underfitted nor overfitted) is when the bias and variance are equal, see figure \eqref{fig:variance_bias}.
-
- \begin{figure} [h]
-	\centering
-	\includegraphics[scale=0.3]{../plots/variance_bias.png}
-	\caption{Bias-variance trade-off. Figure showing the bias (red graph). variance (blue graph) and MSE (purple graph) as functions of the complexity of the model. Figure taken from \url{https://www.reddit.com/r/mlclass/comments/mmlfu/a_nice_alternative_explanation_of_bias_and/}}
-	\label{fig:variance_bias}
-\end{figure}
-
-As we can see from the figure, the bias decreases and the variance increases as the model gets more complex. The MSE is minimized when $\sigma^2=\text{bias}$. 
-
-\subsubsection{R$^2$ score function} \label{sec:R2}
-The R$^2$ score function is a measure of how close the data are to the fitted regression line, and is a widely used quantity within statistics. [http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit]
-
-It is defined by how much of the variation that is not explained by the model, i.e, 
-\begin{equation*}
-\text{R}^2=\frac{\text{Explained variation}}{\text{Total variation}}
-\end{equation*}
-where the explained variation is the difference between the variance and the MSE and the total variation is given by
-\begin{equation*}
-\text{Total variation}=\frac{1}{N}\sum_{i=1}^N(y_i-\bar{y})^2.
-\end{equation*}
-
-The R$^2$-score is always between 0 and 1, it is 0 if the model does not explain any of the variations and 1 if it explains all variations. In that manner, we should fight for a high R2-score. It is in entirety given by
-\begin{equation}
-R^2(\vec{y},\tilde{\vec{y}})=1-\frac{\sum_{i=1}^N(y_i-\tilde{y})^2}{\sum_{i=1}^N(y_i-\bar{y})^2}.
-\end{equation}
 
 \subsubsection{Confidence interval} \label{sec:confidence}
 The confidence interval is the interval that you are within with a probability given by the confidence level. The confidence interval (CI) means
@@ -261,3 +210,56 @@ So, how can we make us of this in project 1? To predict which coefficients we co
 \text{Var}(\vec{\beta})=(\hat{X}^T\hat{X})^{-1}\sigma^2
 \end{equation}
 where the $\sigma^2$ is the sample variance of the points.
+
+Another approx is to simply calculate $N$ estimates of each beta, and sort them in increasing order. Leaving out the $p\%$ first elements of the data set and the $p\%$ last elements, we are left with the $q=100\%-2p\%$ most likely betas, and the confidence interval related to a confidence level of $q\%$ is within the smallest and largest elements of this new set.
+
+\subsection{Error analysis} \label{sec:error_analysis}
+Different methods to estimate error:
+\begin{itemize}
+	\item{Absolute error}
+	\item{Relative error}
+	\item{Mean square error (MSE)}
+	\item{R$^2$ score function}
+\end{itemize}
+In this report we will study only the MSE and R$^2$ score function.
+
+\subsubsection{Mean Square Error (MSE)} \label{sec:MSE}
+The most popular error estimation method is the mean square error, also called least squares. \cite{Hastie} We study the MSE in order to find out how the cost function is reduced, because it is basically the standard cost function, used in OLS. 
+\begin{equation}
+\text{MSE}(\vec{\beta})=\frac{1}{N}\sum_{i=1}^N(y_i-\tilde{y}(\vec{\beta}))^2
+\end{equation}
+Compared to least absolute value, the points far away from the fitted line are weighted stronger. We will also study a quantity called bias, which is just the sum over differences between the model and all points,
+\begin{equation}
+\text{bias}(\vec{\beta})=\frac{1}{N}\sum_{i=1}^N(y_i-\tilde{y}(\vec{\beta})).
+\end{equation}
+As one can see, the bias can both be positive and negative, where a large positive bias indicates underfitting and a large negative bias indicates overfitting. \cite{Berkley} It can be shown that the MSE is a sum of the bias squared and the variance,
+\begin{equation}
+\text{MSE}(\vec{\beta})=\text{bias}(\vec{\beta})^2+\sigma^2, 
+\end{equation}
+and based on this we can show that the optimal complexity of our model (which is neither underfitted nor overfitted) is when the bias and variance are equal, see figure \eqref{fig:variance_bias}.
+
+ \begin{figure} [h]
+	\centering
+	\includegraphics[scale=0.3]{../plots/variance_bias.png}
+	\caption{Bias-variance trade-off. Figure showing the bias (red graph). variance (blue graph) and MSE (purple graph) as functions of the complexity of the model. Figure taken from \url{https://www.reddit.com/r/mlclass/comments/mmlfu/a_nice_alternative_explanation_of_bias_and/}}
+	\label{fig:variance_bias}
+\end{figure}
+
+As we can see from the figure, the bias decreases and the variance increases as the model gets more complex. The MSE is minimized when $\sigma^2=\text{bias}$. 
+
+\subsubsection{R$^2$ score function} \label{sec:R2}
+The R$^2$ score function is a measure of how close the data are to the fitted regression line, and is a widely used quantity within statistics. \cite{R2}
+
+It is defined by how much of the variation that is not explained by the model, i.e, 
+\begin{equation*}
+\text{R}^2=\frac{\text{Explained variation}}{\text{Total variation}}
+\end{equation*}
+where the explained variation is the difference between the variance and the MSE and the total variation is given by
+\begin{equation*}
+\text{Total variation}=\frac{1}{N}\sum_{i=1}^N(y_i-\bar{y})^2.
+\end{equation*}
+
+The R$^2$-score is always between 0 and 1, it is 0 if the model does not explain any of the variations and 1 if it explains all variations. In that manner, we should fight for a high R2-score. It is in entirety given by
+\begin{equation}
+R^2(\vec{y},\tilde{\vec{y}})=1-\frac{\sum_{i=1}^N(y_i-\tilde{y})^2}{\sum_{i=1}^N(y_i-\bar{y})^2}.
+\end{equation}

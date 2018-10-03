@@ -14,7 +14,7 @@ N = 1000                        # Number of sampling points
 λ = 1e-5                       # Penalty
 η = 0.0001                      # Learning rate
 σ = 0.1                         # Standard deviation used in noise
-niter = 1e5                     # Number of iterations used in Gradient Descent
+niter = 1e6                     # Number of iterations used in Gradient Descent
 
 noise = normal(0,σ*σ,N)         # Noise
 
@@ -25,9 +25,14 @@ y = uniform(0,1,N)
 z = FrankeFunction(x, y) + noise
 
 
-# === Resample ===
-avg_x, var_x, std_x = bootstrap(x)
-avg_y, var_y, std_y = bootstrap(y)
+# === Calculating Confidence Intervals (CI) ===
+order5 = Reg_2D(x, y, z, Px=5, Py=5)
+
+avg_z, var_z, std_z = bootstrap(z)
+X = order5.set_up_X()*var_z
+
+var_beta = np.linalg.inv(X.T.dot(X))*var_z
+var_beta = np.diag(var_beta)
 
 
 # === Call self-built regression functions ===
@@ -38,8 +43,6 @@ beta_ridge = order5.ridge(λ)
 print("\n Doing Lasso regression..."); beta_lasso = order5.lasso(λ, η, niter)
 print("\n Doing Ridge regression..."); beta_ridge2 = order5.reg_q(2, λ, η, niter)
 
-
-#print(np.var(beta_ols.flatten()))
 
 # === Call scikit regression functions ===
 order5_scikit = Reg_scikit(x, y, z, Px=5, Py=5)
@@ -60,11 +63,15 @@ betas = ["beta_ols_test", "beta_ols", "beta_ridge_test", "beta_ridge", \
 
 for beta in betas:
     beta_mat = eval(beta)
+    
+    print('Confidence interval')
+    print(beta_mat.flatten()-var_beta, beta_mat.flatten()+var_beta)
 
     fig = plt.figure()
     plt.imshow(beta_mat, cmap=cm.coolwarm)
+    cbar = plt.colorbar()
+    cbar.ax.tick_params(labelsize=22)
     plt.savefig("../plots/{}_visualize.png".format(beta))
-    plt.colorbar()
 
     #plot_3D(beta_mat, show_plot=False)
     
@@ -88,10 +95,11 @@ for i in np.linspace(-8,2,100):
     #R2_lasso.append(R2(x, y, z, beta__))
     
     
+label_size = {"size":"14"}
 plt.semilogx(lambda_list, R2_ridge, label='Ridge', linewidth=2)
 #plt.semilogx(lambda_list, R2_lasso, label='Lasso')
-plt.xlabel('$\lambda$')
-plt.ylabel('$R^2$-score')
+plt.xlabel('$\lambda$', **label_size)
+plt.ylabel('$R^2$-score', **label_size)
 plt.legend(loc='best')
 plt.grid()
 plt.savefig('../plots/lambda_R2score.png')
@@ -109,8 +117,8 @@ for i in np.linspace(-6,-0.7, 100):
     R2_ols.append(R2(x, y, z, beta_ols))
     
 plt.semilogx(var, R2_ols, linewidth=2)
-plt.xlabel('$\sigma^2$ in noise')
-plt.ylabel('$R^2$-score')
+plt.xlabel('$\sigma^2$ in noise', **label_size)
+plt.ylabel('$R^2$-score', **label_size)
 plt.grid()
 plt.savefig('../plots/var_R2score.png')
 plt.show()

@@ -35,7 +35,7 @@ def plot_3D(beta, show_plot=True):
     surf = ax.plot_surface(X,Y,Z,cmap=cm.coolwarm,linewidth=0,antialiased=False)
 
     #Customize the z axis. 
-    ax.set_zlim(-0.10,1.40)
+    #ax.set_zlim(-0.10,1.40)
     ax.zaxis.set_major_locator(LinearLocator(10))
     ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
     ax.set_xlabel('X axis')
