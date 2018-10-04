@@ -117,13 +117,13 @@ In figure \eqref{fig:franke} one can find a 3D visualization of the Franke funct
 \newgeometry{left=2cm,right=2cm,top=1cm}
 \begin{figure} [H]%
 	\centering
-	\subfloat[OLS without noise]{{\includegraphics[width=9cm]{../plots/OLS.png} }}%
+	\subfloat[OLS without noise]{{\includegraphics[width=9cm]{../plots/OLS_terrain.png} }}%
 	\subfloat[OLS with noise]{{\includegraphics[width=9cm]{../plots/OLS_noise.png} }}\\
 	
-	\subfloat[Ridge without noise]{{\includegraphics[width=9cm]{../plots/Ridge.png} }}%
+	\subfloat[Ridge without noise]{{\includegraphics[width=9cm]{../plots/Ridge_terrain.png} }}%
 	\subfloat[Ridge with noise]{{\includegraphics[width=9cm]{../plots/Ridge_noise.png} }}\\
 	
-	\subfloat[Lasso without noise]{{\includegraphics[width=9cm]{../plots/Lasso.png} }}%
+	\subfloat[Lasso without noise]{{\includegraphics[width=9cm]{../plots/Lasso_terrain.png} }}%
 	\subfloat[Lasso with noise]{{\includegraphics[width=9cm]{../plots/Lasso_noise.png} }}
 	\caption{Fitted polynomial by OLS, Ridge and Lasso with and without noise. For Ridge and Lasso, we used a low penalty of $\lambda=1e-15$. Lasso was performed with $\eta=1e-3$ and 1e6 iterations. The noise was sampled from a normal distribution with $\sigma=0.1$.}%
 	\label{fig:franke_plots}%
@@ -148,24 +148,10 @@ To be able to determine which method is best, we need to analyze the error. In t
 \end{table}
 
 
-\subsubsection{Coefficients $\beta$}
+\subsubsection{Confidence interval}
 It can also be interesting to see how the coefficients actually differ between the self-built functions and the Scikit Learn function. In figure \eqref{fig:beta_plots}, the beta values are visualized such that large numbers got strong color, negative numbers are blue and positive numbers are red. The methods OLS, Ridge, Lasso and Ridge produced using gradient descent are presented. 
 
-\begin{figure} [H]%
-	\centering
-	\subfloat[OLS self]{{\includegraphics[width=3cm]{../plots/beta_ols_visualize.png} }}%
-	\subfloat[Ridge self]{{\includegraphics[width=3cm]{../plots/beta_ridge_visualize.png} }}%
-	\subfloat[Lasso self]{{\includegraphics[width=3cm]{../plots/beta_lasso_visualize.png} }}%
-	\subfloat[Ridge2 self]{{\includegraphics[width=3cm]{../plots/beta_ridge2_visualize.png} }}\\
-	
-	\subfloat[OLS scikit]{{\includegraphics[width=3cm]{../plots/beta_ols_test_visualize.png} }}%
-	\subfloat[Ridge scikit]{{\includegraphics[width=3cm]{../plots/beta_ridge_test_visualize.png} }}%
-	\subfloat[Lasso scikit]{{\includegraphics[width=3cm]{../plots/beta_lasso_test_visualize.png} }}%
-	\subfloat[Ridge scikit]{{\includegraphics[width=3cm]{../plots/beta_ridge_test_visualize.png} }}
-	
-	\caption{Beta values visualized for different methods. The upper images are gotten from the self-built functions, where the last one is Ridge found by minimizing beta using gradient descent. The lower images are the benchmarks which are produced by Scikit learn.}%
-	\label{fig:beta_plots}%
-\end{figure}
+
 
 Furthermore, the confidence intervals are given in table \eqref{tab:CI_franke} for all betas and all methods.
 

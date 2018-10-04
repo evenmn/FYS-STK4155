@@ -41,6 +41,18 @@ z = z/np.max(z)                                         # Normalize z
 #avg_y, var_y, std_y = bootstrap(y)
 
 
+# === Calculating Confidence Intervals (CI) ===
+order5 = Reg_2D(x, y, z, Px=5, Py=5)
+
+avg_z, var_z, std_z = bootstrap(z)
+X = order5.set_up_X()*var_z
+
+var_beta = np.linalg.inv(X.T.dot(X))*var_z
+var_beta = np.diag(var_beta)
+print(var_beta)
+
+
+
 # === Call self-built regression functions ===
 order5 = Reg_2D(x, y, z, Px=5, Py=5)
 
