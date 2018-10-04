@@ -65,7 +65,7 @@ Perhaps the simplest and most intuitive method for finding the minimum is the gr
 \end{equation}
 where $\beta_i^{\text{new}}$ is the updated $\beta$ and $\eta$ is a step size, in machine learning often refered to as the learning rate. The idea is to find the gradient of the cost function $Q(\vec{\beta})$ with respect to a certain $\beta_i$, and move in the direction which minimizes the cost function. This is repeated until a minimum is found, defined by either
 \begin{equation}
-\frac{\partial Q(\beta_i)}{\partial\beta_i}<\varepsilon
+Q(\beta_i)<\varepsilon
 \end{equation}
 or that the change in $\beta_i$ for the past $x$ steps is small. 
 \par 
@@ -95,3 +95,23 @@ while dbeta > epsilon:
     debeta = 2*X.T.dot(e) -np.sign(beta)*q*lambda*np.power(abs(beta), q-1)
     beta += eta*dbeta
 \end{lstlisting}
+
+\subsection{Benchmark}
+To benchmark the results in this project, we use Scikit Learn, which is a package for machine learning in Python. \cite{Scikit} The built-in regression tools are made to give high performance and be easy to implement, and is therefore the ideal benchmark in this project. the procedure of calling the OLS, Ridge and Lasso functions looks like this:
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+
+reg = LinearRegression()
+reg.fit (X, z) 
+beta_OLS = reg.coef_
+
+reg = Ridge(alpha=lambda)
+reg.fit(X, z)
+beta_Ridge = reg.coef_
+
+reg = Lasso(alpha=lambda)
+reg.fit(X, z)
+beta_Lasso = reg.coef_
+\end{lstlisting}
+where $X$ is the design matrix and $z$ is the data in z-direction. 

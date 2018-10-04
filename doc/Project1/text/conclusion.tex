@@ -1,4 +1,4 @@
 \section{Conclusion} \label{sec:conclusion}
-Which model fits the data best?
+After what we have seen, we can conclude that OLS gives the best results for our particular data set, but Ridge is not a bad choice either. Lasso gives both higher mean square error (MSE) and lower R$^2$-score than the other methods, and since the implemented Lasso gives similar results to the Lasso function of Scikit Learn, the Lasso is considered as the least good method among the methods that we have tested. We have also seen that the lower penalty the higher R$^2$-score, which is expected since OLS is the best method. 
 
-Mention that I know I should've studied a polynomial of total order of 5. 
+As an afterthought, the choice of terrain data was maybe too ambitious, considering that we should fit a polynomial of maximum degree of 5 to it.  Apropos a polynomial of maximum degree of 5, I know I misunderstood this and used maximum degree of 5 in each spatial directions (should of course have fixed this). Despite this misunderstanding, the mathematical operations I have used are still as valid as for a polynomial of maximum total degree of 5.

@@ -121,6 +121,7 @@ Below one can find the results when fitting the terrain data with a polynomial o
 
 \subsubsection{Visualization of graphes}
 In figure \eqref{fig:terrain_plots} the polynomial gotten from regression on noisy data is compared with the polynomial gotten from regression on smooth data. 
+ In figure \eqref{fig:terrain_plots}, we can see how good we were able to fit the polynomials using various methods
 
 
 \newgeometry{left=2cm,right=2cm,top=1cm}
@@ -132,7 +133,7 @@ In figure \eqref{fig:terrain_plots} the polynomial gotten from regression on noi
 	\subfloat[Lasso]{{\includegraphics[width=9cm]{../plots/Lasso_terrain.png} }}%
 	\subfloat[Terrain data]{{\includegraphics[width=9cm]{../plots/lombok.png} }}
 	
-	\caption{}%
+	\caption{Fitted polynomial by OLS, Ridge and Lasso. For Ridge and Lasso, we used a low penalty of $\lambda=1e-5$. Lasso was performed with $\eta=1e-4$ and 1e5 iterations. The terrain data used in regression was normalized, but the data used in the terrain plot was not.}%
 	\label{fig:terrain_plots}%
 \end{figure}
 \restoregeometry
@@ -156,11 +157,10 @@ To be able to determine which method is best, we need to analyze the error. In t
 
 We have also studied how the R$^2$ score is dependent on various parameters. In figure \eqref{fig:R2_scores_terrain}, the R$^2$-score is plotted as a function of the penalty for Ridge and Lasso (a), and as a function of the noise for OLS, Ridge and Lasso (b).
 
-\begin{figure} [H]%
+\begin{figure} [H]
 	\centering
-	\subfloat[Lambda vs. R2-score]{{\includegraphics[width=7cm]{../plots/lambda_R2score_terrain.png} }}%
-	\subfloat[Variance vs. R2-score]{{\includegraphics[width=7cm]{../plots/var_R2score_terrain.png} }}
-	\caption{R$^2$-score plotted as a function of the penalty $\lambda$ (a) and as a function of the noise (b). The penalty was varied in the interval $\lambda\in[10^{-8},10^2]$ and the variance of the normal distribution the noise was withdrawn from was varied in the interval $\sigma^2\in[10^{-6},10^{-0.7}]$. The other parameters used were $\lambda=1e-5$ (penalty, was held constant for (b) only), $\eta=1e-4$ (learning rate), $niter=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.01)$ (noise, was held constant for (a) only).}%
+	\includegraphics[width=7cm]{../plots/lambda_R2score_terrain.png}
+	\caption{R$^2$-score plotted as a function of the penalty $\lambda$. The penalty was varied in the interval $\lambda\in[10^{-8},10^2]$, and the other parameters used were $\eta=1e-4$ (learning rate) and $niter=1e5$ (number of iterations).}
 	\label{fig:R2_scores_terrain}
 \end{figure}
 
