@@ -1,2 +1,11 @@
 \section{Discussion} \label{sec:discussion}
-Why do we observe what we observe
+The first thing we can see from the results, is that the fitted functions in figure \eqref{fig:franke_plots} look very similar with and without noise. This is probably caused by too small noise. However, we observe that both the OLS regression and Ridge are really good fits compared to the actual function in figure \eqref{fig:data}. Lasso is also similar, but with the naked eye we can see that it is obviously not as good as OLS and Ridge. 
+
+This is also reflected in the error analysis, where the MSE is way larger for Lasso compared to OLS and Ridge. OLS seems to have a slightly lower MSE than Ridge again, but for Ridge with gradient descent the MSE is almost as high as for Lasso. From this, it may seems like the the gradient descent method does not work properly, because the cost function is obviously not fully minimized. When it comes to the R$^2$-score, we observe that also here OLS got the best score barely in front of Ridge, with RidgeGD and Lasso far behind. 
+
+Furthermore, from the R$^2$ vs. $\lambda$ plot in figure \eqref{fig:R2_scores}, we can see that Ridge mostly got a better R$^2$-score than Lasso, only beaten around $\lambda=1$. What surprises me, is that the methods do not get more similar when the penalty decreases, since they should both approach OLS when the penalty gets smaller. In the second plot in the same figure, we again find Lasso to give the lowest R$^2$-score. 
+
+In figure \eqref{fig:beta_plots}, we can see that the beta values produced by Scikit's OLS function and the self-built OLS-function are more or less identical. The same applies to Ridge, so we can conclude that those two methods are implemented correctly (also based on the error analysis). The situaton is unlike for the gradient descent methods, where the coefficients differ. Especially for RidgeGD, the difference is significantly both in sign and magnitude. For Lasso, we can reveal some similarities, and at least the magnitudes are similar. Again it is tempting to conclude that the minimization is wrong. Something I find strange, is that every second coefficient is negative and every second is positive for OLS, and obtain a cool pattern which I cannot explain. 
+
+\vspace{2cm}
+

@@ -22,7 +22,7 @@ The assumption we need to make, is that the relative frequency of $x_i$ equals $
 \item The average value of all $K$ $\vec{\beta}^*$'s are stored in a new vector $\vec{\bar{\beta}}^*$
 \item Finally, the variance of $\vec{\bar{\beta}}^*$ should correspond to the sample variance
 \end{enumerate}
-\cite{BootstrapEfron}
+\cite{Bootstrap}
 
 The implementation could look something like this
 \lstset{basicstyle=\scriptsize}
@@ -37,7 +37,7 @@ def bootstrap(data, K=1000):
     
     return Avg, Var, Std
 \end{lstlisting}
-which is strongly inspired by the lecture notes [NEED REFERENCE]
+which is strongly inspired by the lecture notes \cite{Lecture}.
 
 It is also worth to mention that we should hold back a small part of the original data set for testing, since we need to test the model on data that it has not seen before.
 

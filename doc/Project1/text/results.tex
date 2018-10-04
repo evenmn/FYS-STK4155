@@ -1,11 +1,11 @@
 \section{Results} \label{sec:results}
-Here the results will be presented. We start looking at how good our linear regression is, by fitting a polynomial to points withdrawn from a known PDF. Thereafter we will see how good the regression is when using real terrain data. To give a intuition on how good the fit is, we will in both cases show 3D plots of the graphs using various methods, and then present the error analysis. 
+Here the results will be presented. We start looking at how good our linear regression is, by fitting a polynomial to points withdrawn from a known PDF. Thereafter we will see how good the regression is when using real terrain data. To give an intuition on how good the fit is, we will in both cases show 3D plots of the polynomials given by OLS, Ridge and Lasso methods, and then present a proper error analysis. 
 
 \subsection{Franke function}
-Below one can find the results of the regression on Franke function. All results in this section was obtained from the same data set, with an estimated variance of ...
+Below one can find the results when fitting the Franke function. All results in this section was obtained from the same data set, consisting of 1000 points, withdrawn from a uniform distribution ($x,y\in[0,1]$). Further, the polynomial degrees in x- and y-directions were set to $P_x=P_y=5$. For the methods that require minimization, we used gradient descent with the parameters $\lambda=1e-5$ (penalty), $\eta=1e-4$ (learning rate) and $niter=1e5$ (number of iterations) when nothing else is specified. For benchmarking the results (mainly to verify the code), Scikit learn was used. In the first place, the studies were done without noise, and then everything was repeated with adding a noise of $\mathcal{N}(0, \sigma^2=0.01)$
 
 \subsubsection{Visualization of graphes}
-In figure \eqref{fig:data} one can find a 3D visualization of the Franke function, for easier comparison with the fitted graphs presented in figure \eqref{fig:franke_plots}. The data sets were composed drawing random $x$'s and $y$'s in the interval $x,y\in[0,1]$ from a uniform distribution, and the corresponding $z$-values where obtained from the Franke function. Further, we added noise produced by $\mathcal{N}(0, \sigma^2=0.1)$ and compared with the undisturbed data set. For Lasso and Ridge, we used a penalty $\lambda=1e-15$, and for Lasso we also used gradient descent for minimization. On that occasion, the learning rate was set to $\eta=0.001$ with niter$=1000000$ as the number of iterations. 
+In figure \eqref{fig:franke_plots} the polynomial gotten from regression on noisy data is compared with the polynomial gotten from regression on smooth data. 
 
  
 \newgeometry{left=2cm,right=2cm,top=1cm}
@@ -19,55 +19,64 @@ In figure \eqref{fig:data} one can find a 3D visualization of the Franke functio
     
     \subfloat[Lasso without noise]{{\includegraphics[width=9cm]{../plots/Lasso.png} }}%
     \subfloat[Lasso with noise]{{\includegraphics[width=9cm]{../plots/Lasso_noise.png} }}
-    \caption{Fitted polynomial by OLS, Ridge and Lasso with and without noise. For Ridge and Lasso, we used a low penalty of $\lambda=1e-15$. Lasso was performed with $\eta=1e-3$ and 1e6 iterations. The noise was sampled from a normal distribution with $\sigma=0.1$.}%
+    \caption{Fitted polynomial by OLS, Ridge and Lasso with and without noise. For Ridge and Lasso, we used a low penalty of $\lambda=1e-5$. Lasso was performed with $\eta=1e-4$ and 1e5 iterations. The noise was sampled from a normal distribution with $\sigma=0.1$.}%
     \label{fig:franke_plots}%
 \end{figure}
 \restoregeometry
 
 
 \subsubsection{Error}
-To be able to determine which method is best, we need to analyze the error. In table \eqref{tab:franke_error}, the MSE and R$^2$-score are given for OLS, Ridge, Lasso and Ridge with gradient descent. 
+To be able to determine which method is best, we need to analyze the error. In table \eqref{tab:franke_error}, the MSE and R$^2$-score are given for OLS, Ridge, Lasso and Ridge with gradient descent (RidgeGD). 
 
 \begin{table} [H]
-	\caption{Mean Square Error and R$^2$-score presented for OLS, Ridge, Lasso and Ridge + gradient descent.  \vspace{2mm}}
+	\caption{Mean Square Error and R$^2$-score presented for OLS, Ridge, Lasso and Ridge + gradient descent (RidgeGD), where noise was added to the data. The parameters used were $\lambda=1e-5$ (penalty), $\eta=1e-4$ (learning rate), $niter=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.01)$ (noise). \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{l|XX|XX} \hline\hline
 		\label{tab:franke_error}
 		& \multicolumn{2}{c}{\textbf{MSE}}&\multicolumn{2}{c}{\textbf{R2}}\\ \hline
 		&self&scikit&self&scikit\\ \hline \\
-		OLS & 0.07853 & 0.86104 & 0.05386 & 1.7483\\
-		Ridge & 0.07852 & 0.86410 & 0.05406 & 1.6904 \\
-		Lasso & 0.07704 & 0.86231 & 0.07187 & 1.6492 \\
-		RidgeGD & 0.07523 & 0.91850 & 0.09362 & 1.3217 \\ \hline
+		OLS & 0.001215 & 0.001215 & 0.9854 & 0.9853\\
+		Ridge & 0.001628 & 0.001628 & 0.9804 & 0.9804 \\
+		Lasso & 0.009476 & 0.006651 & 0.8861 & 0.9201 \\
+		RidgeGD & 0.009067 & 0.001628 & 0.8911 & 0.9804 \\ \hline
 	\end{tabularx}
 \end{table}
 
+We have also studied how the R$^2$ score is dependent on various parameters. In figure \eqref{fig:R2_scores}, the R$^2$-score is plotted as a function of the penalty for Ridge and Lasso (a), and as a function of the noise for OLS, Ridge and Lasso (b).
+
+\begin{figure} [H]%
+	\centering
+	\subfloat[Lambda vs. R2-score]{{\includegraphics[width=7cm]{../plots/lambda_R2score.png} }}%
+	\subfloat[Variance vs. R2-score]{{\includegraphics[width=7cm]{../plots/var_R2score.png} }}
+	\caption{R$^2$-score plotted as a function of the penalty $\lambda$ (a) and as a function of the noise (b). The penalty was varied in the interval $\lambda\in[10^{-8},10^2]$ and the variance of the normal distribution the noise was withdrawn from was varied in the interval $\sigma^2\in[10^{-6},10^{-0.7}]$. The other parameters used were $\lambda=1e-5$ (penalty, was held constant for (b) only), $\eta=1e-4$ (learning rate), $niter=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.01)$ (noise, was held constant for (a) only).}%
+	\label{fig:R2_scores}
+\end{figure}
 
 \subsubsection{Coefficients $\beta$}
-It can also be interesting to see how the coefficients actually differ between the self-built functions and the Scikit Learn function. In figure \eqref{fig:beta_plots}, the beta values are visualized such that large numbers got strong color, negative numbers are blue and positive numbers are red. The methods OLS, Ridge, Lasso and Ridge produced using gradient descent are presented. 
+It can also be interesting to see how the coefficients actually differ between the self-built functions and the Scikit Learn function. In figure \eqref{fig:beta_plots}, the beta values are visualized such that large numbers got strong color, negative numbers are blue and positive numbers are red. The methods OLS, Ridge, Lasso and Ridge produced using gradient descent (RidgeGD) are presented. 
 
 \begin{figure} [H]%
 	\centering
 	\subfloat[OLS self]{{\includegraphics[width=3cm]{../plots/beta_ols_visualize.png} }}%
 	\subfloat[Ridge self]{{\includegraphics[width=3cm]{../plots/beta_ridge_visualize.png} }}%
 	\subfloat[Lasso self]{{\includegraphics[width=3cm]{../plots/beta_lasso_visualize.png} }}%
-	\subfloat[Ridge2 self]{{\includegraphics[width=3cm]{../plots/beta_ridge2_visualize.png} }}\\
+	\subfloat[RidgeGD self]{{\includegraphics[width=3cm]{../plots/beta_ridge2_visualize.png} }}\\
 	
 	\subfloat[OLS scikit]{{\includegraphics[width=3cm]{../plots/beta_ols_test_visualize.png} }}%
 	\subfloat[Ridge scikit]{{\includegraphics[width=3cm]{../plots/beta_ridge_test_visualize.png} }}%
 	\subfloat[Lasso scikit]{{\includegraphics[width=3cm]{../plots/beta_lasso_test_visualize.png} }}%
 	\subfloat[Ridge scikit]{{\includegraphics[width=3cm]{../plots/beta_ridge_test_visualize.png} }}
 	
-	\caption{Beta values visualized for different methods. The upper images are gotten from the self-built functions, where the last one is Ridge found by minimizing beta using gradient descent. The lower images are the benchmarks which are produced by Scikit learn.}%
+	\caption{Beta values visualized for different methods. The upper images are gotten from the self-built functions, where the last one (Ridge2) is Ridge found by minimizing beta using gradient descent. The lower images are the benchmarks which are produced by Scikit learn. The parameters used were $\lambda=1e-5$ (penalty), $\eta=1e-4$ (learning rate), $niter=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.01)$ (noise).}%
 	\label{fig:beta_plots}%
 \end{figure}
 
-Furthermore, the confidence intervals are given in table \eqref{tab:CI_franke} for all betas and all methods.
+Furthermore, the confidence intervals are given in table \eqref{tab:CI_franke} for all betas and all methods, when noise is included.
 
 \begin{table} [H]
-	\caption{Write table text here.  \vspace{2mm}}
+	\caption{Confidence intervals. The parameters used were $\lambda=1e-5$ (penalty), $\eta=1e-4$ (learning rate), $niter=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.01)$ (noise).  \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{l|XXXX} \hline\hline
 		\label{tab:CI_franke}
-		&\textbf{OLS}&\textbf{Ridge}&\textbf{Lasso}&\textbf{Ridge2}\\ \hline \\
+		&\textbf{OLS}&\textbf{Ridge}&\textbf{Lasso}&\textbf{RidgeGD}\\ \hline \\
 		$\beta_1$ & 0.07853 & 0.86104 & 0.05386 & 1.7483\\
 		$\beta_2$ & 0.07853 & 0.86104 & 0.05386 & 1.7483\\
 		$\beta_3$ & 0.07853 & 0.86104 & 0.05386 & 1.7483\\
@@ -108,56 +117,63 @@ Furthermore, the confidence intervals are given in table \eqref{tab:CI_franke} f
 \end{table}
 
 \subsection{Real data}
-Below one can find the results of the regression on Franke function. All results in this section was obtained from the same data set, with an estimated variance of ...
+Below one can find the results when fitting the terrain data with a polynomial of a maximum degree of 5 in x- and y-directions. For the methods that require minimization, we used gradient descent with the parameters $\lambda=1e-5$ (penalty), $\eta=1e-4$ (learning rate) and $niter=1e5$ (number of iterations) when nothing else is specified. For benchmarking the results (mainly to verify the code), Scikit learn was used. In the first place, the studies were done without noise, and then everything was repeated with adding a noise of $\mathcal{N}(0, \sigma^2=0.01)$
 
 \subsubsection{Visualization of graphes}
-In figure \eqref{fig:franke} one can find a 3D visualization of the Franke function, for easier comparison with the fitted graphs presented in figure \eqref{fig:franke_plots}. The data sets were composed drawing random $x$'s and $y$'s in the interval $x,y\in[0,1]$ from a uniform distribution, and the corresponding $z$-values where obtained from the Franke function. Further, we added noise produced by $\mathcal{N}(0, \sigma^2=0.1)$ and compared with the undisturbed data set. For Lasso and Ridge, we used a penalty $\lambda=1e-15$, and for Lasso we also used gradient descent for minimization. On that occasion, the learning rate was set to $\eta=0.001$ with niter$=1000000$ as the number of iterations. 
+In figure \eqref{fig:terrain_plots} the polynomial gotten from regression on noisy data is compared with the polynomial gotten from regression on smooth data. 
 
 
 \newgeometry{left=2cm,right=2cm,top=1cm}
 \begin{figure} [H]%
 	\centering
-	\subfloat[OLS terrain]{{\includegraphics[width=9cm]{../plots/OLS_terrain.png} }}%
-	\subfloat[Ridge terrain]{{\includegraphics[width=9cm]{../plots/Ridge_terrain.png} }}\\
+	\subfloat[OLS]{{\includegraphics[width=9cm]{../plots/OLS_terrain.png} }}%
+	\subfloat[Ridge]{{\includegraphics[width=9cm]{../plots/Ridge_terrain.png} }}\\
 	
-	\subfloat[Lasso terrain]{{\includegraphics[width=9cm]{../plots/Lasso_terrain.png} }}%
-	\subfloat[Lombok]{{\includegraphics[width=9cm]{../plots/lombok.png} }}
+	\subfloat[Lasso]{{\includegraphics[width=9cm]{../plots/Lasso_terrain.png} }}%
+	\subfloat[Terrain data]{{\includegraphics[width=9cm]{../plots/lombok.png} }}
 	
-	\caption{kfkjg}%
-	\label{fig:franke_plots}%
+	\caption{}%
+	\label{fig:terrain_plots}%
 \end{figure}
 \restoregeometry
 
 
 \subsubsection{Error}
-To be able to determine which method is best, we need to analyze the error. In table \eqref{tab:franke_error}, the MSE and R$^2$-score are given for OLS, Ridge, Lasso and Ridge with gradient descent. 
+To be able to determine which method is best, we need to analyze the error. In table \eqref{tab:terrain_error}, the MSE and R$^2$-score are given for OLS, Ridge, Lasso and Ridge with gradient descent (RidgeGD). 
 
 \begin{table} [H]
-	\caption{Mean Square Error and R$^2$-score presented for OLS, Ridge, Lasso and Ridge + gradient descent.  \vspace{2mm}}
+	\caption{Mean Square Error and R$^2$-score presented for OLS, Ridge, Lasso and Ridge + gradient descent (RidgeGD), where noise was added to the data. The parameters used were $\lambda=1e-5$ (penalty), $\eta=1e-4$ (learning rate), $niter=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.01)$ (noise). \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{l|XX|XX} \hline\hline
-		\label{tab:franke_error}
+		\label{tab:terrain_error}
 		& \multicolumn{2}{c}{\textbf{MSE}}&\multicolumn{2}{c}{\textbf{R2}}\\ \hline
 		&self&scikit&self&scikit\\ \hline \\
-		OLS & 0.07853 & 0.86104 & 0.05386 & 1.7483\\
-		Ridge & 0.07852 & 0.86410 & 0.05406 & 1.6904 \\
-		Lasso & 0.07704 & 0.86231 & 0.07187 & 1.6492 \\
-		RidgeGD & 0.07523 & 0.91850 & 0.09362 & 1.3217 \\ \hline
+		OLS & 0.006282 & 0.006282 & 0.9267 & 0.9267\\
+		Ridge & 0.007886 & 0.007886 & 0.9080 & 0.9080 \\
+		Lasso & 0.01294 & 0.01340 & 0.8491 & 0.8437 \\
+		RidgeGD & 0.01299 & 0.007885 & 0.8485 & 0.9080 \\ \hline
 	\end{tabularx}
 \end{table}
 
+We have also studied how the R$^2$ score is dependent on various parameters. In figure \eqref{fig:R2_scores_terrain}, the R$^2$-score is plotted as a function of the penalty for Ridge and Lasso (a), and as a function of the noise for OLS, Ridge and Lasso (b).
 
-\subsubsection{Confidence interval}
-It can also be interesting to see how the coefficients actually differ between the self-built functions and the Scikit Learn function. In figure \eqref{fig:beta_plots}, the beta values are visualized such that large numbers got strong color, negative numbers are blue and positive numbers are red. The methods OLS, Ridge, Lasso and Ridge produced using gradient descent are presented. 
+\begin{figure} [H]%
+	\centering
+	\subfloat[Lambda vs. R2-score]{{\includegraphics[width=7cm]{../plots/lambda_R2score_terrain.png} }}%
+	\subfloat[Variance vs. R2-score]{{\includegraphics[width=7cm]{../plots/var_R2score_terrain.png} }}
+	\caption{R$^2$-score plotted as a function of the penalty $\lambda$ (a) and as a function of the noise (b). The penalty was varied in the interval $\lambda\in[10^{-8},10^2]$ and the variance of the normal distribution the noise was withdrawn from was varied in the interval $\sigma^2\in[10^{-6},10^{-0.7}]$. The other parameters used were $\lambda=1e-5$ (penalty, was held constant for (b) only), $\eta=1e-4$ (learning rate), $niter=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.01)$ (noise, was held constant for (a) only).}%
+	\label{fig:R2_scores_terrain}
+\end{figure}
 
+\subsubsection{Coefficients $\beta$}
+It can also be interesting to see how the coefficients actually differ between the self-built functions and the Scikit Learn function. In figure \eqref{fig:beta_plots}, the beta values are visualized such that large numbers got strong color, negative numbers are blue and positive numbers are red. The methods OLS, Ridge, Lasso and Ridge produced using gradient descent (RidgeGD) are presented. 
 
-
-Furthermore, the confidence intervals are given in table \eqref{tab:CI_franke} for all betas and all methods.
+Furthermore, the confidence intervals are given in table \eqref{tab:CI_terrain} for all betas and all methods, when noise is included.
 
 \begin{table} [H]
-	\caption{Write table text here.  \vspace{2mm}}
+	\caption{Confidence intervals. The parameters used were $\lambda=1e-5$ (penalty), $\eta=1e-4$ (learning rate), $niter=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.01)$ (noise).  \vspace{2mm}}
 	\begin{tabularx}{\textwidth}{l|XXXX} \hline\hline
-		\label{tab:CI_franke}
-		&\textbf{OLS}&\textbf{Ridge}&\textbf{Lasso}&\textbf{Ridge2}\\ \hline \\
+		\label{tab:CI_terrain}
+		&\textbf{OLS}&\textbf{Ridge}&\textbf{Lasso}&\textbf{RidgeGD}\\ \hline \\
 		$\beta_1$ & 0.07853 & 0.86104 & 0.05386 & 1.7483\\
 		$\beta_2$ & 0.07853 & 0.86104 & 0.05386 & 1.7483\\
 		$\beta_3$ & 0.07853 & 0.86104 & 0.05386 & 1.7483\\
