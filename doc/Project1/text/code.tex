@@ -12,7 +12,7 @@ This project is largely based on numerical calculation, so a few words about the
 To keep the code neat and clean we decided to write object oriented code, although we do not have that many functions. The code of this project consists of two main functions fit\_franke.py and fit\_terrain.py, where the former is used to test the tools on a known function and the latter is used to fit a polynomial to terrain data. Both of them are calling the classes for 2D regression and resampling techniques, named regression\_2D.py and resampling.py respectively, and fit\_franke.py is also communicating with franke.py. For overview of the code structure, see figure \eqref{fig:codestructure}.
 \begin{figure}
 \centering
-\begin{tikzpicture}[auto,node distance=1.5cm]
+\begin{tikzpicture}[auto,node distance=0.7cm]
 
   % Create entity node
   \node[entity] (node1) {fit\_terrain.py};
@@ -22,7 +22,7 @@ To keep the code neat and clean we decided to write object oriented code, althou
   \node[relationship] (rel2) [below left = of node1] {resampling.py};
   
   % Create another entity node
-  \node[entity] (node2) [below left = of rel1] {fit\_franke.py} child[grow=down,level distance=2cm] {node[attribute] {franke.py}};
+  \node[entity] (node2) [below left = of rel1] {fit\_franke.py} child[grow=down,level distance=1.5cm] {node[attribute] {franke.py}};
   
   % Draw paths
   \path (rel1) edge node {} (node1);
