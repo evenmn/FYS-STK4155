@@ -1,7 +1,7 @@
 \section{Methods} \label{sec:methods}
 
 \subsection{Resampling techniques} \label{sec:resampling}
-A resampling technique is a way of estimating the variance of data sets without calculating the covariance. As we saw in section section \ref{sec:error_analysis}, the true covariance is given by a double loop which we will avoid calculating if possible. There are different ways of doing this, and we have already went through several of them in this course:
+A resampling technique is a way of estimating the variance of data sets without calculating the covariance. As we saw in section section \ref{sec:error_analysis}, the true covariance is given by a double sum which we will avoid calculating if possible. There are different ways of doing this, and we have already went through several of them in this course:
 \begin{itemize}
 \item{Jackknife resampling}
 \item{K-fold validation}
@@ -97,7 +97,7 @@ while dbeta > epsilon:
 \end{lstlisting}
 
 \subsection{Benchmark}
-To benchmark the results in this project, we use Scikit Learn, which is a package for machine learning in Python. \cite{Scikit} The built-in regression tools are made to give high performance and be easy to implement, and is therefore the ideal benchmark in this project. the procedure of calling the OLS, Ridge and Lasso functions looks like this:
+To benchmark the results in this project, we use Scikit Learn, which is a package for machine learning in Python. \cite{Scikit} The built-in regression tools are made to give high performance and be easy to implement, and is therefore the ideal benchmark in this project. The procedure of calling the OLS, Ridge and Lasso functions looks like this:
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
@@ -114,4 +114,4 @@ reg = Lasso(alpha=lambda)
 reg.fit(X, z)
 beta_Lasso = reg.coef_
 \end{lstlisting}
-where $X$ is the design matrix and $z$ is the data in z-direction. 
+where $X$ is the design matrix and $z$ is the dependent variables. See \textit{regression\_scikit.py} for actual implementation. 

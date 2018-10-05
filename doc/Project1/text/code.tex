@@ -36,11 +36,11 @@ To keep the code neat and clean we decided to write object oriented code, althou
 \end{figure}
 
 \subsection{Implementation and optimization} \label{sec:implementation}
-To get a code which provides good performance, we need to be thoughtful when implementing it. The loops are often bottlenecks, so by replacing loops with vector operations we can save a lot of time. An example on this, is when we calculate the mean square error (MSE) given by
+To get a code which provides good performance, we need to be thoughtful when implementing it. The loops are often the bottlenecks, so by replacing loops with vector operations we can save a lot of time. An example on this, is when we calculate the MSE
 \begin{equation}
 \text{MSE}(\vec{\beta})=\sum_i\bigg(y_i-\beta_0-\sum_jX_{ij}\beta_j\bigg)^2,
 \end{equation}
-where $\vec{y}$ and $\vec{\beta}$ are vectors and $\hat{X}$ is a matrix. For implementing this directly, we need a double loops, which will be slow for large systems. A better solution would be to exploit the linear algebra properties of vectors:
+where $\vec{y}$ and $\vec{\beta}$ are vectors and $\hat{X}$ is a matrix. For implementing this directly, we need a double loop, which will be slow for large systems. A better solution would be to exploit the linear algebra properties of vectors:
 
 \begin{equation}
 \text{MSE}(\vec{\beta})=(\vec{y}-\hat{X}^T\vec{\beta})^T\cdot(\vec{y}-\hat{X}^T\vec{\beta})
