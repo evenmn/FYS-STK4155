@@ -1,5 +1,6 @@
 import numpy as np
-
+from regression_2D import *
+from error_tools import *
 
 def bootstrap(data, K=1000):
     '''Bootstrap resampling
@@ -17,22 +18,33 @@ def bootstrap(data, K=1000):
     
     
     
-def k_fold(data, K=8):
+def k_fold(x, y, z, K=8):
     '''K-fold validation resampling'''
     
-    dataMat = np.reshape(data, (K, int(len(data)/K)))
-    avgVec = np.empty(K)
+    xMat = np.reshape(x, (K, int(len(x)/K)))
+    yMat = np.reshape(y, (K, int(len(y)/K)))
+    zMat = np.reshape(z, (K, int(len(z)/K)))
+    
+    MSE_train = 0
+    MSE_test = 0
     
     for i in range(K):
-        dataMatNew = np.delete(dataMat, i, 0)
-        avgVec[i] = np.average(dataMatNew.flatten())
+        xMatNew = np.delete(xMat, i, 0)
+        yMatNew = np.delete(yMat, i, 0)
+        zMatNew = np.delete(zMat, i, 0)
         
-    Avg = np.average(avgVec)
-    Var = np.var(avgVec)
-    Std = np.std(avgVec)
-    
-    return Avg, Var, Std
-    
+        xVecNew = xMatNew.flatten()
+        yVecNew = yMatNew.flatten()
+        zVecNew = zMatNew.flatten()
+        
+        order5 = Reg_2D(xVecNew, yVecNew, zVecNew, Px=5, Py=5)
+        beta_train = order5.ols()
+        
+        MSE_train += MSE(xVecNew, yVecNew, zVecNew, beta_train)
+        MSE_test += MSE(xMat[i], yMat[i], zMat[i], beta_train)
+
+    return MSE_train/K, MSE_test/K
+        
     
 
 def blocking(data):

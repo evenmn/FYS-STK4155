@@ -24,6 +24,12 @@ x = uniform(0,1,N)
 y = uniform(0,1,N)
 z = FrankeFunction(x, y) + noise
 
+print(k_fold(x, y, z, K=10))
+print(k_fold(x, y, z, K=20))
+print(k_fold(x, y, z, K=50))
+print(k_fold(x, y, z, K=100))
+stop
+
 '''
 # === Calculating Confidence Intervals (CI) ===
 order5 = Reg_2D(x, y, z, Px=5, Py=5)
