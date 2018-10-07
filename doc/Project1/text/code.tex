@@ -12,7 +12,7 @@ This project is largely based on numerical calculation, so a few words about the
 To keep the code neat and clean we decided to write object oriented code, although we do not have that many functions. The code of this project consists of two main functions fit\_franke.py and fit\_terrain.py, where the former is used to test the tools on a known function and the latter is used to fit a polynomial to terrain data. Both of them are calling the classes for 2D regression and resampling techniques, named regression\_2D.py and resampling.py respectively, and fit\_franke.py is also communicating with franke.py. For overview of the code structure, see figure \eqref{fig:codestructure}.
 \begin{figure}
 \centering
-\begin{tikzpicture}[auto,node distance=1.5cm]
+\begin{tikzpicture}[auto,node distance=0.7cm]
 
   % Create entity node
   \node[entity] (node1) {fit\_terrain.py};
@@ -22,7 +22,7 @@ To keep the code neat and clean we decided to write object oriented code, althou
   \node[relationship] (rel2) [below left = of node1] {resampling.py};
   
   % Create another entity node
-  \node[entity] (node2) [below left = of rel1] {fit\_franke.py} child[grow=down,level distance=2cm] {node[attribute] {franke.py}};
+  \node[entity] (node2) [below left = of rel1] {fit\_franke.py} child[grow=down,level distance=1.5cm] {node[attribute] {franke.py}};
   
   % Draw paths
   \path (rel1) edge node {} (node1);
@@ -36,11 +36,11 @@ To keep the code neat and clean we decided to write object oriented code, althou
 \end{figure}
 
 \subsection{Implementation and optimization} \label{sec:implementation}
-To get a code which provides good performance, we need to be thoughtful when implementing it. The loops are often bottlenecks, so by replacing loops with vector operations we can save a lot of time. An example on this, is when we calculate the mean square error (MSE) given by
+To get a code which provides good performance, we need to be thoughtful when implementing it. The loops are often the bottlenecks, so by replacing loops with vector operations we can save a lot of time. An example on this, is when we calculate the MSE
 \begin{equation}
 \text{MSE}(\vec{\beta})=\sum_i\bigg(y_i-\beta_0-\sum_jX_{ij}\beta_j\bigg)^2,
 \end{equation}
-where $\vec{y}$ and $\vec{\beta}$ are vectors and $\hat{X}$ is a matrix. For implementing this directly, we need a double loops, which will be slow for large systems. A better solution would be to exploit the linear algebra properties of vectors:
+where $\vec{y}$ and $\vec{\beta}$ are vectors and $\hat{X}$ is a matrix. For implementing this directly, we need a double loop, which will be slow for large systems. A better solution would be to exploit the linear algebra properties of vectors:
 
 \begin{equation}
 \text{MSE}(\vec{\beta})=(\vec{y}-\hat{X}^T\vec{\beta})^T\cdot(\vec{y}-\hat{X}^T\vec{\beta})

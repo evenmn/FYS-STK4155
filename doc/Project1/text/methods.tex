@@ -1,7 +1,7 @@
 \section{Methods} \label{sec:methods}
 
 \subsection{Resampling techniques} \label{sec:resampling}
-A resampling technique is a way of estimating the variance of data sets without calculating the covariance. As we saw in section section \ref{sec:error_analysis}, the true covariance is given by a double loop which we will avoid calculating if possible. There are different ways of doing this, and we have already went through several of them in this course:
+A resampling technique is a way of estimating the variance of data sets without calculating the covariance. As we saw in section section \ref{sec:error_analysis}, the true covariance is given by a double sum which we will avoid calculating if possible. There are different ways of doing this, and we have already went through several of them in this course:
 \begin{itemize}
 \item{Jackknife resampling}
 \item{K-fold validation}
@@ -22,7 +22,7 @@ The assumption we need to make, is that the relative frequency of $x_i$ equals $
 \item The average value of all $K$ $\vec{\beta}^*$'s are stored in a new vector $\vec{\bar{\beta}}^*$
 \item Finally, the variance of $\vec{\bar{\beta}}^*$ should correspond to the sample variance
 \end{enumerate}
-\cite{BootstrapEfron}
+\cite{Bootstrap}
 
 The implementation could look something like this
 \lstset{basicstyle=\scriptsize}
@@ -37,7 +37,7 @@ def bootstrap(data, K=1000):
     
     return Avg, Var, Std
 \end{lstlisting}
-which is strongly inspired by the lecture notes [NEED REFERENCE]
+which is strongly inspired by the lecture notes \cite{Lecture}.
 
 It is also worth to mention that we should hold back a small part of the original data set for testing, since we need to test the model on data that it has not seen before.
 
@@ -65,7 +65,7 @@ Perhaps the simplest and most intuitive method for finding the minimum is the gr
 \end{equation}
 where $\beta_i^{\text{new}}$ is the updated $\beta$ and $\eta$ is a step size, in machine learning often refered to as the learning rate. The idea is to find the gradient of the cost function $Q(\vec{\beta})$ with respect to a certain $\beta_i$, and move in the direction which minimizes the cost function. This is repeated until a minimum is found, defined by either
 \begin{equation}
-\frac{\partial Q(\beta_i)}{\partial\beta_i}<\varepsilon
+Q(\beta_i)<\varepsilon
 \end{equation}
 or that the change in $\beta_i$ for the past $x$ steps is small. 
 \par 
@@ -95,3 +95,23 @@ while dbeta > epsilon:
     debeta = 2*X.T.dot(e) -np.sign(beta)*q*lambda*np.power(abs(beta), q-1)
     beta += eta*dbeta
 \end{lstlisting}
+
+\subsection{Benchmark}
+To benchmark the results in this project, we use Scikit Learn, which is a package for machine learning in Python. \cite{Scikit} The built-in regression tools are made to give high performance and be easy to implement, and is therefore the ideal benchmark in this project. The procedure of calling the OLS, Ridge and Lasso functions looks like this:
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+
+reg = LinearRegression()
+reg.fit (X, z) 
+beta_OLS = reg.coef_
+
+reg = Ridge(alpha=lambda)
+reg.fit(X, z)
+beta_Ridge = reg.coef_
+
+reg = Lasso(alpha=lambda)
+reg.fit(X, z)
+beta_Lasso = reg.coef_
+\end{lstlisting}
+where $X$ is the design matrix and $z$ is the dependent variables. See \textit{regression\_scikit.py} for actual implementation. 

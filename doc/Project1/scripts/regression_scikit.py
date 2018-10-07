@@ -61,7 +61,7 @@ class Reg_scikit():
         X = Reg_scikit.set_up_X(self)
         
         reg = LinearRegression()
-        reg.fit (X, z) 
+        reg.fit(X, z) 
         
         return np.reshape(reg.coef_, (Px,Py))
         

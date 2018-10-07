@@ -1,8 +1,12 @@
 \section{Theory} \label{sec:theory}
-Regression analysis are widely used in different fields of natural sciences, data science and economics to mention some. The simplest form is the linear regression, which is intuitive and easy to work with. 
+Regression analysis are widely used in different fields of natural sciences, data science and economics to mention some. In fact, as fast as we a data set that needs to be analyzed, regression is unavoidable. The simplest form is the linear regression, which is intuitive and easy to work with. 
  
 \subsection{Linear regression} \label{sec:regression}
-In linear regression, the dependent variable $y_i$ is a linear combination of the parameters. \cite{Hastie}
+In linear regression, the dependent variable $y_i$ is a linear combination of the parameters, and for a dependent variable this can be written as
+\begin{equation}
+y_i=\sum_jX_{ij}\beta_j.
+\end{equation}
+In principle, $x_ij$ can be an arbitrary function of the arguments $x_i$, but in this project we will only fit the data with a polynomial function. \cite{Hastie}
 
 \subsubsection{Ordinary Least Square (OLS)} \label{sec:OLS}
 Suppose we have a set of points $\{(x_1, y_1), (x_2, y_2),\hdots, (x_n, y_n)\}$, and we want to fit a p'th order polynomial to them. The most intuitive way would be to find coefficients $\vec{\beta}$ which minimize the error in
@@ -33,7 +37,7 @@ as the \textit{design} matrix and
 \end{equation}
 as the coefficients. 
 
-For a nonsingular matrix $\hat{X}$ (but not necessary symmetric) we can find the optimal $\vec{\beta}$ by solving
+For a nonsingular matrix $\hat{X}$ (but not necessary square) we can find the optimal $\vec{\beta}$ by solving
 \begin{equation}
 \vec{\beta}=(\hat{X}^T\hat{X})^{-1}\hat{X}^T\vec{y},
 \end{equation}
@@ -41,7 +45,7 @@ which again corresponds to minimizing the cost function,
 \begin{equation}
 \vec{\beta}=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2\bigg\}.
 \end{equation}
-where we here have used the standard cost function, given by least squares,
+where the standard cost function is used, given by least squares,
 
 \begin{equation}
 Q(\vec{\beta})=\sum_{i=1}^{n}(y_i-\tilde{y}_i)^2=(\vec{y}-\hat{X}\vec{\beta})^T(\vec{y}-\hat{X}\vec{\beta}).
@@ -49,7 +53,7 @@ Q(\vec{\beta})=\sum_{i=1}^{n}(y_i-\tilde{y}_i)^2=(\vec{y}-\hat{X}\vec{\beta})^T(
 
 This works perfectly when all rows in $\hat{X}$ are linearly independent, but this will generally not be the case for large data sets. If we are not able to diagonalize the matrix, we will not be able to calculate $(\hat{X}^T\hat{X})^{-1}$, so we need to do something smart. 
 
-Fortunately there is a simple trick we can do to make all matrices diagonalizable; we can add a diagonal matrix to the initial matrix. 
+Fortunately, there is a simple trick we can do to make all matrices diagonalizable; we can add a diagonal matrix to the initial matrix. 
 
 
 \subsubsection{Ridge regression} \label{sec:ridge}
@@ -71,17 +75,18 @@ or we could simply solve the equation
 \begin{equation}
 \vec{\beta}^{\text{ridge}}=(\hat{X}^T\hat{X}+\lambda I)^{-1}\hat{X}^T\vec{\beta}.
 \end{equation}
-In the latter equation we can easily see why this solves our problem.
+In the latter equation we can easily see why this solves our problem. For this case, we expect the coefficients to be smaller compared with OLS, since the cost function is directly dependent on $\vec{\beta}^2$.
 
 \subsubsection{Lasso regression} \label{sec:lasso}
 The idea behind Lasso regression is similar to the idea behind Ridge regression, and they differ only by the exponent factor in the last term. The modified cost function now writes
 \begin{equation}
-Q^{\text{lasso}}(\vec{\beta})=\sum_{i=1}^N(y_i-\tilde{y_i})^2+\lambda||\vec{\beta}||_2,
+Q^{\text{lasso}}(\vec{\beta})=\sum_{i=1}^N(y_i-\tilde{y_i})^2+\lambda|\vec{\beta}|,
 \end{equation}
 and to find the optimal coefficients $\vec{\beta}$, we need to minimize
 \begin{equation}
 \vec{\beta}^{\text{lasso}}=\text{argmin},\vec{\beta}\bigg\{\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p|\beta_j|\bigg\}.
 \end{equation}
+We expect the coefficients to be even smaller for Lasso regression than for Ridge regression, since the cost function is directly dependent on $\vec{\beta}$.
 
 \subsubsection{General form} \label{sec:general}
 We can generalize the models above to a minimization problem where we have a $q$ in the last exponent, 
@@ -91,7 +96,7 @@ We can generalize the models above to a minimization problem where we have a $q$
 such that $q=2$ corresponds to the Ridge method and $q=1$ is associated with Lasso regression. It can also be interesting to try other $q$-values.
 
 \subsection{Multivariate linear regression} \label{sec:higher_reg}
-We can use the same approach as above when dealing with regression of higher order, since the problem is to fit a function to points, no matter how many components they have. We will first take a look at how we can fit a 2D polynomial to some terrain data, before we briefly describe how to fit a function of arbitrary order to points.
+The same approach as above can be used when dealing with regression of higher order, since the problem is to fit a function to points, no matter how many components they have. We will first take a look at how we can fit a 2D polynomial to some terrain data, before we briefly describe how to fit a function of an arbitrary order to points.
 
 \subsubsection{Terrain} \label{sec:terrain}
 A set of data points $\{(x_1, y_1, z_1), (x_2, y_2, z_2),\hdots, (x_n, y_n,z_n)\}$ gives some coordinates in space, which for instance can describe the terrain. The system of linear equations to solve can then be lined up as 
@@ -131,7 +136,7 @@ f(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4} - \frac{(9y-2)^2}{4}\right)}
 \end{align*}
 and is a smooth 2D function as one can see in figure \eqref{fig:data}, part (a).
 
- \begin{figure} [H]%
+ \begin{figure} [h]%
     \centering
     \subfloat[Franke function]{{\includegraphics[width=8cm]{../plots/franke.png} }}%
     \subfloat[Lombok terrain]{{\includegraphics[width=8cm]{../plots/lombok.png} }}
@@ -145,7 +150,7 @@ Secondly, we use the verified regression tools to fit a polynomial to real terra
 There should be no surprise that we can extend the theory above to even higher orders. 
 Although we stick to 2D regression in this project, we add this section for completeness. 
 
-Suppose now that we have a data set of $n$ points in $d$ dimensions, \\ $\{(x_1^1, x_1^2, \hdots, x_1^d), (x_2^1, x_2^2,\hdots, x_2^d),\hdots, (x_n^1, x_n^2,\hdots,x_n^d)\}$, where the superscript indicates in which dimension the coordinate is, and the subscript is the coordinate number. We want to fit the points with a polynomial of degree $p\in\mathbb{R}^d$, where we assume that the fitting polynomial has the same degree in all direction, which makes the notation neater, but is not essential. To be more specific, we want polynomial coefficients $\vec{\beta}=(\beta_0, \beta_1, \hdots, \beta_{p^d})$ that minimizes the error in 
+Suppose now that we have a data set of $n$ points in $d$ dimensions, \\ $\{(x_1^1, x_1^2, \hdots, x_1^d), (x_2^1, x_2^2,\hdots, x_2^d),\hdots, (x_n^1, x_n^2,\hdots,x_n^d)\}$, where the superscript indicates in which dimension the coordinate is, and the subscript is the coordinate number. We want to fit a polynomial of degree $p\in\mathbb{R}^d$ to the points, where we assume that the fitting polynomial has the same degree in all directions, which makes the notation neater, but is not essential. To be more specific, we want polynomial coefficients $\vec{\beta}=(\beta_0, \beta_1, \hdots, \beta_{p^d})$ that minimizes the error in 
 \begin{align*}
 x_1^d&=\beta_0(x_1^1)^0(x_1^2)^0\hdots(x_1^d)^0 +\beta_1(x_1^1)^1(x_1^2)^0\hdots(x_1^d)^0+\hdots+\beta_{p^d}(x_1^1)^p(x_1^2)^p\hdots(x_1^d)^p+\varepsilon_1\\
 x_2^d&=\beta_0(x_2^1)^0(x_2^2)^0\hdots(x_2^d)^0 +\beta_1(x_2^1)^1(x_2^2)^0\hdots(x_2^d)^0+\hdots+\beta_{p^d}(x_2^1)^p(x_2^2)^p\hdots(x_2^d)^p+\varepsilon_2\\
@@ -176,7 +181,7 @@ where the sample mean is given by
 \end{equation}
 We will stress that sample mean is not necessarily the same as the distribution mean, but the sample mean will approximate the distribution mean for large data sets, known as the \textit{central limit theorem}. \cite{StatMek}
 
-Often we are studying multiple data sets at the same time, and want to estimate the total variance. The sample mean of one data set $\alpha$ is still given by
+Often we study multiple data sets at the same time, and want to estimate the total variance. The sample mean of one data set $\alpha$ is still given by
 \begin{equation}
 \bar{y}_{\alpha}=\frac{1}{N}\sum_{i=1}^Ny_{\alpha,i},
 \end{equation}
@@ -188,7 +193,7 @@ The total variance will then be a sum over the single set variances plus the cro
 \begin{equation}
 \sigma_M^2=\frac{1}{M}\sum_{\alpha=1}^M\frac{\sigma_{\alpha}^2}{N}+\frac{2}{MN^2}\sum_{\alpha=1}^M\sum_{i<j}^N(y_{\alpha,i}-\bar{y}_M)(y_{\alpha,j}-\bar{y}_M).
 \end{equation}
-The last term is called the covariance, and is a measure of how much the data set are related. If they are totally independent, the covariance is zero. For large data sets this term is computational expensive to calculate, and we will rather use resampling techniques to estimate the variance. A few resampling techniques are presented in the Method section.
+The last term is called the covariance, and is a measure of how much the data sets are related. If they are totally uncorrelated, the covariance is zero. For large data sets this term is computational expensive to calculate, and we will rather use resampling techniques to estimate the variance. A few resampling techniques are presented in the \textit{Method} section.
 
 \subsubsection{Confidence interval} \label{sec:confidence}
 The confidence interval is the interval that you are within with a probability given by the confidence level. The confidence interval (CI) means
@@ -197,11 +202,11 @@ The confidence interval is the interval that you are within with a probability g
 \end{equation}
 where $\bar{y}$ is the sample mean, $\sigma$ is the standard deviation of the PDF, $N$ is the number of points and $z^*$ is directly related to the confidence level and can be found in statistics tables. 
 
-As an example, assume that you flip a coin N times and count number of heads. Before you start, you want to know how many heads you will count with a 95\% confidence. The procedure for calculating the CI is then
+As an example, suppose that you flip a coin $N$ times and count number of heads. Before you start, you want to know how many heads you will count with a 95\% confidence. The procedure for calculating the CI is then
 \begin{enumerate}
-	\item Calculate the sample mean of your data set
-	\item Find $z^*$ from a table. For 95\% confidence, the Z-score $z^*=1.96$
-	\item Calculate the standard deviation of the PDF. The clue in this example, is that the PDF is approximating a binomial distribution when $N$ increases, with a known $\sigma$ [https://www.sumproduct.com/thought/simulation-stimulation] 
+	\item Calculate the sample mean of your data set, which for this case is $N/2$.
+	\item Find $z^*$ fromhttps://www.sumproduct.com/thought/simulation-stimulation a table. For 95\% confidence, the Z-score $z^*=1.96$
+	\item Calculate the standard deviation of the PDF. The clue in this example, is that the PDF approximates a binomial distribution when $N$ increases, with a known $\sigma$. \cite{Coin}
 	\item Plug into the formula above
 \end{enumerate}
 
@@ -211,20 +216,20 @@ So, how can we make us of this in project 1? To predict which coefficients we co
 \end{equation}
 where the $\sigma^2$ is the sample variance of the points.
 
-Another approx is to simply calculate $N$ estimates of each beta, and sort them in increasing order. Leaving out the $p\%$ first elements of the data set and the $p\%$ last elements, we are left with the $q=100\%-2p\%$ most likely betas, and the confidence interval related to a confidence level of $q\%$ is within the smallest and largest elements of this new set.
+Another approach is to simply calculate $N$ estimates of each beta, and sort them in increasing order. Leaving out the $p\%$ first elements of the data set and the $p\%$ last elements, we are left with the $q=100\%-2p\%$ most likely betas, and the confidence interval related to a confidence level of $q\%$ is within the smallest and largest elements of this new set.
 
 \subsection{Error analysis} \label{sec:error_analysis}
-Different methods to estimate error:
+To find out how good the fit is, we could potentially compare the polynomial plot to the data plot and decide whether the fit is good or not. However, that approach is risky in the sense that it is hard to determine how good a fit really is, and we therefore rely on error estimates. There are many ways to calculate the error, where some frequently used methods are
 \begin{itemize}
-	\item{Absolute error}
-	\item{Relative error}
-	\item{Mean square error (MSE)}
-	\item{R$^2$ score function}
+	\item{the absolute error}
+	\item{the relative error}
+	\item{the mean square error (MSE)}
+	\item{the R$^2$ score function}
 \end{itemize}
 In this report we will study only the MSE and R$^2$ score function.
 
 \subsubsection{Mean Square Error (MSE)} \label{sec:MSE}
-The most popular error estimation method is the mean square error, also called least squares. \cite{Hastie} We study the MSE in order to find out how the cost function is reduced, because it is basically the standard cost function, used in OLS. 
+The most popular error estimation method is the mean square error, also called least squares. \cite{Hastie} We study the MSE in order to compute the reduction of the cost function, because it is basically the standard cost function, used in OLS. 
 \begin{equation}
 \text{MSE}(\vec{\beta})=\frac{1}{N}\sum_{i=1}^N(y_i-\tilde{y}(\vec{\beta}))^2
 \end{equation}
@@ -237,15 +242,13 @@ As one can see, the bias can both be positive and negative, where a large positi
 \text{MSE}(\vec{\beta})=\text{bias}(\vec{\beta})^2+\sigma^2, 
 \end{equation}
 and based on this we can show that the optimal complexity of our model (which is neither underfitted nor overfitted) is when the bias and variance are equal, see figure \eqref{fig:variance_bias}.
-
  \begin{figure} [h]
 	\centering
 	\includegraphics[scale=0.3]{../plots/variance_bias.png}
 	\caption{Bias-variance trade-off. Figure showing the bias (red graph). variance (blue graph) and MSE (purple graph) as functions of the complexity of the model. Figure taken from \url{https://www.reddit.com/r/mlclass/comments/mmlfu/a_nice_alternative_explanation_of_bias_and/}}
 	\label{fig:variance_bias}
 \end{figure}
-
-As we can see from the figure, the bias decreases and the variance increases as the model gets more complex. The MSE is minimized when $\sigma^2=\text{bias}$. 
+From the figure, we observe that the bias decreases and the variance increases as the model gets more complex. The MSE is minimized when $\sigma^2=\text{bias}$. 
 
 \subsubsection{R$^2$ score function} \label{sec:R2}
 The R$^2$ score function is a measure of how close the data are to the fitted regression line, and is a widely used quantity within statistics. \cite{R2}
@@ -259,7 +262,7 @@ where the explained variation is the difference between the variance and the MSE
 \text{Total variation}=\frac{1}{N}\sum_{i=1}^N(y_i-\bar{y})^2.
 \end{equation*}
 
-The R$^2$-score is always between 0 and 1, it is 0 if the model does not explain any of the variations and 1 if it explains all variations. In that manner, we should fight for a high R2-score. It is in entirety given by
+The R$^2$-score is usually between 0 and 1. If the model does not explain any of the variations it is 0 and if it explains all variations the score is 1. In that manner, we should fight for a high R2-score. It is in entirety given by
 \begin{equation}
 R^2(\vec{y},\tilde{\vec{y}})=1-\frac{\sum_{i=1}^N(y_i-\tilde{y})^2}{\sum_{i=1}^N(y_i-\bar{y})^2}.
 \end{equation}

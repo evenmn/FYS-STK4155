@@ -49,7 +49,6 @@ X = order5.set_up_X()*var_z
 
 var_beta = np.linalg.inv(X.T.dot(X))*var_z
 var_beta = np.diag(var_beta)
-print(var_beta)
 
 
 
@@ -93,84 +92,58 @@ for beta in betas:
     print("R2: ", R2(x, y, z, beta_mat))
 plt.show()
 
-'''
+
 # === lambda vs R2 ===
 lambda_list = []
 R2_ridge = []
 R2_lasso = []
-
 for i in np.linspace(-8,2,100):
     lambda_list.append(10**i)
     beta_ = order5.ridge(lambda_list[-1])
     R2_ridge.append(R2(x, y, z, beta_))
     
-    #beta__ = order5.lasso(lambda_list[-1])
-    #R2_lasso.append(R2(x, y, z, beta__))
+    beta__ = order5.lasso(lambda_list[-1], η=η, niter=niter)
+    R2_lasso.append(R2(x, y, z, beta__))
     
     
+label_size = {"size":"14"}
 plt.semilogx(lambda_list, R2_ridge, label='Ridge', linewidth=2)
-#plt.semilogx(lambda_list, R2_lasso, label='Lasso')
-plt.xlabel('$\lambda$')
-plt.ylabel('$R^2$-score')
+plt.semilogx(lambda_list, R2_lasso, label='Lasso', linewidth=2)
+plt.xlabel('$\lambda$', **label_size)
+plt.ylabel('$R^2$-score', **label_size)
 plt.legend(loc='best')
 plt.grid()
-plt.savefig('../plots/lambda_R2score.png')
+plt.savefig('../plots/lambda_R2score_terrain.png')
 plt.show()
 
 
 # === noise vs R2 ===
 R2_ols = []
+R2_ridge = []
+R2_lasso = []
 var = []
 for i in np.linspace(-6,-0.7, 100):
     var.append(10**i)
     noise = normal(0,var[-1],N)         # Noise
     z = FrankeFunction(x, y) + noise
     
-    R2_ols.append(R2(x, y, z, beta_ols))
+    order5 = Reg_2D(x, y, z, Px=5, Py=5)
+    beta_ols = order5.ols()
+    beta_ridge = order5.ridge(λ)
+    beta_lasso = order5.lasso(λ, η, niter)
     
-plt.semilogx(var, R2_ols, linewidth=2)
-plt.xlabel('$\sigma^2$ in noise')
-plt.ylabel('$R^2$-score')
+    R2_ols.append(R2(x, y, z, beta_ols))
+    R2_ridge.append(R2(x, y, z, beta_ridge))
+    R2_lasso.append(R2(x, y, z, beta_lasso))
+    
+    
+plt.semilogx(var, R2_ols, label='OLS', linewidth=2)
+plt.semilogx(var, R2_ridge, label='Ridge', linewidth=2)
+plt.semilogx(var, R2_lasso, label='Lasso', linewidth=2)
+plt.xlabel('$\sigma^2$ in noise', **label_size)
+plt.ylabel('$R^2$-score', **label_size)
+plt.legend(loc='best')
 plt.grid()
-plt.savefig('../plots/var_R2score.png')
-plt.show()
-'''
-'''
-start = clock()
-order5 = Reg_2D(X_flatten, Y_flatten, Z_flatten, Px=5, Py=5)
-beta_ols = order5.ridge()
-end = clock()
-print(end-start)
-print(beta_ols)
-
-# Show the terrain
-plt.figure()
-plt.title('Terrain over Mount Everest')
-plt.imshow(terrain)#, cmap='gray')
-plt.xlabel('X')
-plt.ylabel('Y')
+plt.savefig('../plots/var_R2score_terrain.png')
 plt.show()
 
-plt.imshow(polyval(X, Y, beta_ols))
-plt.show()
-stop
-# PLOT
-
-fig = plt.figure() 
-ax = fig.gca(projection='3d')
-
-#Plot the surface. 
-surf = ax.plot_surface(X,Y,terrain,cmap=cm.coolwarm,linewidth=0,antialiased=False)
-
-#Customize the z axis. 
-ax.set_zlim(0,3000)
-ax.zaxis.set_major_locator(LinearLocator(10))
-ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
-ax.set_xlabel('X axis')
-ax.set_ylabel('Y axis')
-ax.set_zlabel('Z axis')
-
-#Add a color bar which maps values to colors. 
-fig.colorbar(surf, shrink=0.5, aspect=5)
-plt.show()
-'''

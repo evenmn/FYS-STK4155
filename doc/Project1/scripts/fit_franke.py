@@ -14,7 +14,7 @@ N = 1000                        # Number of sampling points
 λ = 1e-5                       # Penalty
 η = 0.0001                      # Learning rate
 σ = 0.1                         # Standard deviation used in noise
-niter = 1e4                     # Number of iterations used in Gradient Descent
+niter = 1e5                   # Number of iterations used in Gradient Descent
 
 noise = normal(0,σ*σ,N)         # Noise
 
@@ -22,7 +22,7 @@ noise = normal(0,σ*σ,N)         # Noise
 # === Generate sampling points ===
 x = uniform(0,1,N)
 y = uniform(0,1,N)
-z = FrankeFunction(x, y) + noise
+z = FrankeFunction(x, y) #+ noise
 
 print(k_fold(x, y, z, K=10))
 print(k_fold(x, y, z, K=20))
@@ -66,7 +66,6 @@ beta_lasso_test[0,0] = beta_lasso[0,0]
 betas = ["beta_ols_test", "beta_ols", "beta_ridge_test", "beta_ridge", \
          "beta_lasso_test", "beta_lasso", "beta_ridge_test", "beta_ridge2"]
 
-
 for beta in betas:
     beta_mat = eval(beta)
     
@@ -77,7 +76,7 @@ for beta in betas:
     plt.imshow(beta_mat, cmap=cm.coolwarm)
     cbar = plt.colorbar()
     cbar.ax.tick_params(labelsize=22)
-    plt.savefig("../plots/{}_visualize.png".format(beta))
+    #plt.savefig("../plots/{}_visualize.png".format(beta))
 
     plot_3D(beta_mat, show_plot=False)
     
@@ -86,45 +85,57 @@ for beta in betas:
     print("R2: ", R2(x, y, z, beta_mat))
 plt.show()
 
-
+stop
 # === lambda vs R2 ===
 lambda_list = []
 R2_ridge = []
 R2_lasso = []
-
 for i in np.linspace(-8,2,100):
     lambda_list.append(10**i)
     beta_ = order5.ridge(lambda_list[-1])
     R2_ridge.append(R2(x, y, z, beta_))
     
-    #beta__ = order5.lasso(lambda_list[-1])
-    #R2_lasso.append(R2(x, y, z, beta__))
+    beta__ = order5.lasso(lambda_list[-1], η=η, niter=niter)
+    R2_lasso.append(R2(x, y, z, beta__))
     
     
 label_size = {"size":"14"}
 plt.semilogx(lambda_list, R2_ridge, label='Ridge', linewidth=2)
-#plt.semilogx(lambda_list, R2_lasso, label='Lasso')
+plt.semilogx(lambda_list, R2_lasso, label='Lasso', linewidth=2)
 plt.xlabel('$\lambda$', **label_size)
 plt.ylabel('$R^2$-score', **label_size)
 plt.legend(loc='best')
 plt.grid()
-plt.savefig('../plots/lambda_R2score.png')
+#plt.savefig('../plots/lambda_R2score.png')
 plt.show()
 
 
 # === noise vs R2 ===
 R2_ols = []
+R2_ridge = []
+R2_lasso = []
 var = []
 for i in np.linspace(-6,-0.7, 100):
     var.append(10**i)
     noise = normal(0,var[-1],N)         # Noise
     z = FrankeFunction(x, y) + noise
     
-    R2_ols.append(R2(x, y, z, beta_ols))
+    order5 = Reg_2D(x, y, z, Px=5, Py=5)
+    beta_ols = order5.ols()
+    beta_ridge = order5.ridge(λ)
+    beta_lasso = order5.lasso(λ, η, niter)
     
-plt.semilogx(var, R2_ols, linewidth=2)
+    R2_ols.append(R2(x, y, z, beta_ols))
+    R2_ridge.append(R2(x, y, z, beta_ridge))
+    R2_lasso.append(R2(x, y, z, beta_lasso))
+    
+    
+plt.semilogx(var, R2_ols, label='OLS', linewidth=2)
+plt.semilogx(var, R2_ridge, label='Ridge', linewidth=2)
+plt.semilogx(var, R2_lasso, label='Lasso', linewidth=2)
 plt.xlabel('$\sigma^2$ in noise', **label_size)
 plt.ylabel('$R^2$-score', **label_size)
+plt.legend(loc='best')
 plt.grid()
-plt.savefig('../plots/var_R2score.png')
+#plt.savefig('../plots/var_R2score.png')
 plt.show()
