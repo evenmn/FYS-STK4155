@@ -24,11 +24,6 @@ x = uniform(0,1,N)
 y = uniform(0,1,N)
 z = FrankeFunction(x, y) #+ noise
 
-print(k_fold(x, y, z, K=10))
-print(k_fold(x, y, z, K=20))
-print(k_fold(x, y, z, K=50))
-print(k_fold(x, y, z, K=100))
-stop
 
 '''
 # === Calculating Confidence Intervals (CI) ===
@@ -84,6 +79,11 @@ for beta in betas:
     print("MSE: ", MSE(x, y, z, beta_mat))
     print("R2: ", R2(x, y, z, beta_mat))
 plt.show()
+
+print("OLS K=10: ", k_fold(x, y, z, K=10, method='ols'))
+print("Ridge K=10: ", k_fold(x, y, z, K=10, method='ridge'))
+print("Lasso K=10: ", k_fold(x, y, z, K=10, method='lasso'))
+print("RidgeGD K=10: ", k_fold(x, y, z, K=10, method='ridgeGD'))
 
 stop
 # === lambda vs R2 ===

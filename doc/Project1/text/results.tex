@@ -30,14 +30,14 @@ To be able to determine which method is best, we need to analyze the error. In t
 
 \begin{table} [H]
 	\caption{Mean Square Error and R$^2$-score presented for OLS, Ridge, Lasso and Ridge + gradient descent (RidgeGD), where noise was added to the data. The parameters used were $\lambda=1e-5$ (penalty), $\eta=1e-4$ (learning rate), $niter=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.01)$ (noise). \vspace{2mm}}
-	\begin{tabularx}{\textwidth}{l|XX|XX} \hline\hline
+	\begin{tabularx}{\textwidth}{l|XXX|XXX} \hline\hline
 		\label{tab:franke_error}
-		& \multicolumn{2}{c}{\textbf{MSE}}&\multicolumn{2}{c}{\textbf{R2}}\\ \hline
-		&self&scikit&self&scikit\\ \hline \\
-		OLS & 0.001215 & 0.001215 & 0.9854 & 0.9853\\
-		Ridge & 0.001628 & 0.001628 & 0.9804 & 0.9804 \\
-		Lasso & 0.009476 & 0.006651 & 0.8861 & 0.9201 \\
-		RidgeGD & 0.009067 & 0.001628 & 0.8911 & 0.9804 \\ \hline
+		& \multicolumn{3}{c}{\textbf{MSE}}&\multicolumn{3}{c}{\textbf{R2}}\\ \hline
+		&self&K-fold&scikit&self&K-fold&scikit\\ \hline \\
+		OLS & 0.001215 && 0.001215 & 0.9854 && 0.9853\\
+		Ridge & 0.001628 && 0.001628 & 0.9804 && 0.9804 \\
+		Lasso & 0.009476 && 0.006651 & 0.8861 && 0.9201 \\
+		RidgeGD & 0.009067 && 0.001628 & 0.8911 && 0.9804 \\ \hline
 	\end{tabularx}
 \end{table}
 
@@ -144,14 +144,14 @@ To be able to determine which method is best, we need to analyze the error. In t
 
 \begin{table} [H]
 	\caption{Mean Square Error and R$^2$-score presented for OLS, Ridge, Lasso and Ridge + gradient descent (RidgeGD), where noise was added to the data. The parameters used were $\lambda=1e-5$ (penalty), $\eta=1e-4$ (learning rate), $niter=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.01)$ (noise). \vspace{2mm}}
-	\begin{tabularx}{\textwidth}{l|XX|XX} \hline\hline
+	\begin{tabularx}{\textwidth}{l|XXX|XXX} \hline\hline
 		\label{tab:terrain_error}
-		& \multicolumn{2}{c}{\textbf{MSE}}&\multicolumn{2}{c}{\textbf{R2}}\\ \hline
-		&self&scikit&self&scikit\\ \hline \\
-		OLS & 0.006282 & 0.006282 & 0.9267 & 0.9267\\
-		Ridge & 0.007886 & 0.007886 & 0.9080 & 0.9080 \\
-		Lasso & 0.01294 & 0.01340 & 0.8491 & 0.8437 \\
-		RidgeGD & 0.01299 & 0.007885 & 0.8485 & 0.9080 \\ \hline
+		& \multicolumn{3}{c}{\textbf{MSE}}&\multicolumn{3}{c}{\textbf{R2}}\\ \hline
+		&self&K-fold&scikit&self&K-fold&scikit\\ \hline \\
+		OLS & 0.006282 && 0.006282 & 0.9267 && 0.9267\\
+		Ridge & 0.007886 && 0.007886 & 0.9080 && 0.9080 \\
+		Lasso & 0.01294 && 0.01340 & 0.8491 && 0.8437 \\
+		RidgeGD & 0.01299 && 0.007885 & 0.8485 && 0.9080 \\ \hline
 	\end{tabularx}
 \end{table}
 

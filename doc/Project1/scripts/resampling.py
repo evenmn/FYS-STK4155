@@ -18,7 +18,7 @@ def bootstrap(data, K=1000):
     
     
     
-def k_fold(x, y, z, K=8):
+def k_fold(x, y, z, K=8, method='ols'):
     '''K-fold validation resampling'''
     
     xMat = np.reshape(x, (K, int(len(x)/K)))
@@ -27,6 +27,8 @@ def k_fold(x, y, z, K=8):
     
     MSE_train = 0
     MSE_test = 0
+    R2_train = 0
+    R2_test = 0
     
     for i in range(K):
         xMatNew = np.delete(xMat, i, 0)
@@ -38,12 +40,25 @@ def k_fold(x, y, z, K=8):
         zVecNew = zMatNew.flatten()
         
         order5 = Reg_2D(xVecNew, yVecNew, zVecNew, Px=5, Py=5)
-        beta_train = order5.ols()
+        
+        if method == 'ols':
+            beta_train = order5.ols()
+        elif method == 'ridge':
+            beta_train = order5.ridge()
+        elif method == 'lasso':
+            beta_train = order5.lasso()
+        elif method == 'ridgeGD':
+            beta_train = order5.reg_q(2)
+        else:
+            raise NameError("No method called ", method)
         
         MSE_train += MSE(xVecNew, yVecNew, zVecNew, beta_train)
         MSE_test += MSE(xMat[i], yMat[i], zMat[i], beta_train)
+        
+        R2_train += R2(xVecNew, yVecNew, zVecNew, beta_train)
+        R2_test += R2(xMat[i], yMat[i], zMat[i], beta_train)
 
-    return MSE_train/K, MSE_test/K
+    return MSE_train/K, MSE_test/K, R2_train/K, R2_test/K
         
     
 

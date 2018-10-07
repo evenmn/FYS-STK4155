@@ -21,11 +21,6 @@ def R2(x, y, z, beta):
     return 1 - e.T.dot(e)/f.T.dot(f)
     
     
-def MSE_resampling(x, y, z, beta):
-    '''Calculate MSE using resampling'''
-    
-    
-    
 def plot_3D(beta, show_plot=True):
     '''Plot 3D'''
     
