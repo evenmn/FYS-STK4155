@@ -50,7 +50,7 @@ def k_fold(x, y, z, K=8, method='ols'):
         elif method == 'ridgeGD':
             beta_train = order5.reg_q(2)
         else:
-            raise NameError("No method called ", method)
+            raise NameError("No method named ", method)
         
         MSE_train += MSE(xVecNew, yVecNew, zVecNew, beta_train)
         MSE_test += MSE(xMat[i], yMat[i], zMat[i], beta_train)

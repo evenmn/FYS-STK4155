@@ -76,7 +76,7 @@ class Reg_2D():
 
 
 
-    def reg_q(self, q, λ=1e-5, η=1e-3, niter=1e5):
+    def reg_q(self, q, λ=1e-5, η=1e-4, niter=1e5):
         '''Regression with penalty
         
         Arguments:
@@ -127,7 +127,7 @@ class Reg_2D():
         
         
         
-    def lasso(self, λ=1e-5, η=1e-3, niter=1e5):
+    def lasso(self, λ=1e-5, η=1e-4, niter=1e5):
         '''Lasso regression'''
         return Reg_2D.reg_q(self, 1, λ, η, niter)
 

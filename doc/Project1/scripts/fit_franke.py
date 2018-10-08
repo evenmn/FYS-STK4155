@@ -22,7 +22,8 @@ noise = normal(0,σ*σ,N)         # Noise
 # === Generate sampling points ===
 x = uniform(0,1,N)
 y = uniform(0,1,N)
-z = FrankeFunction(x, y) #+ noise
+z = FrankeFunction(x, y) + noise
+
 
 
 '''
@@ -41,8 +42,8 @@ order5 = Reg_2D(x, y, z, Px=5, Py=5)
 
 beta_ols = order5.ols()
 beta_ridge = order5.ridge(λ)
-print("\n Doing Lasso regression..."); beta_lasso = order5.lasso(λ, η, niter)
-print("\n Doing Ridge regression..."); beta_ridge2 = order5.reg_q(2, λ, η, niter)
+print("\nDoing Lasso regression..."); beta_lasso = order5.lasso(λ, η, niter)
+print("\nDoing Ridge regression..."); beta_ridge2 = order5.reg_q(2, λ, η, niter)
 
 
 # === Call scikit regression functions ===
@@ -80,12 +81,14 @@ for beta in betas:
     print("R2: ", R2(x, y, z, beta_mat))
 plt.show()
 
+
+# === Resample ===
 print("OLS K=10: ", k_fold(x, y, z, K=10, method='ols'))
 print("Ridge K=10: ", k_fold(x, y, z, K=10, method='ridge'))
 print("Lasso K=10: ", k_fold(x, y, z, K=10, method='lasso'))
 print("RidgeGD K=10: ", k_fold(x, y, z, K=10, method='ridgeGD'))
 
-stop
+
 # === lambda vs R2 ===
 lambda_list = []
 R2_ridge = []
