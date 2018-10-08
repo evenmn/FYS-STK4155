@@ -5,10 +5,8 @@ Here the results will be presented. We start looking at how good our linear regr
 Below one can find the results when fitting the Franke function. All results in this section were obtained from the same data set, consisting of 1000 points, withdrawn from a uniform distribution ($x,y\in[0,1]$). Further, the polynomial degrees in x- and y-directions were set to $P_x=P_y=5$. For the methods that require minimization, we used gradient descent with the parameters $\lambda=1e-5$ (penalty), $\eta=1e-4$ (learning rate) and $\text{niter}=1e5$ (number of iterations) when nothing else is specified. To benchmark the results (mainly to verify the code), Scikit Learn was used. In the first place, the studies were done without noise, and then everything was repeated with adding a noise of $\mathcal{N}(0, \sigma^2=0.1)$.
 
 \subsubsection{Visualization of graphes}
-In figure \eqref{fig:franke_plots} the polynomial produced by regression on noisy data is compared with the polynomial produced by regression on smooth data. 
-
- 
-\newgeometry{left=2cm,right=2cm,top=1cm}
+In figure \eqref{fig:franke_plots} the polynomial produced by regression on noisy data is compared with the polynomial produced by regression on smooth data.
+\newgeometry{left=2cm,right=2cm,top=0.6cm}
 \begin{figure} [H]%
     \centering
     \subfloat[OLS without noise]{{\includegraphics[width=9cm]{../plots/OLS.png} }}%
@@ -153,7 +151,7 @@ To determine which method is best, we need to analyze the error. In table \eqref
 	\begin{tabularx}{\textwidth}{l|XXX|XXX} \hline\hline
 		\label{tab:terrain_error}
 		& \multicolumn{3}{c}{\textbf{MSE}}&\multicolumn{3}{c}{\textbf{R2}}\\ \hline
-		&self&K-fold&scikit&self&K-fold&scikit\\ \hline \\
+		&Self&K-fold&Scikit&Self&K-fold&Scikit\\ \hline \\
 		OLS & 0.003665 & 0.003834 & 0.003665 & 0.9550 & 0.9520 & 0.9550\\
 		Ridge & 0.004322 & 0.004512 & 0.004322 & 0.9469 & 0.9436 & 0.9469 \\
 		Lasso & 0.006960 & 0.006893 & 0.006758 & 0.9145 & 0.9138 & 0.9170 \\

@@ -59,6 +59,7 @@ beta_ols_test[0,0] = beta_ols[0,0]
 beta_ridge_test[0,0] = beta_ridge[0,0]
 beta_lasso_test[0,0] = beta_lasso[0,0]
 
+'''
 betas = ["beta_ols_test", "beta_ols", "beta_ridge_test", "beta_ridge", \
          "beta_lasso_test", "beta_lasso", "beta_ridge_test", "beta_ridge2"]
 
@@ -87,7 +88,7 @@ print("OLS K=10: ", k_fold(x, y, z, K=10, method='ols'))
 print("Ridge K=10: ", k_fold(x, y, z, K=10, method='ridge'))
 print("Lasso K=10: ", k_fold(x, y, z, K=10, method='lasso'))
 print("RidgeGD K=10: ", k_fold(x, y, z, K=10, method='ridgeGD'))
-
+'''
 
 # === lambda vs R2 ===
 lambda_list = []
