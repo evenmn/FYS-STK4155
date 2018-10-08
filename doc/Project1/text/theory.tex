@@ -210,11 +210,11 @@ As an example, suppose that you flip a coin $N$ times and count number of heads.
 	\item Plug into the formula above
 \end{enumerate}
 
-So, how can we make us of this in project 1? To predict which coefficients we could get from the regression, it could be useful to calculate their CI. This is possible, since we can find their variance from the analytical formula
+So, how can we make us of this in project 1? To predict which coefficients we could get from the regression, it could be useful to calculate their CI. This is possible, since we can get their variance from the analytical formula
 \begin{equation}
 \text{Var}(\vec{\beta})=(\hat{X}^T\hat{X})^{-1}\sigma^2
 \end{equation}
-where the $\sigma^2$ is the sample variance of the points.
+where the $\sigma^2$ is the sample variance of the points. The variance matrix will have the variance of each $\beta_j$ on the diagonal, while the off-diagonal elements are associated with the covariance. 
 
 Another approach is to simply calculate $N$ estimates of each beta, and sort them in increasing order. Leaving out the $p\%$ first elements of the data set and the $p\%$ last elements, we are left with the $q=100\%-2p\%$ most likely betas, and the confidence interval related to a confidence level of $q\%$ is within the smallest and largest elements of this new set.
 
@@ -229,7 +229,7 @@ To find out how good the fit is, we could potentially compare the polynomial plo
 In this report we will study only the MSE and R$^2$ score function.
 
 \subsubsection{Mean Square Error (MSE)} \label{sec:MSE}
-The most popular error estimation method is the mean square error, also called least squares. \cite{Hastie} We study the MSE in order to compute the reduction of the cost function, because it is basically the standard cost function, used in OLS. 
+The most popular error estimation method is the mean square error, also called least squares. [3] We study the MSE in order to compute the reduction of the cost function, because it is basically the standard cost function, used in OLS. 
 \begin{equation}
 \text{MSE}(\vec{\beta})=\frac{1}{N}\sum_{i=1}^N(y_i-\tilde{y}(\vec{\beta}))^2
 \end{equation}
@@ -262,7 +262,7 @@ where the explained variation is the difference between the variance and the MSE
 \text{Total variation}=\frac{1}{N}\sum_{i=1}^N(y_i-\bar{y})^2.
 \end{equation*}
 
-The R$^2$-score is usually between 0 and 1. If the model does not explain any of the variations it is 0 and if it explains all variations the score is 1. In that manner, we should fight for a high R2-score. It is in entirety given by
+The R$^2$-score is usually between 0 and 1. If the model does not explain any of the variations it is 0 and if it explains all variations the score is 1. In that manner, we should fight for a high R2-score. In entirety it reads
 \begin{equation}
 R^2(\vec{y},\tilde{\vec{y}})=1-\frac{\sum_{i=1}^N(y_i-\tilde{y})^2}{\sum_{i=1}^N(y_i-\bar{y})^2}.
 \end{equation}

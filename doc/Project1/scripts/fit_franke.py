@@ -13,7 +13,7 @@ from error_tools import *
 N = 1000                        # Number of sampling points
 λ = 1e-5                       # Penalty
 η = 0.0001                      # Learning rate
-σ = 0.1                         # Standard deviation used in noise
+σ = 0.3                         # Standard deviation used in noise
 niter = 1e5                   # Number of iterations used in Gradient Descent
 
 noise = normal(0,σ*σ,N)         # Noise

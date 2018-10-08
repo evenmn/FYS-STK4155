@@ -1,18 +1,18 @@
 \section{Code} \label{sec:code}
 This project is largely based on numerical calculation, so a few words about the code is necessary. The code is written in Python, which is easy to work with and considered fast enough. The most expensive part is without doubt the minimization using gradient descent, and for really large systems a low-level language might be preferred. Although no performance benchmarks will be provided in this article, we can reveal that the code was more than fast enough for our data sets. To run the code, the following packages are required:
-\begin{itemize}
-\item NumPy\quad-\quad Fundamental package for scientific works in Python
-\item Matplotlib\quad-\quad For plotting
-\item Scikit Learn\quad-\quad Benchmark for self-produced code
-\item Scipy\quad-\quad For reading terrain data
-\item tqdm\quad-\quad For progression bar
+\begin{itemize}[noitemsep]
+	\item NumPy\quad-\quad Fundamental package for scientific works in Python
+	\item Matplotlib\quad-\quad For plotting
+	\item Scikit Learn\quad-\quad Benchmark for self-produced code
+	\item Scipy\quad-\quad For reading terrain data
+	\item tqdm\quad-\quad For progression bar
 \end{itemize}
 
 \subsection{Code structure} \label{sec:structure}
 To keep the code neat and clean we decided to write object oriented code, although we do not have that many functions. The code of this project consists of two main functions fit\_franke.py and fit\_terrain.py, where the former is used to test the tools on a known function and the latter is used to fit a polynomial to terrain data. Both of them are calling the classes for 2D regression and resampling techniques, named regression\_2D.py and resampling.py respectively, and fit\_franke.py is also communicating with franke.py. For overview of the code structure, see figure \eqref{fig:codestructure}.
 \begin{figure}
 \centering
-\begin{tikzpicture}[auto,node distance=0.7cm]
+\begin{tikzpicture}[auto,node distance=0.9cm]
 
   % Create entity node
   \node[entity] (node1) {fit\_terrain.py};
@@ -34,14 +34,12 @@ To keep the code neat and clean we decided to write object oriented code, althou
 \caption{Code structure}
 \label{fig:codestructure}
 \end{figure}
-
 \subsection{Implementation and optimization} \label{sec:implementation}
 To get a code which provides good performance, we need to be thoughtful when implementing it. The loops are often the bottlenecks, so by replacing loops with vector operations we can save a lot of time. An example on this, is when we calculate the MSE
 \begin{equation}
 \text{MSE}(\vec{\beta})=\sum_i\bigg(y_i-\beta_0-\sum_jX_{ij}\beta_j\bigg)^2,
 \end{equation}
 where $\vec{y}$ and $\vec{\beta}$ are vectors and $\hat{X}$ is a matrix. For implementing this directly, we need a double loop, which will be slow for large systems. A better solution would be to exploit the linear algebra properties of vectors:
-
 \begin{equation}
 \text{MSE}(\vec{\beta})=(\vec{y}-\hat{X}^T\vec{\beta})^T\cdot(\vec{y}-\hat{X}^T\vec{\beta})
 \end{equation}
