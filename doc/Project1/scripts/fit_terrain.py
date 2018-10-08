@@ -80,18 +80,19 @@ betas = ["beta_ols_test", "beta_ols", "beta_ridge_test", "beta_ridge", "beta_las
 for beta in betas:
     beta_mat = eval(beta)
 
-    #fig = plt.figure()
-    #plt.imshow(beta_mat, cmap=cm.coolwarm)
-    #plt.savefig("../plots/{}_visualize.png".format(beta))
-    #plt.colorbar()
-
-    plot_3D(beta_mat, show_plot=False)
+    #plot_3D(beta_mat, show_plot=False)
     
     print("\n---{}---".format(beta))
     print("MSE: ", MSE(x, y, z, beta_mat))
     print("R2: ", R2(x, y, z, beta_mat))
 plt.show()
 
+
+# === Resample ===
+print("OLS K=10: ", k_fold(x, y, z, K=10, method='ols'))
+print("Ridge K=10: ", k_fold(x, y, z, K=10, method='ridge'))
+print("Lasso K=10: ", k_fold(x, y, z, K=10, method='lasso'))
+print("RidgeGD K=10: ", k_fold(x, y, z, K=10, method='ridgeGD'))
 
 # === lambda vs R2 ===
 lambda_list = []
@@ -116,34 +117,4 @@ plt.grid()
 plt.savefig('../plots/lambda_R2score_terrain.png')
 plt.show()
 
-
-# === noise vs R2 ===
-R2_ols = []
-R2_ridge = []
-R2_lasso = []
-var = []
-for i in np.linspace(-6,-0.7, 100):
-    var.append(10**i)
-    noise = normal(0,var[-1],N)         # Noise
-    z = FrankeFunction(x, y) + noise
-    
-    order5 = Reg_2D(x, y, z, Px=5, Py=5)
-    beta_ols = order5.ols()
-    beta_ridge = order5.ridge(λ)
-    beta_lasso = order5.lasso(λ, η, niter)
-    
-    R2_ols.append(R2(x, y, z, beta_ols))
-    R2_ridge.append(R2(x, y, z, beta_ridge))
-    R2_lasso.append(R2(x, y, z, beta_lasso))
-    
-    
-plt.semilogx(var, R2_ols, label='OLS', linewidth=2)
-plt.semilogx(var, R2_ridge, label='Ridge', linewidth=2)
-plt.semilogx(var, R2_lasso, label='Lasso', linewidth=2)
-plt.xlabel('$\sigma^2$ in noise', **label_size)
-plt.ylabel('$R^2$-score', **label_size)
-plt.legend(loc='best')
-plt.grid()
-plt.savefig('../plots/var_R2score_terrain.png')
-plt.show()
 
