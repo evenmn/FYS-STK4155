@@ -43,7 +43,7 @@ print(out,'\n')
 
 # --- Heavy calculations ---
 '''Sometimes two layers is not sufficient, and one needs to use more layers to
-achieve the correct results. When call multilayer'''
+achieve the correct results. Then call multilayer'''
 
 X = np.array([[0,0], [1,0], [0,1], [1,1]])
 t = np.array([[0], [1], [1], [0]])

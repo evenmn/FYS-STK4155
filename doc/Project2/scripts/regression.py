@@ -98,7 +98,7 @@ if __name__ == '__main__':
     X = np.multiply(states[:,1:], states[:,:-1])
 
     # calculate Ising energies
-    E = ising_energies(states, L)
+    E = ising_energies(states)
 
     model = Reg(X, E)
     J = model.ols()

@@ -3,6 +3,9 @@
 import sys
 from sigmoid import *
 from multilayer import multilayer, recall_multilayer
+#from numba import njit, prange
+from tqdm import tqdm
+
 
 '''
 This is supposed to be a class of neural networks, for different purposes.
@@ -66,6 +69,7 @@ def linear(X, t, T, eta = 0.1):
 
 
 # Double perceptron for nonlinear problems
+
 def nonlinear(X, t, T, H, eta = 0.1):
     '''
     Arguments
@@ -95,7 +99,7 @@ def nonlinear(X, t, T, H, eta = 0.1):
     '''
     
     I = len(X[0])
-    O = len(t[0])
+    O = len(t)
     M = len(X)
     
     if len(t) != M:
@@ -110,7 +114,7 @@ def nonlinear(X, t, T, H, eta = 0.1):
     b2 = np.random.random(O)
 
     # Training
-    for iter in range(T):
+    for iter in tqdm(range(T)):
         for i in range(M):
         
             # FORWARD PROPAGATION

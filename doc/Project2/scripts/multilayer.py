@@ -5,7 +5,10 @@ import numpy as np
 from numpy.random import random as rand
 from sigmoid import sigmoid1, sig_der1
 from sys import exit
+from tqdm import tqdm
+#from numba import njit, prange
 
+#@njit(nopython=False, parallel=True)
 def multilayer(X, t, T, h, eta = 0.1):
     '''
     Arguments
@@ -38,7 +41,6 @@ def multilayer(X, t, T, h, eta = 0.1):
     
     if type(h) is not np.ndarray:
         raise TypeError("h needs to be a numpy array")
-        exit()
         
     if np.count_nonzero(h) != len(h):
         print("h contains one or more zeros, trying to solve it linearly")
@@ -48,30 +50,29 @@ def multilayer(X, t, T, h, eta = 0.1):
         
 
     I = len(X[0])
-    O = len(t[0])
+    O = len(t)
     M = len(X)
     H = len(h)
     
     if len(t) != M:
-        print("Input and output array do not have the same length, rejecting")
-        exit()
+        raise ValueError("Input and output array do not have the same length, rejecting")
 
     # Weights
     W = []; b = []
-    W.append(2 * rand([I, h[0]]) - 1)
-    b.append(2 * rand(h[0]) - 1)
+    W.append(2 * rand([I, h[0]]) - 1)           # Add first W-matrix
+    b.append(2 * rand(h[0]) - 1)                # Add first bias vector
     
     for i in range(H-1):
-        W.append(2 * rand([h[i],h[i+1]]) - 1)
-        b.append(2 * rand(h[i+1]) - 1)
-    W.append(2 * rand([h[-1], O]) - 1)
-    b.append(2 * rand(O) - 1)
+        W.append(2 * rand([h[i],h[i+1]]) - 1)   # Add other W-matrices
+        b.append(2 * rand(h[i+1]) - 1)          # Add other bias vectors
+    W.append(2 * rand([h[-1], O]) - 1)          # Add last W-matrix
+    b.append(2 * rand(O) - 1)                   # Add last bias vector
     W = np.array(W)
     b = np.array(b)
 
     # Training
-    for iter in range(T):
-        for i in range(M):
+    for iter in tqdm(range(T)):
+        for i in tqdm(range(M)):
         
             # FORWARD PROPAGATION
             out = []
@@ -98,6 +99,7 @@ def multilayer(X, t, T, h, eta = 0.1):
             
     return W, b
 
+#@njit(parallel=True)
 def recall_multilayer(X, W, b):
     Out = np.empty(len(X))
     for i in range(len(X)):

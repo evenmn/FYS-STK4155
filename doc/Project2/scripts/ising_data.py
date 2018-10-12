@@ -13,12 +13,22 @@ def ising_energies(states, J_const=1.0):
     
 def P_up(T):
     '''Probability of spin down'''
-    return 1/(1+np.exp(2/T))
+    
+    if T < 1e-10:
+        return 0
+        
+    else:
+        return 1/(1+np.exp(2/T))
     
     
 def P_dn(T):
     '''Probability of spin up'''
-    return 1/(1+np.exp(-2/T))
+    
+    if T < 1e-10:
+        return 1
+        
+    else:
+        return 1/(1+np.exp(-2/T))
     
     
 def produce_states(size, T):

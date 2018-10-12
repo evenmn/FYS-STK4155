@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import numpy as np
+from numba import njit
 
 def sigmoid1(x):
     '''Maps the argument x in the interval [0, 1]'''
