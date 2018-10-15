@@ -6,15 +6,7 @@
 using namespace std;
 using namespace arma;
 
-void multi(mat X, mat t0, field <mat> &W, field <vec> &b, int h[], int H, int T, double eta) {
-
-    Mat <double> t;
-    t.resize(9,3);         // Need to choose size automatically
-    for(int i = 0; i<size(t)[0]; i++){
-        rowvec test = t.row(i);
-        conv_from_number(t0(i,0), test);
-        t.row(i) = test;
-    }
+void multi(mat X, mat t, field <mat> &W, field <vec> &b, int h[], int H, int T, double eta) {
 
     int I = size(X)[1];
     int O = size(t)[1];
@@ -43,6 +35,7 @@ void multi(mat X, mat t0, field <mat> &W, field <vec> &b, int h[], int H, int T,
     field <vec> deltah(H+1);
 
     for(int iter=0; iter<T; iter++) {
+        cout << iter << '/' << T << endl;
         for(int i=0; i<M; i++) {
 
             // Forward propagation
