@@ -35,7 +35,7 @@ void multi(mat X, mat t, field <mat> &W, field <vec> &b, int h[], int H, int T, 
     field <vec> deltah(H+1);
 
     for(int iter=0; iter<T; iter++) {
-        cout << iter << '/' << T << endl;
+        cout << iter+1 << '/' << T << endl;
         for(int i=0; i<M; i++) {
 
             // Forward propagation

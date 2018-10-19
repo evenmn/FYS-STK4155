@@ -17,22 +17,16 @@ def read_pkl(t, path='../data/', reshape=True):
 def write_file(data, extension='.csv', path='../data/'):
     '''Write file'''
     
-    np.savetxt(path+'Ising2DFM_reSample_L40tcexcluded_shuffeled%s'%extension, np.vstack((data[:70000], data[99999:])), delimiter=',')
+    np.savetxt(path+'Ising2DFM_reSample_L40tcexcluded_shuffled%s'%extension, data, delimiter=',')
 
 
 # Load inputs and targets
 x = read_pkl('All')                          # Inputs
 t = read_pkl('All_labels', reshape=False)    # Targets
 
-data = np.int_(np.c_[x, t])                          # Merge x and t
+data = np.int_(np.c_[x, t])                  # Merge x and t
+data = np.delete(data, np.arange(70000, 100000), axis=0)    # Remove data around tc
 
-#np.delete(data, np.arange(70000, 100000))
-
-#print(data.shape)
-
-#stop
-#data = data[range(]
+np.random.shuffle(data)
 
 write_file(data, extension='.csv')
-
-
