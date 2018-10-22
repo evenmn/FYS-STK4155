@@ -31,7 +31,7 @@ void conv_from_number(double number, rowvec &out) {
 
 double conv_to_number(vec in) {
     // Convert an array of doubles between 0 and 1 to double
-    double number;
+    double number = 0;
     int i = 1;
     for(auto element : in) {
         number += element * i;

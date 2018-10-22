@@ -1,0 +1,28 @@
+\section{Code} \label{sec:code}
+
+\subsection{Code structure} \label{sec:structure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[auto,node distance=0.9cm]
+
+  % Create entity node
+  \node[entity] (node1) {fit\_terrain.py};
+  
+  % Establish relationships
+  \node[relationship] (rel1) [below right = of node1] {regression\_2D.py};
+  \node[relationship] (rel2) [below left = of node1] {resampling.py};
+  
+  % Create another entity node
+  \node[entity] (node2) [below left = of rel1] {fit\_franke.py} child[grow=down,level distance=1.5cm] {node[attribute] {franke.py}};
+  
+  % Draw paths
+  \path (rel1) edge node {} (node1);
+  \path (rel2) edge node {} (node1);
+  \path (rel1) edge node {} (node2);
+  \path (rel2) edge node {} (node2);
+
+\end{tikzpicture}
+\caption{Code structure}
+\label{fig:codestructure}
+\end{figure}

@@ -32,8 +32,12 @@ void recall_multi(mat X, field <mat> W, field <vec> b, mat &out){
         out_Xi(0,0) = trans(X.row(i));
         for(int j=0; j<size(W)[0]; j++) {
             vec net = trans(W(j,0)) * out_Xi(j,0) + b(j,0);
+            //cout << "\n" << out_Xi(j,0) << endl;
+            //cout << net << endl;
             sigmoid(out_Xi(j+1,0), net);
         }
-        out.row(i) = conv_to_number(out_Xi(size(W)[0]));
+        //cout << out_Xi(size(W)[0]) << endl;
+        out.row(i) = out_Xi(size(W)[0]); //conv_to_number(out_Xi(size(W)[0]));
     }
+    //cout << out << endl;
 }

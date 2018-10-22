@@ -8,10 +8,10 @@ using namespace arma;
 
 void multi(mat X, mat t, field <mat> &W, field <vec> &b, int h[], int H, int T, double eta) {
 
-    int I = size(X)[1];
-    int O = size(t)[1];
-    int M = size(X)[0];
-    int N = size(t)[0];
+    unsigned long I = size(X)[1];
+    unsigned long O = size(t)[1];
+    unsigned long M = size(X)[0];
+    unsigned long N = size(t)[0];
 
     if(N != M){
         cout << "Input and output array do not have the same length, rejecting" << endl;
@@ -19,14 +19,15 @@ void multi(mat X, mat t, field <mat> &W, field <vec> &b, int h[], int H, int T, 
     }
 
 
-    W(0,0) = 2*randu(I, h[0]) - 1;
-    b(0,0) = 2*randu(h[0]) - 1;
-    W(H,0) = 2*randu(h[H-1], O) - 1;
-    b(H,0) = 2*randu(O) - 1;
+    W(0,0) = 2*randn(I, h[0]) - 1;      // First set of weights
+    b(0,0) = 2*randn(h[0]) - 1;         // First set of bias weights
+    W(H,0) = 2*randn(h[H-1], O) - 1;    // Last set of weights
+    b(H,0) = 2*randn(O) - 1;            // Last set of bias weights
+
 
     for(int i=0; i<H-1; i++){
-        W(i+1,0) = 2*randu(h[i], h[i+1]) - 1;
-        b(i+1,0) = 2*randu(h[i+1]) - 1;
+        W(i+1,0) = 2*randn(h[i], h[i+1]) - 1;
+        b(i+1,0) = 2*randn(h[i+1]) - 1;
     }
 
     // Declare armadillo objects
@@ -35,9 +36,8 @@ void multi(mat X, mat t, field <mat> &W, field <vec> &b, int h[], int H, int T, 
     field <vec> deltah(H+1);
 
     for(int iter=0; iter<T; iter++) {
-        cout << iter+1 << '/' << T << endl;
+        cout << iter+1 << "/" << T << endl;
         for(int i=0; i<M; i++) {
-
             // Forward propagation
             out(0,0) = trans(X.row(i));
             for(int j=0; j<H+1; j++) {
