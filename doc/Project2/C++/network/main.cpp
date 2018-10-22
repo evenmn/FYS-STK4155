@@ -18,9 +18,9 @@ int main() {
     vec t;                                     // Targets
 
     // --- Multilayer ---
-    double eta = 0.1;                          //Learning rate
-    int T = 1000;                              //Number of iterations
-    int h[] = {5, 5};                    //2 hidden layer where each has 4 nodes
+    double eta = 0.01;                          //Learning rate
+    int T = 100;                              //Number of iterations
+    int h[] = {5};                    //2 hidden layer where each has 4 nodes
     int size_h = sizeof(h)/sizeof(*h);
 
     // Load data. Data around Tc is excluded, and the data is shuffled
@@ -56,13 +56,13 @@ int main() {
     recall_multi(X_test, W_field, b_field, out); // Recall
     cout << trans(out.head_rows(20)) << endl;
     cout << trans(t_test.head(20)) << endl;
-    cout << "Correctness: " << 1-sum(abs(round(t_test-out)))/(N-N_train) << endl;
+    cout << "Success rate: " << 1-sum(abs(round(t_test-out)))/(N-N_train) << endl;
 
     cout << "\nTraining set" << endl;
     recall_multi(X_train, W_field, b_field, out2); // Recall
     cout << trans(out2.head_rows(20)) << endl;
     cout << trans(t_train.head(20)) << endl;
-    cout << "Correctness: " << 1-sum(abs(round(t_train-out2)))/N_train << endl;
+    cout << "Success rate: " << 1-sum(abs(round(t_train-out2)))/N_train << endl;
 
     cout << "\nCPU-time training: " << 1.0*(end_multi - start_multi)/CLOCKS_PER_SEC << '\n' << endl;
 

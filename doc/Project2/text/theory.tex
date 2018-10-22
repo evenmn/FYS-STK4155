@@ -1,7 +1,7 @@
 \section{Theory} \label{sec:theory}
 
 
-\subsection{Single-layer perceptrons}
+\subsection{Single-layer perceptron model}
 The principle behind single-layer perceptrons, which is the simplest neural networks, is quite easy to understand. A set of inputs are sent into the network, and a set of outputs is returned. The inputs are multiplied by several weights, and by adjusting those weights a single perceptron can solve every \textit{linear problem} (I come back to this later). A drawing of the single-layer perceptron is found in figure (\ref{fig:single_perceptron}).
 
 \begin{figure} [H]
@@ -34,26 +34,27 @@ The principle behind single-layer perceptrons, which is the simplest neural netw
 	\node[below of=n,font=\scriptsize] {weights};
 	\end{tikzpicture}
 	\caption{Single perceptron}
+	\label{fig:single_perceptron}
 \end{figure}
-Initially one needs to train the network such that it knows which outputs are correct, and for that one needs to know the outputs that correspond to the inputs. Every time the network is trained, the weights are adjusted such that the error is smaller. 
+Initially, one needs to train the network such that it knows which outputs are correct, and for that one needs to know the outputs that correspond to the inputs. Every time the network is trained, the weights are adjusted such that the error is minimized.
 
 The very first step is to calculate the initial outputs, where the weights usually are set to small random numbers. Then the error is calculated, and the weights are updated to minimize the error. So far so good.
 
 \subsubsection{Forward phase}\label{sec:ashortwalkthrough}
-Let us look at it from a more mathematical perspective, and calculate the netto output. The netto output seen from an output node is simply the sum of all the "arrows" that go to the node, see figure (\ref{fig:single_perceptron}), where each "arrow" is given by the left-hand node multiplied with its respective weight. For example the contribution from input node 2 to output node 1 follows from $X_2\cdot w_{21}$, and the total netto output to $O_1$ is therefore
+Let us look at it from a mathematical perspective, and calculate the netto output. The netto output seen from an output node is simply the sum of all the "arrows" that go to the node, see figure (\ref{fig:single_perceptron}), where each "arrow" is given by the left-hand node multiplied with its respective weight. For example the contribution from input node 2 to output node 1 follows from $X_2\cdot w_{21}$, and the total netto output to $O_1$ is therefore
 \begin{equation}
 net_1 = \sum_{i=1}^{I} X_i\cdot w_{i1} + b_1\cdot 1.
 \end{equation}
-Just some notation remarks: $X_i$ is the value of input node $i$ and $w_{ij}$ is the weight which connects input $i$ to output $j$. The parameter $b$ is the bias weight, which we will discuss later. The netto output to a node $j$ is therefore 
+Just some notation remarks: $X_i$ is the value of input node $i$ and $w_{ij}$ is the weight which connects input $i$ to output $j$. The vector $\vec{b}$ are the bias weights, which we will discuss later. The netto output to a node $j$ is therefore 
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
 net_j = \sum_{i=1}^{I} X_i\cdot w_{ij} + b_j\cdot 1.
 \label{eq:forward}
 \end{empheq}
-You might wonder why we talk about the netto output all the time, do we have other outputs? If we look at the network mathematically, what we talk about as the netto output should be our only output. Anyway, to make the algorithm easy to implement, mapping the netto output to a final output is standard practice. You do not need to care too much about this right now, the mapping is done with a sigmoid function and is explained further in section \ref{sec:sigmoid1}. The sigmoid function takes in the netto output and gives the output, 
+You might wonder why we talk about the netto output all the time, do we have other outputs? If we look at the network mathematically, what we talk about as the netto output should be our only output. Anyway, to make the algorithm easy to implement, mapping the netto output to a final output is standard practice. You do not need to care too much about this right now, the mapping is done with an activation function and is explained further in section \ref{sec:sigmoid1}. The activation function takes in the netto output and gives the output, 
 \begin{equation}
 out_j = \text{sigmoid}(net_j).
 \end{equation}
-Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact answers), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done in multiple ways, and we will apply the widely used \textbf{stochastic gradient descent}, which might also be the most basic. The principle is easy: each weight is adjusted with respect to itself total error gradient,
+Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact answers), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done by any minimization method, and we will look at a few gradient methods. To illustrate the point, we will stick to the \textbf{gradient descent} (GD) method in the calculations, even though other methods will be used later. The principle of GD is easy: each weight is "moved" in the direction of steepest slope,
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
 w_{ij}^+= w_{ij} - \eta\cdot\frac{\partial E_{TOT}}{\partial w_{ij}},
 \label{eq:w_update}
@@ -63,21 +64,12 @@ where $\eta$ is what we call the learning rate. If not everything is clear right
 \subsubsection{BIAS}
 As mentioned above, we use biases when calculating the outputs. The nodes, with value $B$, are called the bias nodes, and the weights, $b$, are called the bias weights. But why do we need those? 
 
-Imagine we have two inputs with value zero, and one output which should not be zero (this could for instance be a NOR gate). Without the bias, we will not be able to get any other output than zero, and in fact the network would struggle to find the right weights even if the output had been zero. 
+Suppose we have two inputs of value zero, and one output which should not be zero (this could for instance be a NOR gate). Without the bias, we will not be able to get any other output than zero, and in fact the network would struggle to find the right weights even if the output had been zero. 
 
 The bias value $B$ does not really matter since the network will adjust the bias weights with respect to it, and is usually set to 1 and ignored in the calculations.
 
 \subsubsection{Learning rate}
-In principle the weights could be updated without adding any learning rate ($\eta=1$), but this can in practice be problematic. It is easy to imagine that the outputs can be fluctuating around the targets without decreasing the error, which is not ideal, and a learning rate can be added to avoid this. The downside is that with a low learning rate the network needs more training to obtain the correct targets (and it takes more time), so we need to find a balance. 
-
-The problem occurs when we are close to the target only, so one solution could be using dynamic learning rate, which decreases when the number of iterations increase,
-\begin{equation}
-\eta=\frac{\eta_0}{\sqrt{1+\text{iter}}},
-\end{equation}
-where $\eta_0$ is the initial learning rate and iter is the current iteration. 
-
-Regardless of whether we use dynamic or static learning rate, an usual value is in the interval $(0,0.25]$, but it is not unusual to see values as low as 0.01 (especially for the static case). 
-
+In principle, the weights could be updated without adding any learning rate ($\eta=1$), but this can in practice be problematic. It is easy to imagine that the outputs can be fluctuating around the targets without decreasing the error, which is not ideal, and a learning rate can be added to avoid this. The downside is that with a low learning rate the network needs more training to obtain the correct results (and it takes more time), so we need to find a balance. 
 
 \subsubsection{Cost function}\label{sec:error_function}
 The cost function we will use is inspired by the error function used in \textbf{least squares methods}, and reads
@@ -87,7 +79,7 @@ E_{TOT} = \frac{1}{2}\sum_j (y_j - t_j)^2
 \end{empheq}
 where we sum over all the outputs. The factor $1/2$ is added just to give a clean derivative, which in fact makes all the expressions neater. It would also be possible to use other error functions, but to find specific expressions for the weight updating formulas, we better focus on the one above. 
 
-\subsection{Activation function}\label{sec:sigmoid1}
+\subsubsection{Activation function}\label{sec:sigmoid1}
 Inspired by Boolian algebra, the inputs and outputs initially are set to either 0, 1, or a superposition of them. To ensure that every output is between 0 and 1, we map them all using a cost function. Perhaps the most common function to use is
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
 f(x)=\frac{1}{1+\exp(-x)}
@@ -101,70 +93,105 @@ and the derivation of it is shown carefully in Appendix A. The function is prese
 \begin{figure} [H]
 	\centering
 	\includegraphics[scale=0.65]{images/sigmoid1.png}
-	\caption{A sigmoid function plotted from -8 to 8. The asymphtotes are drawn to stress that the function will approach the value 1 when $x\rightarrow \infty$ and the value 0 when $x\rightarrow -\infty$.}
+	\caption{A sigmoid function plotted from -8 to 8. The asymptotes are drawn to stress that the function will approach the value 1 when $x\rightarrow \infty$ and the value 0 when $x\rightarrow -\infty$.}
 	\label{fig:sigmoid1}
 \end{figure} 
 
-We can also use other sigmoid functions which not even map between 0 and 1, for instance another well-known sigmoid function reads
-\begin{empheq}[box={\mybluebox[5pt]}]{equation}
-f(x)=\tanh(x)=\frac{\exp(x)-\exp(-x)}{\exp(x) + \exp(-x)}
-\end{empheq}
-which maps between -1 and 1. Apart from that, the function looks quite similar to the sigmoid function in equation (\ref{fig:sigmoid1})\\
-\begin{figure} [H]
-	\centering
-	\includegraphics[scale=0.65]{images/sigmoid2.png}
-	\caption{A sigmoid function plotted from -8 to 8. The asymphtotes are drawn to stress that the function will approach the value 1 when $x\rightarrow \infty$ and the value -1 when $x\rightarrow -\infty$.}
-	\label{fig:sigmoid2}
-\end{figure} 
-Also this function got a simple derivative, given by
-\begin{equation}
-\frac{d\tanh(x)}{dx}=\frac{1}{\cosh^2(x)}=\frac{4}{(\exp(x)+\exp(-x))^2}
-\end{equation}
-which is shown in Appendix B. 
+Examples on other activation functions are \textit{tanh, standard RELU, leaky RELU and ELU}. 
 
-\subsection{Backward phase}
-Now we have the fundamentals to go further with the theory expressed in section \ref{sec:ashortwalkthrough}. Actually, the only thing we are left with is finding an expression for the weight updating based on the formula from equation (\ref{eq:w_update}), 
-\begin{equation}
-w_{ij}^+= w_{ij} - \eta\cdot\frac{\partial E_{TOT}}{\partial w_{ij}},
-\end{equation}
-where the partial derivative is what we need to find. Since the energy is not directly dependent on $w_{ij}$, we need to do a change of variables such that we get derivatives we can calculate. Probably the best choice is
-\begin{equation}
-\frac{\partial E_{TOT}}{\partial w_{ij}}=\frac{\partial E_{TOT}}{\partial out_{j}}\cdot\frac{\partial out_{j}}{\partial net_{j}}\cdot\frac{\partial net_{j}}{\partial w_{ij}}.
-\end{equation}
-Standard differentiating of the error function from section \ref{sec:error_function} gives
-\begin{equation}
-\frac{\partial E_{TOT}}{\partial out_{j}}=-(t_j-out_j)
-\end{equation}
-which is a neat expression as pointed out above. To obtain the second fraction, we need to decide which sigmoid function to use. In the calculations I will use the first mentioned in section \ref{sec:sigmoid1}, that reads
-\begin{equation}
-out_j=\frac{1}{1+\exp(-net_j)}.
-\end{equation}
-and we have already found that
-\begin{equation}
-\frac{\partial out_{j}}{\partial net_{j}}=out_j(1-out_j).
-\end{equation}
-Furthermore the netto output is given by equation (\ref{eq:forward}),
-\begin{equation}
-net_j = \sum_{i=1}^{I} X_i\cdot w_{ij} + b_j\cdot 1,
-\end{equation}
-which simply gives
-\begin{equation}
-\frac{\partial net_{j}}{\partial w_{ij}}=X_i.
-\end{equation}
-We end up with 
-\begin{equation}
-\frac{\partial E_{TOT}}{\partial w_{ij}}=-(t_j-out_j)\cdot out_j(1-out_j)\cdot X_i
-\end{equation}
-and the weight updating formula
-\begin{empheq}[box={\mybluebox[5pt]}]{equation}
-w_{ij}^{+}=w_{ij} + \eta\cdot(t_j-out_j)\cdot out_j(1-out_j)\cdot X_i
+\subsubsection{Backward phase}
+Now we have the fundamentals to go further with the theory expressed in section \ref{sec:ashortwalkthrough}. Actually, the only thing we are left with is finding an expression for the weight updating based on the formula from equation (\ref{eq:w_update}), where the partial derivative is what we need to find. The computations are in detail done in Appendix B, and we obtain the equations
+\begin{empheq}[box={\mybluebox[5pt]}]{align}
+w_{ij}^{+}&=w_{ij} + \eta\cdot(t_j-out_j)\cdot out_j(1-out_j)\cdot X_i\\
+b_i^+&=b_i + \eta\cdot(t_i-out_i)\cdot out_i(1-out_i)
 \end{empheq}
-Similarly we need to update the bias weights, with a formula similar to that one in equation (\ref{eq:w_update}):
-\begin{equation}
-b_i^+=b_i - \eta\cdot\frac{\partial E_{TOT}}{\partial b_i}.
-\end{equation}
-We do the same change of variables and the only thing that changes is the last part, $\partial net_i/\partial b_i$, which can easily be found to be 1. Then
+for updating the weights and bias weights respectively. Then and all the basics for the single perceptron are set. 
+
+\subsubsection{Constraints}
+It is naturally that such a simple algorithm has constraints, and in fact it is only able to solve so-called linear problems. The logic functions, such as OR, NOR, AND and NAND are common examples, which all can be implemented using a single perceptron. On the other hand, the single perceptron is not capable of recognize non-linear functions, such as the XOR-gate.
+
+
+
+\subsection{Multilayer perceptron model}
+If you have understood the single perceptron, 
+In fact, every problem can be solved by a two-layer perceptron, according to \textbf{the universal approximation theorem}. However, in many cases we do not know how many nodes that are sufficient, and it might be just as smart to add another layer to ensure that you have enough weights. 
+
+Start with 2-layer neural network\\
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[x=1.5cm, y=1.5cm, >=stealth]
+	
+	\foreach \m/\l [count=\y] in {1,2,3,missing,4}
+	\node [every neuron/.try, neuron \m/.try] (input-\m) at (0,2.5-\y) {};
+	
+	\foreach \m [count=\y] in {1,missing,2}
+	\node [every neuron/.try, neuron \m/.try ] (hidden-\m) at (2,2-\y*1.25) {};
+	
+	\foreach \m [count=\y] in {1,missing,2}
+	\node [every neuron/.try, neuron \m/.try ] (output-\m) at (4,1.5-\y) {};
+	
+	\foreach \l [count=\i] in {1,2,3,n}
+	\draw [<-] (input-\i) -- ++(-1,0)
+	node [above, midway] {$I_\l$};
+	
+	\foreach \l [count=\i] in {1,n}
+	\node [above] at (hidden-\i.north) {$H_\l$};
+	
+	\foreach \l [count=\i] in {1,n}
+	\draw [->] (output-\i) -- ++(1,0)
+	node [above, midway] {$O_\l$};
+	
+	\foreach \i in {1,...,4}
+	\foreach \j in {1,...,2}
+	\draw [->] (input-\i) -- (hidden-\j);
+	
+	\foreach \i in {1,...,2}
+	\foreach \j in {1,...,2}
+	\draw [->] (hidden-\i) -- (output-\j);
+	
+	\foreach \l [count=\x from 0] in {Input, Hidden, Ouput}
+	\node [align=center, above] at (\x*2,2) {\l \\ layer};
+	
+	\end{tikzpicture}
+	\caption{...}
+\end{figure}
+
+For the single perceptron the updating of weights was quite straight forward, but for a perceptron consisting of multiple layers the question is: how do we update the weights when we do not know the value of the hidden nodes? And how do we know which layer that causes the error? This will be explained in the next subsection, where one of the most popular techniques for this is taken into account.
+
+\subsubsection{Backward Propagation}
+Backward propagation is probably the most used technique to update the weights, and is actually again based on equation (\ref{eq:w_update}). What differs the 
+
+We recognize the first part as $\delta_{ok}$, such that
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-b_i^+=b_i + \eta\cdot(t_i-out_i)\cdot out_i(1-out_i)
+w_{ij}^{(1)}\rightarrow w_{ij}^{(1)} - \eta\cdot\sum_{k=1}^{O}\delta_{ok}\cdot w_{jk}^{(2)}\cdot out_{hj}(1-out_{hj})\cdot x_i
 \end{empheq}
-and all the basics for the single perceptron are set. 
+where we recall $\delta_{ok}$ as
+\begin{equation*}
+\delta_{ok}=-(t_{ok}-out_{ok})\cdot out_{ok}(1-out_{ok}).
+\end{equation*}
+
+\subsubsection{Manymany layers}
+Since it will be quite a lot calculations, I will just express the results here, and move the calculations to Appendix C. Let us start with the forward propagation:
+\begin{empheq}[box={\mybluebox[5pt]}]{align}
+net_{hi}&=\sum_jw_{ji}^{(1)}\cdot i_j + b_{1i}\cdot 1\notag\\
+out_{hi}&=\text{sig}(net_{hi})\notag\\
+\notag\\
+net_{ki}&=\sum_jw_{ji}^{(2)}\cdot out_{hj} + b_{2i}\cdot 1\\
+out_{ki}&=\text{sig}(net_{ki})\notag\\
+\notag\\
+net_{oi}&=\sum_jw_{ji}^{(3)}\cdot out_{kj} + b_{3i}\cdot 1\notag\\
+out_{oi}&=\text{sig}(net_{oi})\notag
+\end{empheq}
+which can easily be turned into vector form. The backward propagation follows from the two-layer example, and we get
+\begin{empheq}[box={\mybluebox[5pt]}]{align}
+w_{ij}^{(3)}&=w_{ij}^{(3)}-\eta\cdot\delta_{oj}\cdot out_{ki}\notag\\
+\notag\\
+w_{ij}^{(2)}&=w_{ij}^{(2)}-\eta\sum_{k=1}^O\delta_{ok}\cdot w_{jk}^{(3)}\cdot out_{kj}(1-out_{kj})\cdot out_{hi}\notag\\
+\notag\\
+w_{ij}^{(1)}&=w_{ij}^{(1)}-\eta\sum_{k=1}^O\sum_{l=1}^K\delta_{ok}\cdot w_{lk}^{(3)}\cdot out_{kl}(1-out_{kl})\cdot w_{jl}^{(2)}out_{hj}(1-out_{hj})\cdot x_i\notag
+\end{empheq}
+where we again use the short hand 
+\begin{equation*}
+\delta_{oj}=(t_j-out_{oj})\cdot out_{oj}(1-out_{oj}).
+\end{equation*}
+If we compare with the weight update formulas for the two-layer case, we recognize some obvious connections, and it is easy to imagine how we can construct a general weight update algorithm, no matter how many layers we have. 
