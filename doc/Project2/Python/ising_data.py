@@ -1,5 +1,6 @@
 import numpy as np
 
+'''
 def ising_energies(states, J_const=1.0):
     """
     This function calculates the energies of the states in the nn Ising Hamiltonian
@@ -9,6 +10,21 @@ def ising_energies(states, J_const=1.0):
     J = np.full(X.shape[1], J_const)
 
     return X.dot(J)
+    '''
+    
+    
+def ising_energies(states,L):
+    """
+    This function calculates the energies of the states in the nn Ising Hamiltonian
+    """
+    J=np.zeros((L,L),)
+    for i in range(L):
+        J[i,(i+1)%L]-=1.0
+        
+    # compute energies
+    E = np.einsum('...i,ij,...j->...',states,J,states)
+
+    return E
     
     
 def P_up(T):
@@ -58,7 +74,7 @@ if __name__ == '__main__':
     states = produce_states([L, N], T=100)
 
     # calculate Ising energies
-    energies = ising_energies(states)
+    energies = ising_energies(states, L)
 
     print(states)
     print(energies)
