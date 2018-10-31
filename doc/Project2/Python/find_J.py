@@ -18,7 +18,7 @@ X=X.reshape((shape[0],shape[1]*shape[2]))       # Flatten along 0/1-axis
 
 # calculate Ising energies
 E = ising_energies(states,L)
-
+'''
 n = 1000                                        # Number of states
 λ=0.001
 
@@ -57,3 +57,10 @@ for J in J_list:
     plt.title(J)
     plt.colorbar()
     plt.show()
+'''
+    
+# Using multilayer 
+from multilayer import *
+n = 1000
+W, b = multilayer(states[:n], E[:n], T, np.array([10]))
+print(recall_multilayer(X, W, b))
