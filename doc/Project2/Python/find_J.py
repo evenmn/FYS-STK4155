@@ -7,7 +7,7 @@ from regression import *
 # define Ising model params
 L = 40         # System size
 N = 100000      # Number of states
-T = 100         # Temperature
+T = 1000         # Temperature
 
 # create random Ising states
 states = produce_states([N, L], T)
@@ -60,7 +60,8 @@ for J in J_list:
 '''
     
 # Using multilayer 
-from multilayer import *
-n = 1000
-W, b = multilayer(states[:n], E[:n], T, np.array([10]))
-print(recall_multilayer(X, W, b))
+import neural_network as nn
+n = 10000
+W, b = nn.multilayer(states[:n], E[:n], T, np.array([10]))
+print(nn.recall_multilayer(states[n:n+10], W, b))
+print(E[n:n+10])
