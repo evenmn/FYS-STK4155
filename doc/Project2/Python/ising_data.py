@@ -1,25 +1,16 @@
 import numpy as np
 
-'''
-def ising_energies(states, J_const=1.0):
-    """
-    This function calculates the energies of the states in the nn Ising Hamiltonian
-    """
-    
-    X = np.multiply(states[:,1:], states[:,:-1])
-    J = np.full(X.shape[1], J_const)
-
-    return X.dot(J)
-    '''
-    
-    
-def ising_energies(states,L):
-    """
-    This function calculates the energies of the states in the nn Ising Hamiltonian
-    """
+def generate_J(L):
     J=np.zeros((L,L),)
     for i in range(L):
         J[i,(i+1)%L]-=1.0
+    return J
+    
+    
+def ising_energies(states,J):
+    """
+    This function calculates the energies of the states in the nn Ising Hamiltonian
+    """
         
     # compute energies
     E = np.einsum('...i,ij,...j->...',states,J,states)
@@ -28,7 +19,7 @@ def ising_energies(states,L):
     
     
 def P_up(T):
-    '''Probability of spin down'''
+    '''Probability of spin up'''
     
     if T < 1e-10:
         return 0
@@ -38,7 +29,7 @@ def P_up(T):
     
     
 def P_dn(T):
-    '''Probability of spin up'''
+    '''Probability of spin down'''
     
     if T < 1e-10:
         return 1

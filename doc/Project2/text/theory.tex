@@ -1,12 +1,40 @@
 \section{Theory} \label{sec:theory}
 
+\subsection{Linear regression}
+In linear regression, the dependent variable $y_i$ is a linear combination of the parameters, and for a dependent variable this can be written as
+	\begin{equation}
+	y_i=\sum_jX_{ij}\beta_j.
+	\end{equation}
+	In principle, $x_{ij}$ can be an arbitrary function of the arguments $x_i$, and in this project the $x_{ij}$'s are all spin interactions in the Ising model ($x_{ij}=s_is_j$).
+	
+	We will study Ordinary Least Square (OLS) regression, Ridge regression and Lasso regression. The OLS cost function is known as
+	\begin{equation}
+	c(\vec{\beta})=\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2\qquad\qquad\qquad\text{OLS}
+	\end{equation}
+	which is minimized when
+	\begin{equation}
+	\vec{\beta}=(\hat{X}^T\hat{X})^{-1}\hat{X}^T\vec{y}.
+	\end{equation}
+	Similarly, the Ridge cost function is
+	\begin{equation}
+	c(\vec{\beta})=\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j^2\qquad\text{Ridge}
+	\end{equation}
+	which is minimized when
+	\begin{equation}
+	\vec{\beta}=(\hat{X}^T\hat{X}+\lambda I)^{-1}\hat{X}^T\vec{y},
+	\end{equation}
+	and finally the Lasso cost function is given by
+	\begin{equation}
+	c(\vec{\beta})=\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j\qquad\text{Lasso}.
+	\end{equation}
+Linear regression is detailed in the project 1 report, [1].
 
-\subsection{Single-layer perceptron model}
-The principle behind single-layer perceptrons, which is the simplest neural networks, is quite easy to understand. A set of inputs are sent into the network, and a set of outputs is returned. The inputs are multiplied by several weights, and by adjusting those weights a single perceptron can solve every \textit{linear problem} (I come back to this later). A drawing of the single-layer perceptron is found in figure (\ref{fig:single_perceptron}).
+
+\subsection{Logistic regression}
+Despite its name, logistic regression is not a fitting tool, but rather a classification tool. Traditionally, it has been denoted as a single perceptron, and is in some ways a very simple neural network. A perceptron is like a flexible function, where a set of inputs are sent into the network, and a set of outputs is returned. The inputs are multiplied by several weights, and by adjusting those weights a single perceptron can solve every \textit{linear problem} (we come back to this later). A drawing of the perceptron is found in figure (\ref{fig:single_perceptron}).
 
 \begin{figure} [H]
 	\centering
-	\label{fig:single_perceptron}
 	\begin{tikzpicture}
 	\node[functions] (center) {};
 	\node[below of=center,font=\scriptsize,text width=4em] {Activation function};
@@ -17,56 +45,58 @@ The principle behind single-layer perceptrons, which is the simplest neural netw
 	\path[draw,->] (center) -- (right);
 	\node[functions,left=3em of center] (left) {$\sum$};
 	\path[draw,->] (left) -- (center);
-	\node[weights,left=3em of left] (2) {$o_2$} -- (2) node[input,left of=2] (l2) {$x_2$};
+	\node[weights,left=3em of left] (2) {$w_2$} -- (2) node[input,left of=2] (l2) {$x_2$};
 	\path[draw,->] (l2) -- (2);
 	\path[draw,->] (2) -- (left);
 	\node[below of=2] (dots) {$\vdots$} -- (dots) node[left of=dots] (ldots) {$\vdots$};
-	\node[weights,below of=dots] (n) {$o_n$} -- (n) node[input,left of=n] (ln) {$x_n$};
+	\node[weights,below of=dots] (n) {$w_n$} -- (n) node[input,left of=n] (ln) {$x_n$};
 	\path[draw,->] (ln) -- (n);
 	\path[draw,->] (n) -- (left);
-	\node[weights,above of=2] (1) {$o_1$} -- (1) node[input,left of=1] (l1) {$x_1$};
+	\node[weights,above of=2] (1) {$w_1$} -- (1) node[input,left of=1] (l1) {$x_1$};
 	\path[draw,->] (l1) -- (1);
 	\path[draw,->] (1) -- (left);
-	\node[weights,above of=1] (0) {$o_0$} -- (0) node[input,left of=0] (l0) {$1$};
+	\node[weights,above of=1] (0) {$b$} -- (0) node[input,left of=0] (l0) {$B$};
+	\node[right of=0,font=\scriptsize] {BIAS};
 	\path[draw,->] (l0) -- (0);
 	\path[draw,->] (0) -- (left);
 	\node[below of=ln,font=\scriptsize] {inputs};
 	\node[below of=n,font=\scriptsize] {weights};
 	\end{tikzpicture}
-	\caption{Single perceptron}
+	\caption{Logistic regression model with $n$ inputs.}
 	\label{fig:single_perceptron}
 \end{figure}
+
 Initially, one needs to train the network such that it knows which outputs are correct, and for that one needs to know the outputs that correspond to the inputs. Every time the network is trained, the weights are adjusted such that the error is minimized.
 
 The very first step is to calculate the initial outputs, where the weights usually are set to small random numbers. Then the error is calculated, and the weights are updated to minimize the error. So far so good.
 
-\subsubsection{Forward phase}\label{sec:ashortwalkthrough}
-Let us look at it from a mathematical perspective, and calculate the netto output. The netto output seen from an output node is simply the sum of all the "arrows" that go to the node, see figure (\ref{fig:single_perceptron}), where each "arrow" is given by the left-hand node multiplied with its respective weight. For example the contribution from input node 2 to output node 1 follows from $X_2\cdot w_{21}$, and the total netto output to $O_1$ is therefore
-\begin{equation}
-net_1 = \sum_{i=1}^{I} X_i\cdot w_{i1} + b_1\cdot 1.
-\end{equation}
-Just some notation remarks: $X_i$ is the value of input node $i$ and $w_{ij}$ is the weight which connects input $i$ to output $j$. The vector $\vec{b}$ are the bias weights, which we will discuss later. The netto output to a node $j$ is therefore 
+\subsubsection{Forward phase}\label{sec:forward}
+Let us look at it from a mathematical perspective, and calculate the net output. The net output seen from an output node is simply the sum of all the "arrows" that point towards the node, see figure (\ref{fig:single_perceptron}), where each "arrow" is given by the left-hand node multiplied with its respective weight. For example, the contribution from input node 2 to the output node follows from $X_2\cdot w_{2}$, and the total net output to the output $O$ is therefore
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-net_j = \sum_{i=1}^{I} X_i\cdot w_{ij} + b_j\cdot 1.
-\label{eq:forward}
+	net = \sum_{i=1}^{I} X_i\cdot w_i + b\cdot 1.
+	\label{eq:forward}
 \end{empheq}
-You might wonder why we talk about the netto output all the time, do we have other outputs? If we look at the network mathematically, what we talk about as the netto output should be our only output. Anyway, to make the algorithm easy to implement, mapping the netto output to a final output is standard practice. You do not need to care too much about this right now, the mapping is done with an activation function and is explained further in section \ref{sec:sigmoid1}. The activation function takes in the netto output and gives the output, 
+Just some notation remarks: $X_i$ is the value of input node $i$ and $w_{i}$ is the weight which connects input $i$ to the output. $b$ is the bias weight, which we will discuss later.
+
+You might wonder why we talk about the net output all the time, do we have other outputs? If we look at the network mathematically, what we talk about as the net output should be our only output. Anyway, to make the algorithm easy to implement, mapping the net output to a final output is standard practice. You do not need to care too much about this right now, the mapping is done with an activation function and is explained further in section \ref{sec:sigmoid1}. The activation function, $f$, takes in the net output and gives the output, 
 \begin{equation}
-out_j = \text{sigmoid}(net_j).
+out = f(net).
 \end{equation}
-Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact answers), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done by any minimization method, and we will look at a few gradient methods. To illustrate the point, we will stick to the \textbf{gradient descent} (GD) method in the calculations, even though other methods will be used later. The principle of GD is easy: each weight is "moved" in the direction of steepest slope,
+
+\subsubsection{Backward phase}
+Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact results), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done by any minimization method, and we will look at a few gradient methods. To illustrate the point, we will stick to the \textbf{gradient descent} (GD) method in the calculations, even though other methods will be used later. The principle of GD is easy: each weight is "moved" in the direction of steepest slope,
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-w_{ij}^+= w_{ij} - \eta\cdot\frac{\partial E_{TOT}}{\partial w_{ij}},
+w_{ij}^+= w_{ij} - \eta\cdot\frac{\partial c(w)}{\partial w_{ij}},
 \label{eq:w_update}
 \end{empheq}
-where $\eta$ is what we call the learning rate. If not everything is clear right now, it is fine. We will discuss the most important concepts before we dive into the maths.
+where $\eta$ is what we call the learning rate and $c(w)$ is the cost function. If not everything is clear right now, it is fine. We will discuss the most important concepts before we dive into the maths.
 
 \subsubsection{BIAS}
 As mentioned above, we use biases when calculating the outputs. The nodes, with value $B$, are called the bias nodes, and the weights, $b$, are called the bias weights. But why do we need those? 
 
 Suppose we have two inputs of value zero, and one output which should not be zero (this could for instance be a NOR gate). Without the bias, we will not be able to get any other output than zero, and in fact the network would struggle to find the right weights even if the output had been zero. 
 
-The bias value $B$ does not really matter since the network will adjust the bias weights with respect to it, and is usually set to 1 and ignored in the calculations.
+The bias value $B$ does not really matter since the network will adjust the bias weights with respect to it, and is usually set to 1 and ignored in the calculations. [2]
 
 \subsubsection{Learning rate}
 In principle, the weights could be updated without adding any learning rate ($\eta=1$), but this can in practice be problematic. It is easy to imagine that the outputs can be fluctuating around the targets without decreasing the error, which is not ideal, and a learning rate can be added to avoid this. The downside is that with a low learning rate the network needs more training to obtain the correct results (and it takes more time), so we need to find a balance. 
@@ -112,7 +142,7 @@ It is naturally that such a simple algorithm has constraints, and in fact it is 
 
 
 
-\subsection{Multilayer perceptron model}
+\subsection{Neural network}
 If you have understood the single perceptron, 
 In fact, every problem can be solved by a two-layer perceptron, according to \textbf{the universal approximation theorem}. However, in many cases we do not know how many nodes that are sufficient, and it might be just as smart to add another layer to ensure that you have enough weights. 
 
@@ -157,6 +187,27 @@ Start with 2-layer neural network\\
 \end{figure}
 
 For the single perceptron the updating of weights was quite straight forward, but for a perceptron consisting of multiple layers the question is: how do we update the weights when we do not know the value of the hidden nodes? And how do we know which layer that causes the error? This will be explained in the next subsection, where one of the most popular techniques for this is taken into account.
+
+\subsubsection{Forward phase}\label{sec:ashortwalkthrough}
+Let us look at it from a mathematical perspective, and calculate the net output. The net output seen from an output node is simply the sum of all the "arrows" that point towards the node, see figure (\ref{fig:single_perceptron}), where each "arrow" is given by the left-hand node multiplied with its respective weight. For example, the contribution from input node 2 to the output node follows from $X_2\cdot w_{2}$, and the total net output to the output $O$ is therefore
+\begin{equation}
+net_1 = \sum_{i=1}^{I} X_i\cdot w_{i} + b_0\cdot 1.
+\end{equation}
+Just some notation remarks: $X_i$ is the value of input node $i$ and $w_{ij}$ is the weight which connects input $i$ to output $j$. The vector $\vec{b}$ are the bias weights, which we will discuss later. The netto output to a node $j$ is therefore 
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+	net_j = \sum_{i=1}^{I} X_i\cdot w_{ij} + b_j\cdot 1.
+	\label{eq:forward}
+\end{empheq}
+You might wonder why we talk about the netto output all the time, do we have other outputs? If we look at the network mathematically, what we talk about as the netto output should be our only output. Anyway, to make the algorithm easy to implement, mapping the netto output to a final output is standard practice. You do not need to care too much about this right now, the mapping is done with an activation function and is explained further in section \ref{sec:sigmoid1}. The activation function takes in the netto output and gives the output, 
+\begin{equation}
+out_j = \text{sigmoid}(net_j).
+\end{equation}
+Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact answers), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done by any minimization method, and we will look at a few gradient methods. To illustrate the point, we will stick to the \textbf{gradient descent} (GD) method in the calculations, even though other methods will be used later. The principle of GD is easy: each weight is "moved" in the direction of steepest slope,
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+	w_{ij}^+= w_{ij} - \eta\cdot\frac{\partial E_{TOT}}{\partial w_{ij}},
+	\label{eq:w_update}
+\end{empheq}
+where $\eta$ is what we call the learning rate. If not everything is clear right now, it is fine. We will discuss the most important concepts before we dive into the maths.
 
 \subsubsection{Backward Propagation}
 Backward propagation is probably the most used technique to update the weights, and is actually again based on equation (\ref{eq:w_update}). What differs the 

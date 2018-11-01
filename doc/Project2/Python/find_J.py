@@ -17,51 +17,55 @@ shape=X.shape
 X=X.reshape((shape[0],shape[1]*shape[2]))       # Flatten along 0/1-axis
 
 # calculate Ising energies
-E = ising_energies(states,L)
-'''
-n = 1000                                        # Number of states
-λ=0.001
+J = generate_J(L)
+E = ising_energies(states,J)
 
-# self-implemented
+n = 1000                                        # Number of states
+λ = 0.001
+
+'''
+# Self-implemented
 model = Reg(X[:n], E[:n])
 #J_ols = model.ols()
 J_ridge = model.ridge(λ)
 J_lasso = model.lasso(λ)
+'''
 
 # Scikit learn
 ols=linear_model.LinearRegression()
 ols.fit(X[:n], E[:n])
-J_ols_sklearn = ols.coef_
+J_ols = ols.coef_
 
 ridge=linear_model.Ridge()
 ridge.set_params(alpha=λ)
 ridge.fit(X[:n], E[:n])
-J_ridge_sklearn = ridge.coef_
+J_ridge = ridge.coef_
 
 lasso=linear_model.Lasso()
 lasso.set_params(alpha=λ)
 lasso.fit(X[:n], E[:n])
-J_lasso_sklearn = lasso.coef_
+J_lasso = lasso.coef_
 
-J_list = ['J_ridge', 'J_lasso', 'J_ols_sklearn', 'J_ridge_sklearn', 'J_lasso_sklearn']
+J_list = ['J_ols', 'J_ridge', 'J_lasso']
 
-for J in J_list:
-    J_eval = eval(J)
+for J_ in J_list:
+    J_eval = eval(J_)
     
-    print('\n--- ', J, ' ---')
+    print('\n--- ', J_, ' ---')
     print(J_eval)
-    print('MSE: ', (J_eval+1).dot(J_eval+1)/L)
+    print('MSE: ', (J_eval-J.flatten()).T.dot(J_eval-J.flatten())/L**2)
     #print('R2: ', (J_eval+1).dot(J_eval+1)/(J_eval+1).dot(J_eval+1))
     
     plt.imshow(J_eval.reshape(40,40))
-    plt.title(J)
+    plt.title(J_)
     plt.colorbar()
     plt.show()
 '''
     
 # Using multilayer 
 import neural_network as nn
-n = 10000
+n = 129900
 W, b = nn.multilayer(states[:n], E[:n], T, np.array([10]))
-print(nn.recall_multilayer(states[n:n+10], W, b))
-print(E[n:n+10])
+print(nn.recall_multilayer(states[n:], W, b))
+print(E[n:])
+'''
