@@ -73,23 +73,16 @@ The very first step is to calculate the initial outputs, where the weights usual
 \subsubsection{Forward phase}\label{sec:forward}
 Let us look at it from a mathematical perspective, and calculate the net output. The net output seen from an output node is simply the sum of all the "arrows" that point towards the node, see figure (\ref{fig:single_perceptron}), where each "arrow" is given by the left-hand node multiplied with its respective weight. For example, the contribution from input node 2 to the output node follows from $X_2\cdot w_{2}$, and the total net output to the output $O$ is therefore
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-	net = \sum_{i=1}^{I} X_i\cdot w_i + b\cdot 1.
+	net = \sum_{i=1}^{I} x_i\cdot w_i + b\cdot 1.
 	\label{eq:forward}
 \end{empheq}
-Just some notation remarks: $X_i$ is the value of input node $i$ and $w_{i}$ is the weight which connects input $i$ to the output. $b$ is the bias weight, which we will discuss later.
+Just some notation remarks: $x_i$ is the value of input node $i$ and $w_{i}$ is the weight which connects input $i$ to the output. $b$ is the bias weight, which we will discuss later.
 
 You might wonder why we talk about the net output all the time, do we have other outputs? If we look at the network mathematically, what we talk about as the net output should be our only output. Anyway, to make the algorithm easy to implement, mapping the net output to a final output is standard practice. You do not need to care too much about this right now, the mapping is done with an activation function and is explained further in section \ref{sec:sigmoid1}. The activation function, $f$, takes in the net output and gives the output, 
 \begin{equation}
 out = f(net).
 \end{equation}
-
-\subsubsection{Backward phase}
-Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact results), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done by any minimization method, and we will look at a few gradient methods. To illustrate the point, we will stick to the \textbf{gradient descent} (GD) method in the calculations, even though other methods will be used later. The principle of GD is easy: each weight is "moved" in the direction of steepest slope,
-\begin{empheq}[box={\mybluebox[5pt]}]{equation}
-w_{ij}^+= w_{ij} - \eta\cdot\frac{\partial c(w)}{\partial w_{ij}},
-\label{eq:w_update}
-\end{empheq}
-where $\eta$ is what we call the learning rate and $c(w)$ is the cost function. If not everything is clear right now, it is fine. We will discuss the most important concepts before we dive into the maths.
+If not everything is clear right now, it is fine. We will discuss the most important concepts before we dive into the maths.
 
 \subsubsection{BIAS}
 As mentioned above, we use biases when calculating the outputs. The nodes, with value $B$, are called the bias nodes, and the weights, $b$, are called the bias weights. But why do we need those? 
@@ -101,116 +94,174 @@ The bias value $B$ does not really matter since the network will adjust the bias
 \subsubsection{Learning rate}
 In principle, the weights could be updated without adding any learning rate ($\eta=1$), but this can in practice be problematic. It is easy to imagine that the outputs can be fluctuating around the targets without decreasing the error, which is not ideal, and a learning rate can be added to avoid this. The downside is that with a low learning rate the network needs more training to obtain the correct results (and it takes more time), so we need to find a balance. 
 
-\subsubsection{Cost function}\label{sec:error_function}
-The cost function we will use is inspired by the error function used in \textbf{least squares methods}, and reads
+\subsubsection{Cost function}\label{sec:cost_function}
+The cost function is what defines the error, and we could in principle have used OLS, ridge and so on. However, in logistic regression, the cross-entropy function is known to give good results and we will mainly stick to it:
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-E_{TOT} = \frac{1}{2}\sum_j (y_j - t_j)^2
-\label{eq:error_function}
+c(\boldsymbol{W}) = -\sum_{i=1}^n\Big[y_i\log f(\boldsymbol{x}_i^T\boldsymbol{W})+(1-y_i)\log[1-f(\boldsymbol{x}_i^T\boldsymbol{W})]\Big]
+\label{eq:cross_entropy}
 \end{empheq}
-where we sum over all the outputs. The factor $1/2$ is added just to give a clean derivative, which in fact makes all the expressions neater. It would also be possible to use other error functions, but to find specific expressions for the weight updating formulas, we better focus on the one above. 
+where $\boldsymbol{W}$ contains all weights, included the bias weight ($\bb{W}\equiv[b,\bb{W}]$), and similarly does $\bb{x}$ include the bias node, which is 1; $\bb{x}\equiv[1,\bb{x}]$. Further, the $f(x)$ is the logistic function 
+\begin{equation}
+f(x)=\frac{1}{1+e^{-x}}.
+\label{eq:logistic}
+\end{equation}
 
 \subsubsection{Activation function}\label{sec:sigmoid1}
-Inspired by Boolian algebra, the inputs and outputs initially are set to either 0, 1, or a superposition of them. To ensure that every output is between 0 and 1, we map them all using a cost function. Perhaps the most common function to use is
-\begin{empheq}[box={\mybluebox[5pt]}]{equation}
-f(x)=\frac{1}{1+\exp(-x)}
-\label{eq:sigmoid}
-\end{empheq}
-which maps between 0 and 1 as required. Another important property is that the derivative of this function has an easy form, which is important. The derivative of this function is
+Above, we were talking about the activation function, which is used to activate the net output. In binary models, this is often just a step function firing when the net output is above a threshold. For continuous outputs, the logistic function written in equation \eqref{eq:logistic} has traditionally been used as the activation function inspired by neuroscience. This function maps an arbitrary number between 0 and 1, which ensures that the outputs will not explode, and its that derivative has an easy form. The derivative of this function is
 \begin{equation}
 f'(x)=f(1-f)
 \end{equation}
-and the derivation of it is shown carefully in Appendix A. The function is presented in figure (\ref{fig:sigmoid1}).
-\begin{figure} [H]
-	\centering
-	\includegraphics[scale=0.65]{images/sigmoid1.png}
-	\caption{A sigmoid function plotted from -8 to 8. The asymptotes are drawn to stress that the function will approach the value 1 when $x\rightarrow \infty$ and the value 0 when $x\rightarrow -\infty$.}
-	\label{fig:sigmoid1}
-\end{figure} 
+and the derivation of it is shown carefully in Appendix A. The function is presented in figure (\ref{fig:activation_functions}), along with more modern activation functions such as \textit{standard RELU, leaky RELU and ELU}.
 
-Examples on other activation functions are \textit{tanh, standard RELU, leaky RELU and ELU}. 
+\begin{figure}
+	\centering
+	\subfloat[Sigmoid]{{\includegraphics[width=8cm]{../plots/sigmoid.png} }}
+	\subfloat[ReLU]{{\includegraphics[width=8cm]{../plots/ReLU.png} }}\\
+	
+	\subfloat[Leaky ReLU]{{\includegraphics[width=8cm]{../plots/LeakyReLU.png} }}%
+	\subfloat[ELU]{{\includegraphics[width=8cm]{../plots/ELU.png} }}
+	\caption{Some more or less popular activation functions}%
+	\label{fig:activation_functions}%
+\end{figure}
 
 \subsubsection{Backward phase}
-Now we have the fundamentals to go further with the theory expressed in section \ref{sec:ashortwalkthrough}. Actually, the only thing we are left with is finding an expression for the weight updating based on the formula from equation (\ref{eq:w_update}), where the partial derivative is what we need to find. The computations are in detail done in Appendix B, and we obtain the equations
-\begin{empheq}[box={\mybluebox[5pt]}]{align}
-w_{ij}^{+}&=w_{ij} + \eta\cdot(t_j-out_j)\cdot out_j(1-out_j)\cdot X_i\\
-b_i^+&=b_i + \eta\cdot(t_i-out_i)\cdot out_i(1-out_i)
+Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact results), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done by any minimization method, and we will look at a few gradient methods. To illustrate the point, we will stick to the \textbf{gradient descent} (GD) method in the calculations, even though other methods will be used later. The principle of GD is easy: each weight is "moved" in the direction of steepest slope,
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+\bb{w}^+= \bb{w} - \eta\cdot\frac{\partial c(\boldsymbol{w})}{\partial \bb{w}},
+\label{eq:w_update}
 \end{empheq}
-for updating the weights and bias weights respectively. Then and all the basics for the single perceptron are set. 
+where $\eta$ is the learning rate and $c(\bb{w})$ is the cost function. 
+
+To go further, we need to choose a cost function which we can differentiate with respect to the weights $\bb{w}$. We choose the one we discussed in section \ref{sec:cost_function}, which has a derivative 
+\begin{equation}
+\frac{\partial c(\bb{w})}{\partial \bb{w}}=[f(\bb{x}^T\bb{w})-\bb{y}]\bb{x}
+\end{equation}
+(see Appendix A). The weight update algorithm we use is thus
+\begin{empheq}[box={\mybluebox[5pt]}]{align}
+\bb{w}^+= \bb{w} - \eta\cdot[f(\bb{x}^T\bb{w})-\bb{y}]\bb{x}.
+\end{empheq}
+where the bias weight is included implicitly in $\bb{w}$ and the same applies for $\bb{x}$.
 
 \subsubsection{Constraints}
-It is naturally that such a simple algorithm has constraints, and in fact it is only able to solve so-called linear problems. The logic functions, such as OR, NOR, AND and NAND are common examples, which all can be implemented using a single perceptron. On the other hand, the single perceptron is not capable of recognize non-linear functions, such as the XOR-gate.
-
+It is naturally that such a simple algorithm has constraints, and in fact it is only able to solve so-called linear problems. The logic functions, such as OR, NOR, AND and NAND are common examples, which all can be implemented using logistic regression. On the other hand, logistic regression is not capable of recognize non-linear functions, such as the XOR-gate. For that we need a neural network, or traditionally called a multi-layer perceptron. 
 
 
 \subsection{Neural network}
-If you have understood the single perceptron, 
-In fact, every problem can be solved by a two-layer perceptron, according to \textbf{the universal approximation theorem}. However, in many cases we do not know how many nodes that are sufficient, and it might be just as smart to add another layer to ensure that you have enough weights. 
+If you have understood logistic regression, understanding a neural network should not be a difficult task. According to  \textbf{the universal approximation theorem}, a neural network with only one hidden layer can approximate any continuous function. [REFERENCE] However, often multiple layers are used since this often causes a fewer total number of nodes. 
 
-Start with 2-layer neural network\\
-\begin{figure}[H]
+In figure \eqref{fig:neural_network}, a two-layer neural network (one hidden layer) is illustrated. It has some similarities with the single perceptron model in figure \eqref{fig:single_perceptron}, but the hidden layer and multiple outputs is added. 
+
+\begin{figure} [H]
 	\centering
-	\begin{tikzpicture}[x=1.5cm, y=1.5cm, >=stealth]
+	\begin{tikzpicture}
 	
-	\foreach \m/\l [count=\y] in {1,2,3,missing,4}
-	\node [every neuron/.try, neuron \m/.try] (input-\m) at (0,2.5-\y) {};
+	% Define outputs
+	\node[] (center) {};
+	\node[input, above=0.3em of center] (o1) {$o_1$};
+	\node[input, below=0.3em of center] (o2) {$o_2$};
 	
-	\foreach \m [count=\y] in {1,missing,2}
-	\node [every neuron/.try, neuron \m/.try ] (hidden-\m) at (2,2-\y*1.25) {};
+	% Draw lines from output nodes
+	\node[right of=o1] (righto1) {};
+	\node[right of=o2] (righto2) {};
+	\path[draw,->] (o1) -- (righto1);
+	\path[draw,->] (o2) -- (righto2);
 	
-	\foreach \m [count=\y] in {1,missing,2}
-	\node [every neuron/.try, neuron \m/.try ] (output-\m) at (4,1.5-\y) {};
+	% Hidden nodes
+	\node[input,left=5em of center] (h3) {$h_3$};
+	\node[input,above of=h3] (h2) {$h_2$};
+	\node[input,above of=h2] (h1) {$h_1$};
+	\node[input,below of=h3] (h4) {$h_4$};
+	\node[input,below of=h4] (h5) {$h_5$};
+	\node[input,above of=h1] (b2) {$b_2$};
 	
-	\foreach \l [count=\i] in {1,2,3,n}
-	\draw [<-] (input-\i) -- ++(-1,0)
-	node [above, midway] {$I_\l$};
+	% Draw lines from hidden nodes
+	\path[draw,->] (h1) -- (o1);
+	\path[draw,->] (h2) -- (o1);
+	\path[draw,->] (h3) -- (o1);
+	\path[draw,->] (h4) -- (o1);
+	\path[draw,->] (h5) -- (o1);
+	\path[draw,->] (b2) -- (o1);
 	
-	\foreach \l [count=\i] in {1,n}
-	\node [above] at (hidden-\i.north) {$H_\l$};
+	\path[draw,->] (h1) -- (o2);
+	\path[draw,->] (h2) -- (o2);
+	\path[draw,->] (h3) -- (o2);
+	\path[draw,->] (h4) -- (o2);
+	\path[draw,->] (h5) -- (o2);
+	\path[draw,->] (b2) -- (o2);
 	
-	\foreach \l [count=\i] in {1,n}
-	\draw [->] (output-\i) -- ++(1,0)
-	node [above, midway] {$O_\l$};
+	% Define place left of left
+	\node[input,left=5em of h3] (x2) {$x_2$};
+	\node[input,above of=x2] (x1) {$x_1$};
+	\node[input,below of=x2] (x3) {$x_3$};
+	\node[input,above of=x1] (b1) {$b_1$};
 	
-	\foreach \i in {1,...,4}
-	\foreach \j in {1,...,2}
-	\draw [->] (input-\i) -- (hidden-\j);
+	% Draw lines from input nodes
+	\path[draw,->] (x1) -- (h1);
+	\path[draw,->] (x1) -- (h2);
+	\path[draw,->] (x1) -- (h3);
+	\path[draw,->] (x1) -- (h4);
+	\path[draw,->] (x1) -- (h5);
 	
-	\foreach \i in {1,...,2}
-	\foreach \j in {1,...,2}
-	\draw [->] (hidden-\i) -- (output-\j);
+	\path[draw,->] (x2) -- (h1);
+	\path[draw,->] (x2) -- (h2);
+	\path[draw,->] (x2) -- (h3);
+	\path[draw,->] (x2) -- (h4);
+	\path[draw,->] (x2) -- (h5);
 	
-	\foreach \l [count=\x from 0] in {Input, Hidden, Ouput}
-	\node [align=center, above] at (\x*2,2) {\l \\ layer};
+	\path[draw,->] (x3) -- (h1);
+	\path[draw,->] (x3) -- (h2);
+	\path[draw,->] (x3) -- (h3);
+	\path[draw,->] (x3) -- (h4);
+	\path[draw,->] (x3) -- (h5);
 	
+	\path[draw,->] (b1) -- (h1);
+	\path[draw,->] (b1) -- (h2);
+	\path[draw,->] (b1) -- (h3);
+	\path[draw,->] (b1) -- (h4);
+	\path[draw,->] (b1) -- (h5);
+	
+	% Draw lines towards input nodes
+	\node[left of=x1] (leftx1) {};
+	\node[left of=x2] (leftx2) {};
+	\node[left of=x3] (leftx3) {};
+	\path[draw,->] (leftx1) -- (x1);
+	\path[draw,->] (leftx2) -- (x2);
+	\path[draw,->] (leftx3) -- (x3);
+	
+	% Add some text
+	\node[below=5.1em of x2,font=\scriptsize] {input};
+	\node[below=5em of h3,font=\scriptsize] {hidden};
+	\node[below=5.8em of center,font=\scriptsize] {output};
 	\end{tikzpicture}
-	\caption{...}
+	\caption{Neural network with 3 input nodes, 5 hidden nodes and 2 output nodes, in addition to the bias nodes.}
+	\label{fig:neural_network}
 \end{figure}
 
-For the single perceptron the updating of weights was quite straight forward, but for a perceptron consisting of multiple layers the question is: how do we update the weights when we do not know the value of the hidden nodes? And how do we know which layer that causes the error? This will be explained in the next subsection, where one of the most popular techniques for this is taken into account.
+For the single perceptron, the update of weights was quite straight forward, but for a perceptron consisting of multiple layers the question is: how do we update the weights when we do not know the value of the hidden nodes? And how do we know which layer causing the error? This will be explained in section \ref{sec:backward}, where one of the most popular techniques for that is discussed. Before that we will generalize the forward phase presented in logistic regression.
 
-\subsubsection{Forward phase}\label{sec:ashortwalkthrough}
-Let us look at it from a mathematical perspective, and calculate the net output. The net output seen from an output node is simply the sum of all the "arrows" that point towards the node, see figure (\ref{fig:single_perceptron}), where each "arrow" is given by the left-hand node multiplied with its respective weight. For example, the contribution from input node 2 to the output node follows from $X_2\cdot w_{2}$, and the total net output to the output $O$ is therefore
-\begin{equation}
-net_1 = \sum_{i=1}^{I} X_i\cdot w_{i} + b_0\cdot 1.
-\end{equation}
-Just some notation remarks: $X_i$ is the value of input node $i$ and $w_{ij}$ is the weight which connects input $i$ to output $j$. The vector $\vec{b}$ are the bias weights, which we will discuss later. The netto output to a node $j$ is therefore 
-\begin{empheq}[box={\mybluebox[5pt]}]{equation}
-	net_j = \sum_{i=1}^{I} X_i\cdot w_{ij} + b_j\cdot 1.
-	\label{eq:forward}
+\subsubsection{Forward phase}
+In section \ref{sec:forward}, we saw how the output is found for a single perceptron. Since we only had one output node, the weights could be stored in an array. When it comes to a neural network, it is more convenient to store the weights in matrices, since they will have indices related to both the node on left-hand side and the node on the right-hand side. For instance, the weight between input node $x_3$ and hidden node $h_5$ in figure \eqref{fig:neural_network} is usually labeled as $w_{35}$. Since we have two layers, we also need to denote which weight set it belongs to, which we will do by a superscript ($w_{35}\Rightarrow w_{35}^{(1)}$). In the same way, $\bb{W}^1$ is the matrix containing all $w_{ij}^{(1)}$, $\bb{x}$ is the vector containing all $x_i$'s and so on. We then find the net outputs at the hidden layer to be
+\begin{empheq}{equation}
+net_{h,j} = \sum_{i=1}^{I} x_i\cdot w_{ij}^{(1)}=\bb{x}^T\bb{W}^{(1)}
+\label{eq:forward_hidden}
 \end{empheq}
-You might wonder why we talk about the netto output all the time, do we have other outputs? If we look at the network mathematically, what we talk about as the netto output should be our only output. Anyway, to make the algorithm easy to implement, mapping the netto output to a final output is standard practice. You do not need to care too much about this right now, the mapping is done with an activation function and is explained further in section \ref{sec:sigmoid1}. The activation function takes in the netto output and gives the output, 
+where the $\bb{x}$ and $\bb{W}^{(1)}$ again are understood to take the biases. This will be the case henceforth. The real output to the hidden nodes will be
 \begin{equation}
-out_j = \text{sigmoid}(net_j).
+h_j = f(net_{h,j}).
 \end{equation}
-Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact answers), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done by any minimization method, and we will look at a few gradient methods. To illustrate the point, we will stick to the \textbf{gradient descent} (GD) method in the calculations, even though other methods will be used later. The principle of GD is easy: each weight is "moved" in the direction of steepest slope,
-\begin{empheq}[box={\mybluebox[5pt]}]{equation}
-	w_{ij}^+= w_{ij} - \eta\cdot\frac{\partial E_{TOT}}{\partial w_{ij}},
-	\label{eq:w_update}
+Further, we need to find the net output to the output nodes, which is obviously just
+\begin{empheq}{equation}
+net_{o,j} = \sum_{i=1}^{H} h_i\cdot w_{ij}^{(2)}=\bb{h}^T\bb{W}^{(2)}
+\label{eq:forward_output}
 \end{empheq}
-where $\eta$ is what we call the learning rate. If not everything is clear right now, it is fine. We will discuss the most important concepts before we dive into the maths.
+We can easily generalize this. Looking at the net output to a hidden layer $l$, we get
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+net_{h_l,j} = \bb{h^{(l-1)}}^T\bb{W}^{(l)}.
+\label{eq:forward_general}
+\end{empheq}
 
-\subsubsection{Backward Propagation}
-Backward propagation is probably the most used technique to update the weights, and is actually again based on equation (\ref{eq:w_update}). What differs the 
+\subsubsection{Backward Propagation} \label{sec:backward}
+Backward propagation is probably the most used technique to update the weights, and is actually again based on equation (\ref{eq:w_update}). What differs, is the differentiation of the cost function, which gets more complex as we add more layers. For one and two hidden layers, we calculate 
 
 We recognize the first part as $\delta_{ok}$, such that
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
@@ -221,7 +272,7 @@ where we recall $\delta_{ok}$ as
 \delta_{ok}=-(t_{ok}-out_{ok})\cdot out_{ok}(1-out_{ok}).
 \end{equation*}
 
-\subsubsection{Manymany layers}
+\subsubsection{Summary}
 Since it will be quite a lot calculations, I will just express the results here, and move the calculations to Appendix C. Let us start with the forward propagation:
 \begin{empheq}[box={\mybluebox[5pt]}]{align}
 net_{hi}&=\sum_jw_{ji}^{(1)}\cdot i_j + b_{1i}\cdot 1\notag\\
@@ -246,3 +297,28 @@ where we again use the short hand
 \delta_{oj}=(t_j-out_{oj})\cdot out_{oj}(1-out_{oj}).
 \end{equation*}
 If we compare with the weight update formulas for the two-layer case, we recognize some obvious connections, and it is easy to imagine how we can construct a general weight update algorithm, no matter how many layers we have. 
+
+Now over to the problem we want to solve using neural networks.
+
+\subsection{Ising model}
+The Ising model is widely used to study phenomena in statistics, physics, economics etc.. In one dimension, it can be viewed as a sequence of two binary numbers, for instance $\pm1$, which we will call spins. Each element interacts with its nearest neighbors by the formula
+\begin{equation}
+E_{i,i+1}=J_{i,i+1}s_is_{i+1}
+\end{equation}
+where $s_i$ and $s_{i+1}$ are the values of the respective elements and $J_{i,i+1}$ is the interaction coefficient. The total energy of an Ising model is just the sum of all interaction energies, which becomes
+\begin{equation}
+E=\sum_iJ_{i,i+1}s_is_{i+1}.
+\end{equation}
+This particular model is basically setting the interaction between two non-neighbors to zero, but we could generalize this:
+\begin{equation}
+E=\sum_{ij}J_{i,j}s_is_j.
+\end{equation}
+where $J$ now is an interaction matrix. We recognize this as an inner product where $\bb{x}$ is a vector containing all $s_is_j$ elements and $\bb{J}$ as the $J$-matrix discussed above flatten out,
+\begin{equation}
+E=\bb{x}^T\bb{J}.
+\end{equation}
+We could extend this to a system of $n$ Ising models, by introducing a matrix $\bb{X}=[\bb{x}_1, \bb{x}_2,\hdots,\bb{x}_n]$ which contains all $\bb{x}$-vectors
+\begin{equation}
+\bb{E}=\bb{X}^T\bb{J}.
+\end{equation}
+If we now know the spin configuration of the models ($\bb{X}$) and the corresponding energies, we can estimate the $\bb{J}$-vector using linear regression.
