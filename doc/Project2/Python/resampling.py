@@ -1,6 +1,7 @@
 import numpy as np
-from regression_2D import *
 from error_tools import *
+from sklearn import linear_model
+from ising_data import generate_J
 
 def bootstrap(data, K=1000):
     '''Bootstrap resampling
@@ -17,9 +18,9 @@ def bootstrap(data, K=1000):
     return Avg, Var, Std
     
     
-    
+'''
 def k_fold(x, y, z, K=8, method='ols'):
-    '''K-fold validation resampling'''
+    K-fold validation resampling
     
     xMat = np.reshape(x, (K, int(len(x)/K)))
     yMat = np.reshape(y, (K, int(len(y)/K)))
@@ -59,7 +60,64 @@ def k_fold(x, y, z, K=8, method='ols'):
         R2_test += R2(xMat[i], yMat[i], zMat[i], beta_train)
 
     return MSE_train/K, MSE_test/K, R2_train/K, R2_test/K
+'''
         
+        
+def k_fold(X, E, L, λ=1e-4, K=10, method='J_ols'):
+    '''K-fold validation resampling'''
+    
+    J = generate_J(L)
+    
+    MSE_train = 0
+    MSE_test = 0
+    R2_train = 0
+    R2_test = 0
+    
+    Xmat = np.reshape(X, (int(len(X)/K), len(X[0]), K))
+    Emat = np.reshape(E, (int(len(X)/K), K))
+    
+    for i in range(K):
+        Xnew = np.delete(Xmat, i, 2)
+        Enew = np.delete(Emat, i, 1)
+        
+        Xvec = np.reshape(Xnew, (len(Xnew)*len(Enew[0]), len(X[0])))
+        Evec = np.reshape(Enew, (len(Xnew)*len(Enew[0]), ))
+        
+        if method == 'J_ols':
+            ols=linear_model.LinearRegression()
+            ols.fit(Xvec, Evec)
+            J_train = ols.coef_
+            #ols.fit(np.reshape(Xmat[i], (len(Xmat[i]), 1)), np.reshape(Emat[i], (len(X), 1)))
+            #J_test = ols.coef_
+
+        elif method == 'J_ridge':
+            ridge=linear_model.Ridge()
+            ridge.set_params(alpha=λ)
+            ridge.fit(Xvec, Evec)
+            J_train = ridge.coef_
+            #ridge.fit(np.reshape(Xmat[i], (len(X), 1)), np.reshape(Emat[i], (len(X), 1)))
+            #J_test = ridge.coef_
+
+        elif method == 'J_lasso':
+            lasso=linear_model.Lasso()
+            lasso.set_params(alpha=λ)
+            lasso.fit(Xvec, Evec)
+            J_train = lasso.coef_
+            #lasso.fit(np.reshape(Xmat[i], (len(X), 1)), np.reshape(Emat[i], (len(X), 1)))
+            #J_test = lasso.coef_
+        
+        else:
+            raise NameError("No method named ", method)
+        
+        print(J_train.shape)
+        print(J.shape)
+        MSE_train += (J_train.flatten()-J.flatten()).T.dot(J_train.flatten()-J.flatten())/L**2
+        #MSE_test += (J_test-J.flatten()).T.dot(J_test-J.flatten())/L**2
+        
+        #R2_train += R2(xVecNew, yVecNew, zVecNew, beta_train)
+        #R2_test += R2(xMat[i], yMat[i], zMat[i], beta_train)
+
+    return MSE_train/K #, MSE_test/K #, R2_train/K, R2_test/K
     
 
 def blocking(data):
