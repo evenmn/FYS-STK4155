@@ -4,6 +4,7 @@ from sklearn import linear_model
 from ising_data import *
 from regression import *
 from resampling import k_fold
+from error_tools import *
 
 # define Ising model params
 L = 40         # System size
@@ -21,19 +22,11 @@ X=X.reshape((shape[0],shape[1]*shape[2]))       # Flatten along 0/1-axis
 J = generate_J(L)
 E = ising_energies(states,J)
 
-N_train = int(4*N/5)                         # Number of training states
-N_test = int(4*N/5)                          # Number of test states
+n = int(4*N/5)                                  # Number of training states
 λ = 0.001
 
 '''
-# Self-implemented
-model = Reg(X[:n], E[:n])
-#J_ols = model.ols()
-J_ridge = model.ridge(λ)
-J_lasso = model.lasso(λ)
-'''
-
-# Scikit learn
+# Linear regression
 ols=linear_model.LinearRegression()
 ols.fit(X[:n], E[:n])
 J_ols = ols.coef_
@@ -55,22 +48,32 @@ for J_ in J_list:
     
     print('\n--- ', J_, ' ---')
     print(J_eval)
-    print('MSE: ', (J_eval-J.flatten()).T.dot(J_eval-J.flatten())/L**2)
-    #print('R2: ', (J_eval+1).dot(J_eval+1)/(J_eval+1).dot(J_eval+1))
+    print('MSE_train: ', MSE(X[:n], J_eval, E[:n]))
+    print('MSE_test: ', MSE(X[n:], J_eval, E[n:]))
+    print('R2_train: ', R2(X[:n], J_eval, E[:n]))
+    print('R2_test: ', R2(X[n:], J_eval, E[n:]))
     
-    MSE_train = k_fold(X, E, L, λ, K=10, method=J_)
-    print('MSE_train: ', MSE_train)
+    MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold(X, E, L, λ, K=10, method=J_)
+    print('MSE_train_kfold: ', MSE_train_kfold)
+    print('MSE_test_kfold: ', MSE_test_kfold)
+    print('R2_train_kfold: ', R2_train_kfold)
+    print('R2_test_kfold: ', R2_test_kfold)
     
-    plt.imshow(J_eval.reshape(L,L))
+    J_eval = J_eval.reshape(L,L)
+    plt.imshow(J_eval)
     plt.title(J_)
     plt.colorbar()
     plt.show()
 '''
     
-# Using multilayer 
+# Neural network
 import neural_network as nn
-n = 129900
-W, b = nn.multilayer(states[:n], E[:n], T, np.array([10]))
-print(nn.recall_multilayer(states[n:], W, b))
+from transformation import *
+E_trans = f(E[:n],-100, 100)
+
+W = nn.linear2(states[:n], E[:n], 50000)
+E_tilde = nn.recall_linear(states[n:], W)
+
+print(E_tilde)
 print(E[n:])
-'''
+

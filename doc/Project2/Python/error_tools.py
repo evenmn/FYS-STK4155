@@ -1,19 +1,18 @@
 import numpy as np
 
-'''
-def MSE(J, J_):
-    Mean Square Error
-    e = J - J_
-    return e.T.dot(e)/len(J)
+
+def MSE(X, J, E):
+    '''Mean Square Error'''
+    e = X.dot(J) - E
+    return e.T.dot(e)/len(E)
+
     
-    
-def R2(x, y, z, beta):
-    R2 score function
-    e = z - polyval(x, y, beta)
-    f = y - np.average(y)
-    
+def R2(X, J, E):
+    '''R2 score function'''
+    e = X.dot(J) - E
+    f = E - np.average(E)
     return 1 - e.T.dot(e)/f.T.dot(f)
-'''
+
     
 def Accuracy(y_test, t_test):
     '''Accuracy score'''

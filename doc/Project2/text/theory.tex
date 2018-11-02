@@ -140,7 +140,7 @@ To go further, we need to choose a cost function which we can differentiate with
 \end{equation}
 (see Appendix A). The weight update algorithm we use is thus
 \begin{empheq}[box={\mybluebox[5pt]}]{align}
-\bb{w}^+= \bb{w} - \eta\cdot[f(\bb{x}^T\bb{w})-\bb{y}]\bb{x}.
+\bb{w}^+= \bb{w} - \eta\cdot[f(\bb{x}^T\bb{w})-\bb{y}]^T\bb{x}.
 \end{empheq}
 where the bias weight is included implicitly in $\bb{w}$ and the same applies for $\bb{x}$.
 

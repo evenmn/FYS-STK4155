@@ -16,57 +16,11 @@ def bootstrap(data, K=1000):
     Std = np.std(dataVec)
     
     return Avg, Var, Std
-    
-    
-'''
-def k_fold(x, y, z, K=8, method='ols'):
-    K-fold validation resampling
-    
-    xMat = np.reshape(x, (K, int(len(x)/K)))
-    yMat = np.reshape(y, (K, int(len(y)/K)))
-    zMat = np.reshape(z, (K, int(len(z)/K)))
-    
-    MSE_train = 0
-    MSE_test = 0
-    R2_train = 0
-    R2_test = 0
-    
-    for i in range(K):
-        xMatNew = np.delete(xMat, i, 0)
-        yMatNew = np.delete(yMat, i, 0)
-        zMatNew = np.delete(zMat, i, 0)
-        
-        xVecNew = xMatNew.flatten()
-        yVecNew = yMatNew.flatten()
-        zVecNew = zMatNew.flatten()
-        
-        order5 = Reg_2D(xVecNew, yVecNew, zVecNew, Px=5, Py=5)
-        
-        if method == 'ols':
-            beta_train = order5.ols()
-        elif method == 'ridge':
-            beta_train = order5.ridge()
-        elif method == 'lasso':
-            beta_train = order5.lasso()
-        elif method == 'ridgeGD':
-            beta_train = order5.reg_q(2)
-        else:
-            raise NameError("No method named ", method)
-        
-        MSE_train += MSE(xVecNew, yVecNew, zVecNew, beta_train)
-        MSE_test += MSE(xMat[i], yMat[i], zMat[i], beta_train)
-        
-        R2_train += R2(xVecNew, yVecNew, zVecNew, beta_train)
-        R2_test += R2(xMat[i], yMat[i], zMat[i], beta_train)
 
-    return MSE_train/K, MSE_test/K, R2_train/K, R2_test/K
-'''
         
         
 def k_fold(X, E, L, λ=1e-4, K=10, method='J_ols'):
     '''K-fold validation resampling'''
-    
-    J = generate_J(L)
     
     MSE_train = 0
     MSE_test = 0
@@ -80,44 +34,36 @@ def k_fold(X, E, L, λ=1e-4, K=10, method='J_ols'):
         Xnew = np.delete(Xmat, i, 2)
         Enew = np.delete(Emat, i, 1)
         
-        Xvec = np.reshape(Xnew, (len(Xnew)*len(Enew[0]), len(X[0])))
-        Evec = np.reshape(Enew, (len(Xnew)*len(Enew[0]), ))
+        X_train = np.reshape(Xnew, (len(Xnew)*len(Enew[0]), len(X[0])))
+        E_train = np.reshape(Enew, (len(Xnew)*len(Enew[0]), ))
         
         if method == 'J_ols':
             ols=linear_model.LinearRegression()
-            ols.fit(Xvec, Evec)
-            J_train = ols.coef_
-            #ols.fit(np.reshape(Xmat[i], (len(Xmat[i]), 1)), np.reshape(Emat[i], (len(X), 1)))
-            #J_test = ols.coef_
+            ols.fit(X_train, E_train)
+            J = ols.coef_
 
         elif method == 'J_ridge':
             ridge=linear_model.Ridge()
             ridge.set_params(alpha=λ)
-            ridge.fit(Xvec, Evec)
-            J_train = ridge.coef_
-            #ridge.fit(np.reshape(Xmat[i], (len(X), 1)), np.reshape(Emat[i], (len(X), 1)))
-            #J_test = ridge.coef_
+            ridge.fit(X_train, E_train)
+            J = ridge.coef_
 
         elif method == 'J_lasso':
             lasso=linear_model.Lasso()
             lasso.set_params(alpha=λ)
-            lasso.fit(Xvec, Evec)
-            J_train = lasso.coef_
-            #lasso.fit(np.reshape(Xmat[i], (len(X), 1)), np.reshape(Emat[i], (len(X), 1)))
-            #J_test = lasso.coef_
+            lasso.fit(X_train, E_train)
+            J = lasso.coef_
         
         else:
             raise NameError("No method named ", method)
         
-        print(J_train.shape)
-        print(J.shape)
-        MSE_train += (J_train.flatten()-J.flatten()).T.dot(J_train.flatten()-J.flatten())/L**2
-        #MSE_test += (J_test-J.flatten()).T.dot(J_test-J.flatten())/L**2
+        MSE_train += MSE(X_train, J, E_train)
+        MSE_test += MSE(Xmat[:,:,i], J, Emat[:,i])
         
-        #R2_train += R2(xVecNew, yVecNew, zVecNew, beta_train)
-        #R2_test += R2(xMat[i], yMat[i], zMat[i], beta_train)
+        R2_train += R2(X_train, J, E_train)
+        R2_test += R2(Xmat[:,:,i], J, Emat[:,i])
 
-    return MSE_train/K #, MSE_test/K #, R2_train/K, R2_test/K
+    return MSE_train/K, MSE_test/K, R2_train/K, R2_test/K
     
 
 def blocking(data):

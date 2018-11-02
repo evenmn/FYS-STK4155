@@ -2,10 +2,103 @@
 
 import numpy as np
 from numpy.random import random as rand
-from sigmoid import sigmoid1, sig_der1
+from activation_function import sigmoid, sig_der
 from sys import exit
 from tqdm import tqdm
 from transformation import f, x
+
+
+def linear(X, t, T, eta = 0.1):
+    '''
+    Arguments
+    ---------
+    X {Array}    : Inputs
+                   Size [M, I] where M is the number of training samples.
+                   Contains a set of training samples.
+                   NB: Needs to be a numpy array           
+    t {Array}    : Targets
+                   Size [M, O] where M is the number of training samples.
+                   Contains a set of targets which correspond to the
+                   input samples.
+                   NB: Needs to be a numpy array  
+    T {Int}      : Number of training cycles.
+                   Needs to be given by the user.
+    eta {float}  : Learning rate.
+                   Usually in the interval [0, 0.5].
+    
+    Returning
+    ---------
+    W  {Array}   : Weights
+                   Size [I, O]
+    '''
+    
+    I = len(X[0])
+    M = len(X)
+    try:
+        O = len(t[0])
+    except:
+        O = 1
+    
+    if len(t) != M:
+        print("Input and output array do not have the same length, rejecting")
+        sys.exit()
+    
+    W = 2*np.random.random([I, O]) - 1
+    b = 2*np.random.random(O) - 1
+
+    for iter in tqdm(range(T)):
+        for i in range(M):
+            net = np.dot(X[i], W) + b
+            out = sigmoid(net)
+
+            deltao = -(t[i] - out) * sig_der(out)
+            W = W - eta * np.outer(np.transpose(X[i]), deltao)
+            b = b - eta * deltao
+            
+    return W, b
+
+    
+    
+def linear2(X, t, T, eta = 0.00001):
+    '''
+    Arguments
+    ---------
+    X {Array}    : Inputs
+                   Size [M, I] where M is the number of training samples.
+                   Contains a set of training samples.
+                   NB: Needs to be a numpy array           
+    t {Array}    : TargetsS
+                   Size [M, O] where M is the number of training samples.
+                   Contains a set of targets which correspond to the
+                   input samples.
+                   NB: Needs to be a numpy array  
+    T {Int}      : Number of training cycles.
+                   Needs to be given by the user.
+    eta {float}  : Learning rate.S
+                   Usually in the interval [0, 0.5].
+    
+    Returning
+    ---------
+    W  {Array}   : Weights
+                   Size [I, O]
+    '''
+    
+    
+    if len(t) != len(X):
+        print("Input and output array do not have the same length, rejecting")
+        sys.exit()
+    
+    X = np.c_[np.ones(len(X)),X]
+    W = 2*np.random.random(len(X[0])) - 1
+
+    for iter in tqdm(range(T)):
+        out = X.dot(W)
+
+        W += eta * (t - out).T.dot(X) 
+            
+    return W
+
+
 
 def multilayer(X, t, T, h, eta = 0.1):
     '''
@@ -82,15 +175,15 @@ def multilayer(X, t, T, h, eta = 0.1):
             out.append(X[i])
             for j in range(H+1):
                 net = (out[j]).dot(W[j]) + b[j]
-                out.append(sigmoid1(net))
+                out.append(sigmoid(net))
             
             # BACKWARD PROPAGATION
-            deltao = -(sigmoid1(t[i]) - out[-1]) * sig_der1(out[-1])
+            deltao = -(sigmoid(t[i]) - out[-1]) * sig_der(out[-1])
             
             deltah = []
             deltah.append(deltao)
             for j in range(H):
-                delta = W[H-j].dot(np.transpose(deltah[-1])) * sig_der1(out[H-j])
+                delta = W[H-j].dot(np.transpose(deltah[-1])) * sig_der(out[H-j])
                 deltah.append(delta)
             deltah = deltah[::-1]     
             
@@ -102,6 +195,13 @@ def multilayer(X, t, T, h, eta = 0.1):
     return W, b
 
 
+def recall_linear(X, W):
+    X = np.c_[np.ones(len(X)),X]
+    
+    net = X.dot(W)
+    return net
+
+
 def recall_multilayer(X, W, b):
     Out = np.empty(len(X))
     for i in range(len(X)):
@@ -109,7 +209,7 @@ def recall_multilayer(X, W, b):
         out.append(X[i])
         for j in range(len(W)):
             net = np.dot(out[j], W[j]) + b[j]
-            out.append(sigmoid1(net))
+            out.append(sigmoid(net))
         Out[i] = out[-1]
     
     Out = x(Out, -100, 100)
