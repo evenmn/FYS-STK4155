@@ -113,6 +113,7 @@ f'(x)=f(1-f)
 \end{equation}
 and the derivation of it is shown carefully in Appendix A. The function is presented in figure (\ref{fig:activation_functions}), along with more modern activation functions such as \textit{standard RELU, leaky RELU and ELU}.
 
+\iffalse
 \begin{figure}
 	\centering
 	\subfloat[Sigmoid]{{\includegraphics[width=8cm]{../plots/sigmoid.png} }}
@@ -123,6 +124,7 @@ and the derivation of it is shown carefully in Appendix A. The function is prese
 	\caption{Some more or less popular activation functions}%
 	\label{fig:activation_functions}%
 \end{figure}
+\fi
 
 \subsubsection{Backward phase}
 Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact results), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done by any minimization method, and we will look at a few gradient methods. To illustrate the point, we will stick to the \textbf{gradient descent} (GD) method in the calculations, even though other methods will be used later. The principle of GD is easy: each weight is "moved" in the direction of steepest slope,
@@ -301,7 +303,10 @@ If we compare with the weight update formulas for the two-layer case, we recogni
 Now over to the problem we want to solve using neural networks.
 
 \subsection{Ising model}
-The Ising model is widely used to study phenomena in statistics, physics, economics etc.. In one dimension, it can be viewed as a sequence of two binary numbers, for instance $\pm1$, which we will call spins. Each element interacts with its nearest neighbors by the formula
+The Ising model is widely used to study phenomena in statistics, physics, economics etc.. 
+
+\subsubsection{One dimension}
+In one dimension, it can be viewed as a sequence of two binary numbers, for instance $\pm1$, which we will call spins. Each element interacts with its nearest neighbors by the formula
 \begin{equation}
 E_{i,i+1}=J_{i,i+1}s_is_{i+1}
 \end{equation}
@@ -322,3 +327,6 @@ We could extend this to a system of $n$ Ising models, by introducing a matrix $\
 \bb{E}=\bb{X}^T\bb{J}.
 \end{equation}
 If we now know the spin configuration of the models ($\bb{X}$) and the corresponding energies, we can estimate the $\bb{J}$-vector using linear regression.
+
+\subsubsection{Two dimensions}
+Phase transition
