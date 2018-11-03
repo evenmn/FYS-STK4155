@@ -6,6 +6,7 @@ from activation_function import sigmoid, sig_der
 from sys import exit
 from tqdm import tqdm
 from transformation import f, x
+import time
 
 
 def linear(X, t, T, eta = 0.1):
@@ -59,7 +60,7 @@ def linear(X, t, T, eta = 0.1):
 
     
     
-def linear2(X, t, T, eta = 0.00001):
+def linear2(X, t, T, eta = 0.000000001):
     '''
     Arguments
     ---------
@@ -89,12 +90,21 @@ def linear2(X, t, T, eta = 0.00001):
         sys.exit()
     
     X = np.c_[np.ones(len(X)),X]
-    W = 2*np.random.random(len(X[0])) - 1
+    W = (2*np.random.random(len(X[0])) - 1)*0.01
 
-    for iter in tqdm(range(T)):
+    for iter in range(T):
+        #time.sleep(0.1)
         out = X.dot(W)
-
-        W += eta * (t - out).T.dot(X) 
+        
+        print('Sum: ', np.sum(np.fabs(out - t)))
+        #print('Gradient: ', (np.fabs(out - t)).T.dot(X))
+        
+        if iter == 199999999:
+            print(t)
+            print(out)
+            print(out-t)
+        
+        W -= eta * (out - t).T.dot(X) 
             
     return W
 
@@ -198,8 +208,7 @@ def multilayer(X, t, T, h, eta = 0.1):
 def recall_linear(X, W):
     X = np.c_[np.ones(len(X)),X]
     
-    net = X.dot(W)
-    return net
+    return X.dot(W)
 
 
 def recall_multilayer(X, W, b):

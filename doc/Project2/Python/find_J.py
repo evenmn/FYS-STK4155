@@ -69,11 +69,10 @@ for J_ in J_list:
 # Neural network
 import neural_network as nn
 from transformation import *
-E_trans = f(E[:n],-100, 100)
 
-W = nn.linear2(states[:n], E[:n], 50000)
-E_tilde = nn.recall_linear(states[n:], W)
+W = nn.linear2(states[:n], E[:n], 20000)
+E_tilde = nn.recall_linear(states[:n], W)
 
 print(E_tilde)
-print(E[n:])
+print(E[:n])
 
