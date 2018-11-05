@@ -1,6 +1,6 @@
 import numpy as np
 from tqdm import tqdm
-from sigmoid import *
+from activation_function import *
 
 def logistic(X, t, T, eta = 0.1):
     '''
@@ -32,7 +32,8 @@ def logistic(X, t, T, eta = 0.1):
         print("Input and output array do not have the same length, rejecting")
         sys.exit()
     
-    X = np.c_[X, np.ones(len(X))[:,np.newaxis]]          # Add bias to X
+    X = np.c_[np.ones(len(X))[:,np.newaxis],X]          # Add bias to X
+    
     W = 2*np.random.random(len(X[0])) - 1               # Initialize W
 
     for iter in tqdm(range(T)):
@@ -45,7 +46,7 @@ def recall_logistic(X, W, add_bias=False):
     if add_bias:
         X = np.c_[X, np.ones(len(X))[:,np.newaxis]]      # Add bias to X
     net = X.dot(W)                                       # Netto output
-    return sigmoid1(net)                                 # Activate output
+    return sigmoid(net)                                 # Activate output
     
     
 if __name__ == '__main__':

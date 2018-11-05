@@ -19,14 +19,17 @@ def write_file(data, extension='.csv', path='../data/'):
     
     np.savetxt(path+'Ising2DFM_reSample_L40tcexcluded_shuffled%s'%extension, data, delimiter=',')
 
+def ignore_tc():
+    
 
-# Load inputs and targets
-x = read_pkl('All')                          # Inputs
-t = read_pkl('All_labels', reshape=False)    # Targets
+    # Load inputs and targets
+    x = read_pkl('All')                          # Inputs
+    t = read_pkl('All_labels', reshape=False)    # Targets
 
-data = np.int_(np.c_[x, t])                  # Merge x and t
-data = np.delete(data, np.arange(70000, 100000), axis=0)    # Remove data around tc
+    data = np.int_(np.c_[x, t])                  # Merge x and t
+    data = np.delete(data, np.arange(70000, 100000), axis=0)    # Remove data around tc
 
-np.random.shuffle(data)
+    np.random.shuffle(data)
+    return data
 
-write_file(data, extension='.csv')
+#write_file(data, extension='.csv')
