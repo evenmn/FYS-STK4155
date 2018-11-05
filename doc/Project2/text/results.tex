@@ -1,6 +1,6 @@
 \section{Results} \label{sec:results}
 
-\subsection{Determine the interaction J}
+\subsection{Determine the energy in the Ising model}
 We have tried to determine the value of J using both linear regression (OLS, Ridge and Lasso) and neural networks. In project 1, we found our implementation of OLS, Ridge and Lasso to give the same result as Scikit Learn, and we will in this project stick to Scikit Learn due to its quickness. [Ref. project 1]
 \begin{table} [H]
 	\caption{Mean Square Error and R$^2$-score of the obtained J obtained from linear regression and neural network.  , where noise was added to the data. The parameters used were $\lambda=1e-5$ (penalty), $\eta=1e-4$ (learning rate), $\text{niter}=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.1)$ (noise). See text for more information.}
@@ -14,6 +14,29 @@ We have tried to determine the value of J using both linear regression (OLS, Rid
 \end{table}
 
 \subsubsection{Linear regression}
+\newgeometry{left=2cm,right=2cm,top=2cm}
+\begin{figure} [H]%
+	\centering
+	\subfloat[OLS, $\lambda=0.1$]{{\includegraphics[width=6cm]{../plots/J_ols_lambda_1.png}}}
+	\subfloat[Ridge, $\lambda=0.1$]{{\includegraphics[width=6cm]{../plots/J_ridge_lambda_1.png} }}
+	\subfloat[Lasso, $\lambda=0.1$]{{\includegraphics[width=6cm]{../plots/J_lasso_lambda_1.png} }}\\
+	
+	\subfloat[OLS, $\lambda=0.01$]{{\includegraphics[width=6cm]{../plots/J_ols_lambda_2.png} }}%
+	\subfloat[Ridge, $\lambda=0.01$]{{\includegraphics[width=6cm]{../plots/J_ridge_lambda_2.png} }}
+	\subfloat[Lasso, $\lambda=0.01$]{{\includegraphics[width=6cm]{../plots/J_lasso_lambda_2.png} }}\\
+	
+	\subfloat[OLS, $\lambda=0.00001$]{{\includegraphics[width=6cm]{../plots/J_ols_lambda_5.png} }}%
+	\subfloat[Ridge, $\lambda=0.00001$]{{\includegraphics[width=6cm]{../plots/J_ridge_lambda_5.png} }}
+	\subfloat[Lasso, $\lambda=0.00001$]{{\includegraphics[width=6cm]{../plots/J_lasso_lambda_5.png} }}\\
+	
+	\subfloat[OLS, $\lambda=0.000001$]{{\includegraphics[width=6cm]{../plots/J_ols_lambda_6.png} }}%
+	\subfloat[Ridge, $\lambda=0.000001$]{{\includegraphics[width=6cm]{../plots/J_ridge_lambda_6.png} }}
+	\subfloat[Lasso, $\lambda=0.000001$]{{\includegraphics[width=6cm]{../plots/J_lasso_lambda_6.png} }}
+	\caption{ }%
+	\label{fig:R2_scores}
+\end{figure}
+\restoregeometry
+
 \subsubsection{Neural networks}
 
 \subsection{Classifying the phase}
@@ -22,14 +45,6 @@ We have tried to determine the value of J using both linear regression (OLS, Rid
 
 
 
-\iffalse
-\begin{figure} [H]%
-	\centering
-	\subfloat[Lambda vs. R2-score]{{\includegraphics[width=7cm]{../plots/lambda_R2score.png} }}%
-	\subfloat[Variance vs. R2-score]{{\includegraphics[width=7cm]{../plots/var_R2score.png} }}
-	\caption{R$^2$-score plotted as a function of the penalty $\lambda$ (a) and as a function of the noise (b). $\lambda\in[10^{-8},10^2]$ in (a) and $\sigma^2\in[10^{-6},10^{-0.7}]$ in (b). The other parameters used were $\lambda=1e-5$ (penalty, was held constant for (b) only), $\eta=1e-4$ (learning rate), $niter=1e5$ (number of iterations) and $\mathcal{N}(0, \sigma^2=0.1)$ (noise, was held constant for (a) only).}%
-	\label{fig:R2_scores}
-\end{figure}
-\fi 
+
 
 
