@@ -1,17 +1,29 @@
 import numpy as np
 
-
-def MSE(X, J, E):
-    '''Mean Square Error'''
-    e = X.dot(J) - E
-    return e.T.dot(e)/len(E)
-
     
-def R2(X, J, E):
+def MSE(E_tilde, E):
+    '''Mean Square Error'''
+    e = E_tilde - E
+    return e.T.dot(e)/len(E)
+    
+    
+def R2(E_tilde, E):
     '''R2 score function'''
-    e = X.dot(J) - E
+    e = E_tilde - E
     f = E - np.average(E)
     return 1 - e.T.dot(e)/f.T.dot(f)
+    
+    
+def MSE_linreg(X, J, E):
+    '''Mean Square Error in linear regression'''
+    E_tilde = X.dot(J)
+    return MSE(E_tilde, E)
+    
+    
+def R2_linreg(X, J, E):
+    '''R2 score function in linear regression'''
+    E_tilde = X.dot(J)
+    return R2(E_tilde, E)
 
     
 def Accuracy(y_test, t_test):

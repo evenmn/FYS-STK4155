@@ -57,11 +57,11 @@ def k_fold(X, E, L, λ=1e-4, K=10, method='J_ols'):
         else:
             raise NameError("No method named ", method)
         
-        MSE_train += MSE(X_train, J, E_train)
-        MSE_test += MSE(Xmat[:,:,i], J, Emat[:,i])
+        MSE_train += MSE_linreg(X_train, J, E_train)
+        MSE_test += MSE_linreg(Xmat[:,:,i], J, Emat[:,i])
         
-        R2_train += R2(X_train, J, E_train)
-        R2_test += R2(Xmat[:,:,i], J, Emat[:,i])
+        R2_train += R2_linreg(X_train, J, E_train)
+        R2_test += R2_linreg(Xmat[:,:,i], J, Emat[:,i])
 
     return MSE_train/K, MSE_test/K, R2_train/K, R2_test/K
     

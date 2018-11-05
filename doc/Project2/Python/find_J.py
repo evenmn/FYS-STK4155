@@ -48,8 +48,8 @@ for J_ in J_list:
     
     print('\n--- ', J_, ' ---')
     print(J_eval)
-    print('MSE_train: ', MSE(X[:n], J_eval, E[:n]))
-    print('MSE_test: ', MSE(X[n:], J_eval, E[n:]))
+    print('MSE_train: ', MSE_linreg(X[:n], J_eval, E[:n]))
+    print('MSE_test: ', MSE_linreg(X[n:], J_eval, E[n:]))
     print('R2_train: ', R2(X[:n], J_eval, E[:n]))
     print('R2_test: ', R2(X[n:], J_eval, E[n:]))
     
@@ -70,9 +70,24 @@ for J_ in J_list:
 import neural_network as nn
 from transformation import *
 
-W = nn.linear2(states[:n], E[:n], 20000)
-E_tilde = nn.recall_linear(states[:n], W)
+W = nn.linear(X[:n], f(E[:n]), 50)
+E_tilde_train = x(nn.recall_linear(X[:n], W))
+E_tilde_test = x(nn.recall_linear(X[n:], W))
 
-print(E_tilde)
-print(E[:n])
+
+print('MSE_train: ', MSE(E_tilde_train, E[:n]))
+print('MSE_test: ', MSE(E_tilde_test, E[n:]))
+print('R2_train: ', R2(E_tilde_train, E[:n]))
+print('R2_test: ', R2(E_tilde_test, E[n:]))
+
+'''
+MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold(X, E, L, λ, K=10, method='J_ols')
+print('MSE_train_kfold: ', MSE_train_kfold)
+print('MSE_test_kfold: ', MSE_test_kfold)
+print('R2_train_kfold: ', R2_train_kfold)
+print('R2_test_kfold: ', R2_test_kfold)
+
+#plt.imshow(np.reshape(W[:-1], (L, L)))
+#plt.show()
+'''
 
