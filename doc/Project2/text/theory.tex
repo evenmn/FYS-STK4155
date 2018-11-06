@@ -8,25 +8,25 @@ In linear regression, the dependent variable $y_i$ is a linear combination of th
 	In principle, $x_{ij}$ can be an arbitrary function of the arguments $x_i$, and in this project the $x_{ij}$'s are all spin interactions in the Ising model ($x_{ij}=s_is_j$).
 	
 	We will study Ordinary Least Square (OLS) regression, Ridge regression and Lasso regression. The OLS cost function is known as
-	\begin{equation}
+	\begin{empheq}[box={\mybluebox[5pt]}]{equation}
 	c(\vec{\beta})=\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2\qquad\qquad\qquad\text{OLS}
-	\end{equation}
+	\end{empheq}
 	which is minimized when
 	\begin{equation}
 	\vec{\beta}=(\hat{X}^T\hat{X})^{-1}\hat{X}^T\vec{y}.
 	\end{equation}
 	Similarly, the Ridge cost function is
-	\begin{equation}
+	\begin{empheq}[box={\mybluebox[5pt]}]{equation}
 	c(\vec{\beta})=\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j^2\qquad\text{Ridge}
-	\end{equation}
+	\end{empheq}
 	where $\lambda$ is called the penalty. This is minimized when
 	\begin{equation}
 	\vec{\beta}=(\hat{X}^T\hat{X}+\lambda I)^{-1}\hat{X}^T\vec{y},
 	\end{equation}
 	and finally the Lasso cost function is given by
-	\begin{equation}
+	\begin{empheq}[box={\mybluebox[5pt]}]{equation}
 	c(\vec{\beta})=\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p\beta_j\qquad\text{Lasso}.
-	\end{equation}
+	\end{empheq}
 Linear regression is detailed in the project 1 report, [1].
 
 
@@ -100,11 +100,8 @@ The cost function is what defines the error, and we could in principle have used
 c(\boldsymbol{W}) = -\sum_{i=1}^n\Big[y_i\log f(\boldsymbol{x}_i^T\boldsymbol{W})+(1-y_i)\log[1-f(\boldsymbol{x}_i^T\boldsymbol{W})]\Big]
 \label{eq:cross_entropy}
 \end{empheq}
-where $\boldsymbol{W}$ contains all weights, included the bias weight ($\bb{W}\equiv[b,\bb{W}]$), and similarly does $\bb{x}$ include the bias node, which is 1; $\bb{x}\equiv[1,\bb{x}]$. Further, the $f(x)$ is the logistic function 
-\begin{empheq}[box={\mybluebox[5pt]}]{equation}
-f(x)=\frac{1}{1+e^{-x}}.
-\label{eq:logistic}
-\end{empheq}
+where $\boldsymbol{W}$ contains all weights, included the bias weight ($\bb{W}\equiv[b,\bb{W}]$), and similarly does $\bb{x}$ include the bias node, which is 1; $\bb{x}\equiv[1,\bb{x}]$. Further, the $f(x)$ is the activation function discussed in next section.
+
 The cross-entropy function is derived from likelyhood function, which famously reads
 \begin{equation}
 p(y|x)=\hat{y}^y\cdot(1-\hat{y})^{1-y}.
@@ -117,13 +114,18 @@ Working in the log space, we can define a log likelyhood function
 which gives the log of the probability of obtaining $y$ given $x$. We want this quantity to increase then the cost function is decreased, so we define out cost function as the negative log likelyhood function. [https://towardsdatascience.com/logistic-regression-detailed-overview-46c4da4303bc]
 
 \subsubsection{Activation function}\label{sec:sigmoid1}
-Above, we were talking about the activation function, which is used to activate the net output. In binary models, this is often just a step function firing when the net output is above a threshold. For continuous outputs, the logistic function  written in equation \eqref{eq:logistic} is usually used in logistic regression to return a probability instead of a binary value. This function has a simple derivative, which is advantageous when calculating a large number of derivatives. As shown in section \ref{sec:sigmoid_der}, the derivative is simply
+Above, we were talking about the activation function, which is used to activate the net output. In binary models, this is often just a step function firing when the net output is above a threshold. For continuous outputs, the logistic function given by
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+f(x)=\frac{1}{1+e^{-x}}.
+\label{eq:logistic}
+\end{empheq}
+is usually used in logistic regression to return a probability instead of a binary value. This function has a simple derivative, which is advantageous when calculating a large number of derivatives. As shown in section \ref{sec:sigmoid_der}, the derivative is simply
 \begin{equation}
 \frac{df(x)}{dx}=x(1-x).
 \label{eq:logistic_der}
 \end{equation}
 
-$tanh(x)$ is an example on another popular activation function in logistic regression, which more or less holds the same properties as the logistic function. 
+$tanh(x)$ is another popular activation function in logistic regression, which more or less holds the same properties as the logistic function. 
 
 \subsubsection{Backward phase}
 Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact results), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done by any minimization method, and we will look at a few gradient methods. To illustrate the point, we will stick to the \textbf{gradient descent} (GD) method in the calculations, even though other methods will be used later. The principle of GD is easy: each weight is "moved" in the direction of steepest slope,
@@ -339,9 +341,9 @@ The Ising model is widely used to study phenomena in statistics, physics, econom
 
 \subsubsection{One dimension}
 In one dimension, it can be viewed as a sequence of two binary numbers, for instance $\pm1$, which we will call spins. Each element interacts with its nearest neighbors by the formula
-\begin{equation}
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
 E_{i,i+1}=J_{i,i+1}s_is_{i+1}
-\end{equation}
+\end{empheq}
 where $s_i$ and $s_{i+1}$ are the values of the respective elements and $J_{i,i+1}$ is the interaction coefficient. The total energy of an Ising model is just the sum of all interaction energies, which becomes
 \begin{equation}
 E=\sum_iJ_{i,i+1}s_is_{i+1}.
@@ -355,16 +357,16 @@ where $J$ now is an interaction matrix. We recognize this as an inner product wh
 E=\bb{x}^T\bb{J}.
 \end{equation}
 We could extend this to a system of $n$ Ising models, by introducing a matrix $\bb{X}=[\bb{x}_1, \bb{x}_2,\hdots,\bb{x}_n]$ which contains all $\bb{x}$-vectors
-\begin{equation}
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
 \bb{E}=\bb{X}^T\bb{J}.
-\end{equation}
+\end{empheq}
 If we now know the spin configuration of the models ($\bb{X}$) and the corresponding energies, we can estimate the $\bb{J}$-vector using linear regression.
 
 \subsubsection{Two dimensions}
 In two dimensions, each spin has four neighbors instead of two, which increases the calculation difficulties significantly. In this case, the Ising model is commonly written as
-\begin{equation}
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
 E=\sum_{<ij>}J_{i,j}s_is_j
-\end{equation}
+\end{empheq}
 where the notation $<>$ restricts the interactions to be between nearest neighbors. In a two-dimensional Ising model, phase transitions can occur, which was first described analytically by Lars Onsager. He showed that the phase transition occurs at
 \begin{equation}
 T_c=\frac{2J}{k\ln(1+\sqrt{2})}\approx 2.269

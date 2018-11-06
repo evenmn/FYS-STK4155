@@ -46,12 +46,14 @@ We observe that the MSE is quite low, especially for Ridge and Lasso. The R$^2$-
 We observe that the $\bb{J}$ obtained form Lasso is superdiagonal, while for Ridge it is sub-superdiagonal. For OLS, the matrix tends to be sub-superdiagonal, but the off-diagonal elements are not fully zero. 
 
 Finally, the R$^2$-score is plotted as a function of the penalty, $\lambda$, in figure \eqref{fig:lambda_vs_R2_linear}.
+\iffalse
 \begin{figure} [H]
 	\centering
 	\includegraphics[scale=0.65]{../plots/lambda_vs_R2_linear.png}
 	\caption{The R$^2$-score as a function of the penalty. }
 	\label{fig:lambda_vs_R2_linear}
 \end{figure} 
+\fi
 
 \subsubsection{Neural networks}
 We now repeat what we have done above, jump over to a neural network approach. 
@@ -68,13 +70,28 @@ We now repeat what we have done above, jump over to a neural network approach.
 		2 + 2 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\
 		5 + 5 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\ 
 		10 + 10 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\
-		10 + 10 + 10 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\ \hline
+		10 + 10 + 10 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\ \hline\hline
 	\end{tabularx}
 \end{table}
 
 \subsection{Classifying the phase}
 Removed states around critical temperature.
+
 \subsubsection{Logistic regression}
+\begin{table} [H]
+	\caption{Accuracy score}
+	\begin{tabularx}{\textwidth}{l|XX|XX} \hline\hline
+		\label{tab:logistic_regression}
+		& \multicolumn{2}{c}{\textbf{GD}}&\multicolumn{2}{c}{\textbf{SGD}}\\ \hline
+		Iterations&Train&Test&Train&Test\\ \hline
+		10 & 3.529e-4 & 4.454e-4 & 3.610e-4 & 1.\\
+		100 & 0.009128 & 0.009651 & 0.009128 & 0.8977 \\
+		1000 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\ \hline\hline
+	\end{tabularx}
+\end{table}
+
+Add lambda as accuracy score plot
+
 \subsubsection{Neural networks}
 
 
