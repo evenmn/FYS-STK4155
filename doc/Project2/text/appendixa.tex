@@ -1,6 +1,6 @@
 \section{Appendix A - Derivation of activation functions} \label{sec:appendixa}
 
-\subsection{Sigmoid}
+\subsection{Sigmoid} \label{sec:sigmoid_der}
 If we differentiate the sigmoid function 
 \begin{equation}
 f(x)=\frac{1}{1+\exp(-x)}
@@ -20,3 +20,5 @@ f'(x) &= -1\cdot(1+\exp(-x))^{-2}\cdot -1\cdot\exp(-x)\\
 &=\frac{1}{1+\exp(-x)}\bigg(1 - \frac{1}{1+\exp(-x)}\bigg)\\
 &=f(1-f)
 \end{align*}
+
+\subsection{Cross-entropy}

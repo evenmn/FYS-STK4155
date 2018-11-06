@@ -4,6 +4,7 @@ import numpy as np
 from convert_pkl import ignore_tc
 from logistic_CE import *
 from error_tools import Accuracy
+import neural_network as nn
 
 '''
 neural_network.py is an 1- or 2-layer artificial neural network which in principle 
@@ -18,19 +19,31 @@ H - Number of hidden nodes
 (eta - Learning rate, set to 0.1, but can be changed as last argument)
 '''
 
-n_train = 129000                 # Number of training sets
-n_test = 1000                      # number of test sets
+'''
+X = np.array([[0,0], [0,1], [1,0], [1,1]])
+t = np.array([0,1,1,1])
+
+W = nn.linear(X, t, 1000, eta=1, minimization='GD', trans=False)
+y = nn.recall_linear(X, W, trans=False)
+
+print(y)
+stop
+'''
+
+n = 120000                 # Number of training sets
 
 data = ignore_tc()
-X_train = data[:n_train,:-1]
-t_train = data[:n_train,-1]
+data[np.where(data==0)]=-1
 
-X_test = data[n_train:n_train+n_test,:-1]
-t_test = data[n_train:n_train+n_test,-1]
+X_train = data[:n,:-1]
+t_train = data[:n,-1]
 
-T = 100
+X_test = data[:n,:-1]
+t_test = data[:n,-1]
 
-W = logistic(X_train, t_train, T)
-y_test = recall_logistic(X_test, W, add_bias=True)
+T = 1000
+
+W = nn.linear(X_train, t_train, T, eta=1, minimization='GD', trans=False)
+y_test = nn.recall_linear(X_test, W, trans=False)
 
 print('Accuracy: ', Accuracy(y_test, t_test))

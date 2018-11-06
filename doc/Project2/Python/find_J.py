@@ -23,9 +23,16 @@ X=X.reshape((shape[0],shape[1]*shape[2]))       # Flatten along 0/1-axis
 J = generate_J(L)
 E = ising_energies(states,J)
 
-n = int(4*N/5)                                  # Number of training states
+n = int(N*0.8)                                  # Number of training states
+
 '''
-for λ in [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]:
+R2_train = np.zeros((12, 3))
+R2_test = np.zeros((12, 3))
+
+lambdas = np.logspace(-6,5,12)
+
+i = 0
+for λ in lambdas:
 
     # Linear regression
     ols=linear_model.LinearRegression()
@@ -44,15 +51,17 @@ for λ in [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]:
 
     J_list = ['J_ols', 'J_ridge', 'J_lasso']
 
+    j = 0
     for J_ in J_list:
         J_eval = eval(J_)
+        R2_train[i,j] = R2_linreg(X[:n], J_eval, E[:n])
+        R2_test[i,j] = R2_linreg(X[n:], J_eval, E[n:])
         
         print('\n--- ', J_, ' ---')
-        #print(J_eval)
-        print('MSE_train: ', MSE_linreg(X[:n], J_eval, E[:n]))
-        print('MSE_test: ', MSE_linreg(X[n:], J_eval, E[n:]))
-        print('R2_train: ', R2_linreg(X[:n], J_eval, E[:n]))
-        print('R2_test: ', R2_linreg(X[n:], J_eval, E[n:]))
+        #print('MSE_train: ', MSE_linreg(X[:n], J_eval, E[:n]))
+        #print('MSE_test: ', MSE_linreg(X[n:], J_eval, E[n:]))
+        print('R2_train: ', R2_train[i,j])
+        print('R2_test: ', R2_test[i,j])
         
         
         MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold_linreg(X, E, λ, K=10, method=J_)
@@ -70,12 +79,26 @@ for λ in [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6]:
         cbar.ax.tick_params(labelsize=22)
         plt.savefig(path + J_ + '_lambda_{}.png'.format(int(-np.log10(λ))))
         
+        j += 1
+    i += 1
+
+plt.semilogx(lambdas, R2_train[:,0], label='OLS (train)')
+plt.semilogx(lambdas, R2_test[:,0], '--', label='OLS (test)')
+plt.semilogx(lambdas, R2_train[:,1], label='Ridge (train)')
+plt.semilogx(lambdas, R2_test[:,1], '--', label='Ridge (test)')
+plt.semilogx(lambdas, R2_train[:,2], label='Lasso (train)')
+plt.semilogx(lambdas, R2_test[:,2], '--', label='Lasso (test)')
+plt.legend(loc='best')
+plt.xlabel('$\lambda$',fontsize=16)
+plt.ylabel('R$^2$-score',fontsize=16)
+plt.grid()
+plt.show()
 '''
     
 # Neural network
 import neural_network as nn
-from transformation import *
 
+# === Linear ===
 W = nn.linear(X[:n], E[:n], 50)
 E_tilde_train = nn.recall_linear(X[:n], W)
 E_tilde_test = nn.recall_linear(X[n:], W)
@@ -91,7 +114,22 @@ print('MSE_train_kfold: ', MSE_train_kfold)
 print('MSE_test_kfold: ', MSE_test_kfold)
 print('R2_train_kfold: ', R2_train_kfold)
 print('R2_test_kfold: ', R2_test_kfold)
+'''
 
-#plt.imshow(np.reshape(W[:-1], (L, L)))
-#plt.show()
+# === Multilayer ===
+W, b = nn.multilayer(X[:n], E[:n], 500, [5])
+E_tilde_train = nn.recall_multilayer(X[:n], W, b)
+E_tilde_test = nn.recall_multilayer(X[n:], W, b)
 
+print('MSE_train: ', MSE(E_tilde_train, E[:n]))
+print('MSE_test: ', MSE(E_tilde_test, E[n:]))
+print('R2_train: ', R2(E_tilde_train, E[:n]))
+print('R2_test: ', R2(E_tilde_test, E[n:]))
+
+
+MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold(X, E, K=10)
+print('MSE_train_kfold: ', MSE_train_kfold)
+print('MSE_test_kfold: ', MSE_test_kfold)
+print('R2_train_kfold: ', R2_train_kfold)
+print('R2_test_kfold: ', R2_test_kfold)
+'''

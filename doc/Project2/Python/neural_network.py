@@ -2,13 +2,13 @@
 
 import numpy as np
 from numpy.random import random as rand
-from activation_function import sigmoid, sig_der
+from activation_function import *
 from transformation import f, x
 from sys import exit
 from tqdm import tqdm
 
 
-def linear(X, t, T, eta = 0.001, trans=True):
+def linear(X, t, T, eta = 0.001, minimization='GD', trans=True):
     '''
     Arguments
     ---------
@@ -43,25 +43,45 @@ def linear(X, t, T, eta = 0.001, trans=True):
         O = 1
     
     if len(t) != M:
-        print("Input and output array do not have the same length, rejecting")
+        print("Input and output arrays do not have the same length, rejecting")
         sys.exit()
     
     W = (2*np.random.random([I+1, O]) - 1)*0.001
     X = np.c_[X, np.ones(M)]
     
-    for iter in tqdm(range(T)):
-        for i in range(M):
-            net = np.dot(X[i], W)
+    if minimization == 'GD':
+        for iter in tqdm(range(T)):
+            net = np.dot(X, W)
             out = sigmoid(net)
 
-            deltao = -(t[i] - out) * sig_der(out)
+            deltao = (out - t[i]) * out.dot(1-out)
             W = W - eta * np.outer(np.transpose(X[i]), deltao)
+        
+            for i in range(M):
+                net = np.dot(X[i], W)
+                out = sigmoid(net)
+
+                deltao = (out - t[i]) * sig_der(out)
+                W = W - eta * np.outer(np.transpose(X[i]), deltao)
+                
+    if minimization == 'SGD':
+        N = 1             # Size of minibatch
+        for iter in tqdm(range(T)):
+            for i in range(N):
+                net = np.dot(X[i], W)
+                out = sigmoid(net)
+
+                deltao = -(t[i] - out) * sig_der(out)
+                dW = np.outer(np.transpose(X[i]), deltao)
+                
+            W = W - eta * dW
+            
             
     return W
 
 
 
-def multilayer(X, t, T, h, eta = 0.001):
+def multilayer(X, t, T, h, eta = 0.1):
     '''
     Arguments
     ---------
@@ -122,13 +142,13 @@ def multilayer(X, t, T, h, eta = 0.001):
 
     # Weights
     W = []; b = []
-    W.append((2 * rand([I, h[0]]) - 1)*0.001)           # Add first W-matrix
+    W.append((2 * rand([I, h[0]]) - 1)*0.0001)           # Add first W-matrix
     b.append(2 * rand(h[0]) - 1)                # Add first bias vector
     
     for i in range(H-1):
-        W.append(2 * rand([h[i],h[i+1]]) - 1)   # Add other W-matrices
+        W.append((2 * rand([h[i],h[i+1]]) - 1)*0.0001)   # Add other W-matrices
         b.append(2 * rand(h[i+1]) - 1)          # Add other bias vectors
-    W.append((2 * rand([h[-1], O]) - 1)*0.001)          # Add last W-matrix
+    W.append((2 * rand([h[-1], O]) - 1)*0.0001)          # Add last W-matrix
     b.append(2 * rand(O) - 1)                   # Add last bias vector
     W = np.array(W)
     b = np.array(b)
@@ -163,11 +183,8 @@ def multilayer(X, t, T, h, eta = 0.001):
             error += abs(t[i] - out[-1])
         print(error)
             
-    #Merge W and b
-    for i in range(H):
-        W[i] = [b[i], W[i]]
             
-    return W
+    return W, b
    
    
     
@@ -185,14 +202,14 @@ def recall_linear(X, W, trans=True):
         return Out
         
 
-def recall_multilayer(X, W):
-    X = np.c_[X, np.ones(len(X))]
+def recall_multilayer(X, W, b):
+    #X = np.c_[X, np.ones(len(X))]
     Out = np.empty(len(X))
     for i in range(len(X)):
         out = []
         out.append(X[i])
         for j in range(len(W)):
-            net = np.dot(out[j], W[j])
+            net = np.dot(out[j], W[j]) + b[j]
             out.append(sigmoid(net))
         Out[i] = out[-1]
     return Out

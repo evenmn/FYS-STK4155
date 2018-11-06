@@ -32,13 +32,13 @@ def logistic(X, t, T, eta = 0.1):
         print("Input and output array do not have the same length, rejecting")
         sys.exit()
     
-    X = np.c_[np.ones(len(X))[:,np.newaxis],X]          # Add bias to X
+    X = np.c_[np.ones(len(X)),X]          # Add bias to X
     
-    W = 2*np.random.random(len(X[0])) - 1               # Initialize W
+    W = (2*np.random.random(len(X[0])) - 1)*0.001               # Initialize W
 
     for iter in tqdm(range(T)):
         out = recall_logistic(X, W)                      # Forward phase
-        W -= eta * (out - t).T.dot(X)                    # Backward phase     
+        W -= eta * np.multiply((out - t), sig_der(out)).T.dot(X)                    # Backward phase     
     return W
     
     

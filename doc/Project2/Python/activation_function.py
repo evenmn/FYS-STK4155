@@ -9,7 +9,7 @@ def sigmoid(x):
     
 def sig_der(x):
     '''The derivative of f(x) = 1/(1 + exp(-x))'''
-    return x*(1 - x)
+    return  x*(1 - x)
 
 def tanh(x):
     '''Maps the argument x in the interval [-1, 1]'''
@@ -39,6 +39,13 @@ def ELU(x):
         return x
     else:
         return np.exp(x)-1
+        
+def ELU_der(x):
+    '''ELU derivative'''
+    if x>0:
+        return 1
+    else:
+        return np.exp(x)
         
 def stepwise(x):
     '''Stepwise function'''
