@@ -101,25 +101,7 @@ where $\beta_i^{\text{new}}$ is the updated $\beta$ and $\eta$ is a step size, i
 Q(\beta_i)<\varepsilon
 \end{equation}
 or that the change in $\beta_i$ for the past $x$ steps is small. 
-\par 
-\vspace{3mm}
-
-Before we can implement equation \eqref{eq:GD}, we need an expression for the derivative of $Q$ with respect to $\beta_i$. The general form of the cost function, as discussed in section \ref{sec:general}, reads
-\begin{equation}
-Q(\vec{\beta},\lambda,q)=\sum_{i=1}^{n}\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)^2+\lambda\sum_{j=1}^p|\beta_j|^q,
-\label{eq:cost_gen}
-\end{equation}
-and its derivative with respect to $\beta_k$ is
-\begin{equation}
-\frac{\partial Q(\vec{\beta},\lambda,q)}{\partial\beta_k}=-2\sum_i^n\Big(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j\Big)x_{ik}+\frac{\beta_k}{|\beta_k|}q\lambda|\beta_k|^{q-1}.
-\label{eq:der_cost_gen}
-\end{equation}
-The vectorized version looks like
-\begin{equation}
-\frac{\partial Q(\vec{\beta},\lambda,q)}{\partial\vec{\beta}}=-2\hat{X}^T(\vec{y}-\hat{X}\vec{\beta})+\frac{\vec{\beta}}{|\vec{\beta}|}q\lambda|\vec{\beta}|^{q-1}
-\label{eq:der_cost_gen_vec}
-\end{equation}
-where all operations are element wise. The algorithm of this minimization method is thus as follows:
+The algorithm for this minimization method is thus as follows:
 
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
@@ -130,7 +112,11 @@ beta += eta*dbeta
 \end{lstlisting}
 
 \subsubsection{Stochastic Gradient Descent (SGD)}
-If will probably not converge in fewer steps, but each step will be faster.
+It will probably not converge in fewer steps, but each step will be faster.
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+\label{eq:SGD}
+\beta_i^{\text{new}}=\beta_i - \eta\cdot\frac{\partial Q(\beta_i)}{\partial\beta_i}
+\end{empheq}
 
 \subsection{Error analysis}
 \label{sec:error_analysis}

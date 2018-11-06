@@ -1,4 +1,5 @@
 \section{Code} \label{sec:code}
+The code is mainly implemented in Python, due to its neatness and flexibility. The numpy package has a lot of functions which are both fast and convenient for machine learning purposes, and there exist some packages that provide easy and fast machine learning tools such as Scikit-Learn, Keras and Tensorflow. However, the neural networks that we implement from scratch will not be as fast in Python as in a low-level language, and they where therefore implemented in C++ as well. 
 
 \subsection{Code structure} \label{sec:structure}
 
@@ -76,7 +77,7 @@ It should look something like this:
 \end{itemize}
 
 \subsection{Implementation}
-For simplicity all the example codes will be Python scripts, and the numpy package will be used diligently because of its linear algebra features and its performance. Similarly one can use armadillo in C++ and if you wonder how to do the implementations in there, you could visit my github repository. Anyway, the best way to implement the algorithm is with a function which takes the parameters as arguments and returns the weights. We define all quantities as numpy arrays, and use \lstinline!np.dot! for the inner product, \lstinline!np.outer! for the outer product and simply multiply two arrays for the Hadamard product. If you do not trust this latter statement, \lstinline!np.multiply! should be corresponding. The implementation looks like this;
+For the algorithms above, there exist huge possibilities for vectorization, and basically all the loops can be avoided using vectorization provided by numpy. 
 
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}

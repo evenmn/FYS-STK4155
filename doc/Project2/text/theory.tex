@@ -111,7 +111,7 @@ Working in the log space, we can define a log likelyhood function
 \log\Big[p(y|x)\Big]&=\log\Big[\hat{y}^y\cdot(1-\hat{y})^{1-y}\Big]\\
 &=y\log\hat{y}+(1-y)\log(1-\hat{y})
 \end{align}
-which gives the log of the probability of obtaining $y$ given $x$. We want this quantity to increase then the cost function is decreased, so we define out cost function as the negative log likelyhood function. [https://towardsdatascience.com/logistic-regression-detailed-overview-46c4da4303bc]
+which gives the log of the probability of obtaining $y$ given $x$. We want this quantity to increase then the cost function is decreased, so we define our cost function as the negative log likelyhood function. [https://towardsdatascience.com/logistic-regression-detailed-overview-46c4da4303bc]
 
 \subsubsection{Activation function}\label{sec:sigmoid1}
 Above, we were talking about the activation function, which is used to activate the net output. In binary models, this is often just a step function firing when the net output is above a threshold. For continuous outputs, the logistic function given by
@@ -137,7 +137,7 @@ where $\eta$ is the learning rate and $c(\bb{w})$ is the cost function. We use t
 \begin{equation}
 \frac{\partial c(\bb{w})}{\partial \bb{w}} =\frac{\partial c(\bb{w})}{\partial out} \cdot\frac{\partial out}{\partial net} \cdot\frac{\partial net}{\partial \bb{w}}
 \end{equation}
-where the first is the derivative of the cost function with respect to the output. for the cross-entropy function, this is
+where the first is the derivative of the cost function with respect to the output. For the cross-entropy function, this is
 \begin{equation}
 \frac{\partial c(\bb{w})}{\partial out}=-\frac{y}{out}+\frac{1-y}{1-out}.
 \end{equation}
@@ -161,7 +161,7 @@ and obtain a weight update algorithm
 where the bias weight is included implicitly in $\bb{w}$ and the same applies for $\bb{x}$.
 
 \subsection{Neural network}
-If you have understood logistic regression, understanding a neural network should not be a difficult task. According to  \textbf{the universal approximation theorem}, a neural network with only one hidden layer can approximate any continuous function. [REFERENCE] However, often multiple layers are used since this often causes a fewer total number of nodes. 
+If you have understood logistic regression, understanding a neural network should not be a difficult task. According to  \textbf{the universal approximation theorem}, a neural network with only one hidden layer can approximate any continuous function. [REFERENCE] However, often multiple layers are used since this often gives fewer nodes in total. 
 
 In figure \eqref{fig:neural_network}, a two-layer neural network (one hidden layer) is illustrated. It has some similarities with the logistic regression model in figure \eqref{fig:single_perceptron}, but a hidden layer and multiple outputs are added. In addition, the output is no longer probabilities and can take any number. 
 
