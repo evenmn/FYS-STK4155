@@ -3,11 +3,12 @@
 import numpy as np
 from numpy.random import random as rand
 from activation_function import sigmoid, sig_der
+from transformation import f, x
 from sys import exit
 from tqdm import tqdm
 
 
-def linear(X, t, T, eta = 0.001):
+def linear(X, t, T, eta = 0.001, trans=True):
     '''
     Arguments
     ---------
@@ -30,6 +31,9 @@ def linear(X, t, T, eta = 0.001):
     W  {Array}   : Weights
                    Size [I, O]
     '''
+    
+    if trans:
+        t = f(t)
     
     I = len(X[0])
     M = len(X)
@@ -167,15 +171,19 @@ def multilayer(X, t, T, h, eta = 0.001):
    
    
     
-def recall_linear(X, W):
+def recall_linear(X, W, trans=True):
     X = np.c_[X, np.ones(len(X))]
     Out = np.empty(len(X))
     for i in range(len(X)):
         net = np.dot(X[i], W)
         out = sigmoid(net)
         Out[i] = out
-    return Out
-
+        
+    if trans:
+        return x(Out)
+    else:
+        return Out
+        
 
 def recall_multilayer(X, W):
     X = np.c_[X, np.ones(len(X))]

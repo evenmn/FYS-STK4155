@@ -2,6 +2,7 @@ import numpy as np
 from error_tools import *
 from sklearn import linear_model
 from ising_data import generate_J
+import neural_network as nn
 
 def bootstrap(data, K=1000):
     '''Bootstrap resampling
@@ -18,24 +19,55 @@ def bootstrap(data, K=1000):
     return Avg, Var, Std
 
         
-        
-def k_fold(X, E, L, λ=1e-4, K=10, method='J_ols'):
-    '''K-fold validation resampling'''
+def k_fold(X, E, eta=1e-3, K=10):
+    '''K-fold validation resampling based on neural netowrk'''
     
     MSE_train = 0
     MSE_test = 0
     R2_train = 0
     R2_test = 0
     
-    Xmat = np.reshape(X, (int(len(X)/K), len(X[0]), K))
-    Emat = np.reshape(E, (int(len(X)/K), K))
+    Xmat = np.reshape(X, (K, int(len(X)/K), len(X[0])))
+    Emat = np.reshape(E, (K, int(len(X)/K)))
     
     for i in range(K):
-        Xnew = np.delete(Xmat, i, 2)
-        Enew = np.delete(Emat, i, 1)
+        Xnew = np.delete(Xmat, i, 0)
+        Enew = np.delete(Emat, i, 0)
         
         X_train = np.reshape(Xnew, (len(Xnew)*len(Enew[0]), len(X[0])))
-        E_train = np.reshape(Enew, (len(Xnew)*len(Enew[0]), ))
+        E_train = np.reshape(Enew, (len(Xnew)*len(Enew[0])))
+        
+        W = nn.linear(X_train, E_train, 50)
+        E_train_tilde = nn.recall_linear(X_train, W)
+        E_test_tilde = nn.recall_linear(Xmat[i], W)
+        
+        MSE_train += MSE(E_train_tilde, E_train)
+        MSE_test += MSE(E_test_tilde, Emat[i])
+        
+        R2_train += R2(E_train_tilde, E_train)
+        R2_test += R2(E_test_tilde, Emat[i])
+
+    return MSE_train/K, MSE_test/K, R2_train/K, R2_test/K
+        
+        
+def k_fold_linreg(X, E, λ=1e-4, K=10, method='J_ols'):
+    '''K-fold validation resampling based on linear algebra'''
+    
+    MSE_train = 0
+    MSE_test = 0
+    R2_train = 0
+    R2_test = 0
+    
+    Xmat = np.reshape(X, (K, int(len(X)/K), len(X[0])))
+    Emat = np.reshape(E, (K, int(len(X)/K)))
+    
+    for i in range(K):
+        Xnew = np.delete(Xmat, i, 0)
+        Enew = np.delete(Emat, i, 0)
+        
+        X_train = np.reshape(Xnew, (len(Xnew)*len(Enew[0]), len(X[0])))
+        E_train = np.reshape(Enew, (len(Xnew)*len(Enew[0])))
+        
         
         if method == 'J_ols':
             ols=linear_model.LinearRegression()
@@ -58,10 +90,10 @@ def k_fold(X, E, L, λ=1e-4, K=10, method='J_ols'):
             raise NameError("No method named ", method)
         
         MSE_train += MSE_linreg(X_train, J, E_train)
-        MSE_test += MSE_linreg(Xmat[:,:,i], J, Emat[:,i])
+        MSE_test += MSE_linreg(Xmat[i], J, Emat[i])
         
         R2_train += R2_linreg(X_train, J, E_train)
-        R2_test += R2_linreg(Xmat[:,:,i], J, Emat[:,i])
+        R2_test += R2_linreg(Xmat[i], J, Emat[i])
 
     return MSE_train/K, MSE_test/K, R2_train/K, R2_test/K
     
