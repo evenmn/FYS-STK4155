@@ -33,7 +33,7 @@ def linear(X, t, T, eta = 0.001, minimization='GD', trans=True):
     '''
     
     if trans:
-        t = f(t)
+        t = f(t)                # Mapping targets between 0 and 1
     
     I = len(X[0])
     M = len(X)
@@ -54,7 +54,7 @@ def linear(X, t, T, eta = 0.001, minimization='GD', trans=True):
             net = np.dot(X, W)
             out = sigmoid(net)
 
-            deltao = (out - t[i]) * out.dot(1-out)
+            deltao = (out - t) * out.dot(1-out)
             W = W - eta * np.outer(np.transpose(X[i]), deltao)
         
             for i in range(M):
@@ -80,8 +80,84 @@ def linear(X, t, T, eta = 0.001, minimization='GD', trans=True):
     return W
 
 
+def nonlinear(X, t, T, H, eta = 0.1):
+    '''
+    Arguments
+    ---------
+    X {Array}    : Inputs
+                   Size [M, I] where M is the number of training samples.
+                   Contains a set of training samples.
+                   NB: Needs to be a numpy array
+    t {Array}    : Targets
+                   Size [M, O] where M is the number of training samples.
+                   Contains a set of targets which correspond to the
+                   input samples.
+                   NB: Needs to be a numpy array
+    T {Int}      : Number of training cycles.
+                   Needs to be given by the user.
+    H {Int}      : Number of hidden nodes.
+                   Needs to be given by the user.
+    eta {float}  : Learning rate.
+                   Usually in the interval [0, 0.5].
+    
+    Returning
+    ---------
+    W1 {Array}   : Weights 1
+                   Size [I, H] where H is the number of hidden nodes.     
+    W2 {Array}   : Weights 2
+                   Size [H, O] where H is the number of hidden nodes.
+    '''
+    
+    I = len(X[0])
+    M = len(X)
+    try:
+        O = len(t[0])
+    except:
+        O = 1
+    
+    if len(t) != M:
+        print("Input and output array do not have the same length, rejecting")
+        sys.exit()
 
-def multilayer(X, t, T, h, eta = 0.1):
+    # Weights
+    W1 = (2*np.random.random([I, H]) - 1)*0.0001
+    W2 = (2*np.random.random([H, O]) - 1)*0.0001
+
+    b1 = np.random.random(H)*0.0001
+    b2 = np.random.random(O)*0.0001
+
+    # Training
+    for iter in tqdm(range(T)):
+        error = 0
+        for i in range(M):
+        
+            # FORWARD PROPAGATION
+            net_h = np.dot(X[i], W1) + b1
+            out_h = sigmoid(net_h)
+
+            net_o = np.dot(out_h, W2) + b2
+            out_o = sigmoid(net_o)
+            
+            # BACKWARD PROPAGATION
+            # Last weights
+            deltao = -(t[i] - out_o) * sig_der(out_o)
+            
+            # First weights            
+            deltah = sig_der(out_h) * np.dot(deltao, np.transpose(W2))
+            
+            # Update weights
+            b1 = b1 - eta * deltah
+            b2 = b2 - eta * deltao
+            W1 = W1 - eta * np.outer(X[i], deltah)
+            W2 = W2 - eta * np.outer(out_h, deltao)
+            
+            error += abs(t[i] - out_o)
+        print(error)
+            
+    return W1, W2, b1, b2
+
+
+def multilayer(X, t, T, h, eta = 0.001):
     '''
     Arguments
     ---------
@@ -197,9 +273,21 @@ def recall_linear(X, W, trans=True):
         Out[i] = out
         
     if trans:
-        return x(Out)
+        return x(Out)               # Mapping targets back
     else:
         return Out
+        
+        
+def recall_nonlinear(X, W1, W2, b1, b2):
+    Out = np.empty(len(X))
+    for i in range(len(X)):
+        net_h = np.dot(X[i], W1) + b1
+        out_h = sigmoid(net_h)
+
+        net_o = np.dot(out_h, W2) + b2
+        out_o = sigmoid(net_o)
+        Out[i] = out_o
+    return Out
         
 
 def recall_multilayer(X, W, b):

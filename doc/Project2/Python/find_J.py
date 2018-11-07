@@ -97,7 +97,7 @@ plt.show()
     
 # Neural network
 import neural_network as nn
-
+'''
 # === Linear ===
 W = nn.linear(X[:n], E[:n], 50)
 E_tilde_train = nn.recall_linear(X[:n], W)
@@ -116,8 +116,20 @@ print('R2_train_kfold: ', R2_train_kfold)
 print('R2_test_kfold: ', R2_test_kfold)
 '''
 
+# === Nonlinear ===
+W1, W2, b1, b2 = nn.nonlinear(X[:n], E[:n], 50, 100)
+E_tilde_train = nn.recall_nonlinear(X[:n], W1, W2, b1, b2)
+E_tilde_test = nn.recall_nonlinear(X[n:], W1, W2, b1, b2)
+
+print('MSE_train: ', MSE(E_tilde_train, E[:n]))
+print('MSE_test: ', MSE(E_tilde_test, E[n:]))
+print('R2_train: ', R2(E_tilde_train, E[:n]))
+print('R2_test: ', R2(E_tilde_test, E[n:]))
+
+
+'''
 # === Multilayer ===
-W, b = nn.multilayer(X[:n], E[:n], 500, [5])
+W, b = nn.multilayer(X[:n], E[:n], 500, [1])
 E_tilde_train = nn.recall_multilayer(X[:n], W, b)
 E_tilde_test = nn.recall_multilayer(X[n:], W, b)
 
