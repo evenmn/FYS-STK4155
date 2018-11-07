@@ -1,30 +1,41 @@
 #!/usr/bin/python
 
 import numpy as np
-from numba import njit
 
-def sigmoid(x):
-    '''Maps the argument x in the interval [0, 1]'''
-    return (1 + np.exp(-x))**(-1)
-    
-def sig_der(x):
-    '''The derivative of f(x) = 1/(1 + exp(-x))'''
-    return  x*(1 - x)
-
-def tanh(x):
-    '''Maps the argument x in the interval [-1, 1]'''
-    return np.tanh(x)
-    
-def tanh_der(x):
-    '''The derivative of f(x) = tanh(x)'''
-    return (np.cosh)**(-2)   
-    
-def ReLU(x):
-    '''Standard ReLU'''
-    if x>0:
-        return x
+def none(x, der=False):
+    '''No activation'''
+    if der:
+        return 1
     else:
-        return 0
+        return x
+
+def sigmoid(x, der=False):
+    '''Maps the argument x in the interval [0, 1]'''
+    if der:
+        return  x*(1 - x)
+    else:
+        return (1 + np.exp(-x))**(-1)
+
+def tanh(x, der=False):
+    '''Maps the argument x in the interval [-1, 1]'''
+    if der:
+        return (np.cosh)**(-2) 
+    else:
+        return np.tanh(x) 
+    
+def ReLU(x, der=False):
+    '''Standard ReLU'''
+    if der:
+        return np.where(x>0, 1, 0)
+    else:
+        return np.where(x>0, x, 0)
+
+def ELU(x, der=False, a=1e-5):
+    '''ELU'''
+    if der:
+        return np.where(x<0, a*np.exp(x), x)
+    else:
+        return np.where(x<0, a*(np.exp(x)-1), x)
         
 def Leaky_ReLU(x):
     '''Leaky ReLU'''
@@ -33,19 +44,6 @@ def Leaky_ReLU(x):
     else:
         return 0.1*x
         
-def ELU(x):
-    '''ELU'''
-    if x>0:
-        return x
-    else:
-        return np.exp(x)-1
-        
-def ELU_der(x):
-    '''ELU derivative'''
-    if x>0:
-        return 1
-    else:
-        return np.exp(x)
         
 def stepwise(x):
     '''Stepwise function'''
@@ -53,6 +51,7 @@ def stepwise(x):
         return 1
     else:
         return 0
+    
 
 
 if __name__ == '__main__':

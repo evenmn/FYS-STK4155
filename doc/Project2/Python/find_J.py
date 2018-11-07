@@ -99,7 +99,7 @@ plt.show()
 import neural_network as nn
 '''
 # === Linear ===
-W = nn.linear(X[:n], E[:n], 50)
+W = nn.linear(X[:n], E[:n], 5, minimization='GD')
 E_tilde_train = nn.recall_linear(X[:n], W)
 E_tilde_test = nn.recall_linear(X[n:], W)
 
@@ -114,10 +114,11 @@ print('MSE_train_kfold: ', MSE_train_kfold)
 print('MSE_test_kfold: ', MSE_test_kfold)
 print('R2_train_kfold: ', R2_train_kfold)
 print('R2_test_kfold: ', R2_test_kfold)
+
 '''
 
 # === Nonlinear ===
-W1, W2, b1, b2 = nn.nonlinear(X[:n], E[:n], 50, 100)
+W1, W2, b1, b2 = nn.nonlinear(X[:n], E[:n], 100, 10, minimization='GD')
 E_tilde_train = nn.recall_nonlinear(X[:n], W1, W2, b1, b2)
 E_tilde_test = nn.recall_nonlinear(X[n:], W1, W2, b1, b2)
 

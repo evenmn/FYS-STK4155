@@ -8,7 +8,7 @@ from sys import exit
 from tqdm import tqdm
 
 
-def linear(X, t, T, eta = 0.001, minimization='GD', trans=True):
+def linear(X, t, T, eta = 0.001, minimization='GD', f=none):
     '''
     Arguments
     ---------
@@ -32,9 +32,6 @@ def linear(X, t, T, eta = 0.001, minimization='GD', trans=True):
                    Size [I, O]
     '''
     
-    if trans:
-        t = f(t)                # Mapping targets between 0 and 1
-    
     I = len(X[0])
     M = len(X)
     try:
@@ -51,36 +48,33 @@ def linear(X, t, T, eta = 0.001, minimization='GD', trans=True):
     
     if minimization == 'GD':
         for iter in tqdm(range(T)):
-            net = np.dot(X, W)
-            out = sigmoid(net)
-
-            deltao = (out - t) * out.dot(1-out)
-            W = W - eta * np.outer(np.transpose(X[i]), deltao)
-        
             for i in range(M):
                 net = np.dot(X[i], W)
-                out = sigmoid(net)
+                out = f(net)
 
-                deltao = (out - t[i]) * sig_der(out)
+                deltao = (out - t[i]) * f(out, der=True)
                 W = W - eta * np.outer(np.transpose(X[i]), deltao)
                 
-    if minimization == 'SGD':
-        N = 1             # Size of minibatch
-        for iter in tqdm(range(T)):
-            for i in range(N):
-                net = np.dot(X[i], W)
-                out = sigmoid(net)
+    elif minimization == 'SGD':
+        m = 2000
 
-                deltao = -(t[i] - out) * sig_der(out)
-                dW = np.outer(np.transpose(X[i]), deltao)
+        for epoch in tqdm(range(T)):
+            for i in range(m):
+                random_index = np.random.randint(m)
+                Xi = X[random_index:random_index+1]
+                ti = t[random_index:random_index+1]
                 
-            W = W - eta * dW
-            
-            
+                net = np.dot(Xi, W)
+                out = f(net)
+
+                deltao = -(ti - out) * f(out, der=True)
+                dW = np.outer(np.transpose(Xi), deltao)
+
+                W -= eta * np.outer(np.transpose(Xi), deltao)
     return W
 
 
-def nonlinear(X, t, T, H, eta = 0.1):
+def nonlinear(X, t, T, H, eta = 0.001, minimization='GD', f1=sigmoid, f2=none):
     '''
     Arguments
     ---------
@@ -120,39 +114,71 @@ def nonlinear(X, t, T, H, eta = 0.1):
         sys.exit()
 
     # Weights
-    W1 = (2*np.random.random([I, H]) - 1)*0.0001
-    W2 = (2*np.random.random([H, O]) - 1)*0.0001
+    W1 = (2*np.random.random([I, H]) - 1)*0.00001
+    W2 = (2*np.random.random([H, O]) - 1)*0.00001
 
-    b1 = np.random.random(H)*0.0001
-    b2 = np.random.random(O)*0.0001
+    b1 = np.random.random(H)*0.00001
+    b2 = np.random.random(O)*0.00001
 
     # Training
-    for iter in tqdm(range(T)):
-        error = 0
-        for i in range(M):
-        
-            # FORWARD PROPAGATION
-            net_h = np.dot(X[i], W1) + b1
-            out_h = sigmoid(net_h)
+    if minimization == 'GD':
+        for iter in tqdm(range(T)):
+            for i in range(M):
+            
+                # FORWARD PROPAGATION
+                net_h = np.dot(X[i], W1) + b1
+                out_h = f1(net_h)
 
-            net_o = np.dot(out_h, W2) + b2
-            out_o = sigmoid(net_o)
+                net_o = np.dot(out_h, W2) + b2
+                out_o = f2(net_o)
+                
+                # BACKWARD PROPAGATION
+                # Last weights
+                deltao = (out_o - t[i]) * f1(out_o, der=True)
+                
+                print(deltao)
+                
+                # First weights            
+                deltah = f2(out_h, der=True) * np.dot(deltao, np.transpose(W2))
+                
+                # Update weights
+                b1 = b1 - eta * deltah
+                b2 = b2 - eta * deltao
+                W1 = W1 - eta * np.outer(X[i], deltah)
+                W2 = W2 - eta * np.outer(out_h, deltao)
             
-            # BACKWARD PROPAGATION
-            # Last weights
-            deltao = -(t[i] - out_o) * sig_der(out_o)
-            
-            # First weights            
-            deltah = sig_der(out_h) * np.dot(deltao, np.transpose(W2))
-            
-            # Update weights
-            b1 = b1 - eta * deltah
-            b2 = b2 - eta * deltao
-            W1 = W1 - eta * np.outer(X[i], deltah)
-            W2 = W2 - eta * np.outer(out_h, deltao)
-            
-            error += abs(t[i] - out_o)
-        print(error)
+    elif minimization == 'SGD':
+        m = 1000
+
+        for epoch in tqdm(range(T)):
+            error = 0
+            for i in range(m):
+                random_index = np.random.randint(m)
+                Xi = X[random_index:random_index+1]
+                ti = t[random_index:random_index+1]
+                
+                # FORWARD PROPAGATION
+                net_h = np.dot(Xi, W1) + b1
+                out_h = f1(net_h)
+
+                net_o = np.dot(out_h, W2) + b2
+                out_o = f2(net_o)
+                
+                # BACKWARD PROPAGATION
+                # Last weights
+                deltao = -(ti - out_o) * f1(out_o, der=True)
+                
+                # First weights            
+                deltah = f2(out_h, der=True) * np.dot(deltao, np.transpose(W2))
+                
+                # Update weights
+                b1 = b1 - eta * deltah
+                b2 = b2 - eta * deltao
+                W1 = W1 - eta * np.outer(Xi, deltah)
+                W2 = W2 - eta * np.outer(out_h, deltao)
+                
+                error += abs(ti - out_o)
+            print(error)
             
     return W1, W2, b1, b2
 
@@ -264,28 +290,25 @@ def multilayer(X, t, T, h, eta = 0.001):
    
    
     
-def recall_linear(X, W, trans=True):
+def recall_linear(X, W):
     X = np.c_[X, np.ones(len(X))]
     Out = np.empty(len(X))
     for i in range(len(X)):
         net = np.dot(X[i], W)
-        out = sigmoid(net)
+        out = net #sigmoid(net)
         Out[i] = out
         
-    if trans:
-        return x(Out)               # Mapping targets back
-    else:
-        return Out
+    return Out
         
         
 def recall_nonlinear(X, W1, W2, b1, b2):
     Out = np.empty(len(X))
     for i in range(len(X)):
         net_h = np.dot(X[i], W1) + b1
-        out_h = sigmoid(net_h)
+        out_h = ReLU(net_h)
 
         net_o = np.dot(out_h, W2) + b2
-        out_o = sigmoid(net_o)
+        out_o = net_o #sigmoid(net_o)
         Out[i] = out_o
     return Out
         
