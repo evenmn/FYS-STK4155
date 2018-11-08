@@ -54,53 +54,63 @@ class NeuralNetwork():
             
         # Number of hidden layers
         if isinstance(self.h, list):
-            self.H = len(h)
+            self.H = len(self.h)
+            self.h.append(self.O)
         elif self.h == 0:
             self.H = 0
-            self.h = [0]
+            self.h = [self.O]
         elif isinstance(self.h, int):
             self.H = 1
-            self.h = [self.h]
+            self.h = [self.h, self.O]
         else:
             raise TypeError('h needs to be a list or int')
-        
+            
         # Initialize weights, including bias weights
         self.W=[]
-        self.W.append((2*np.random.random([self.I+1, self.O]) - 1)*np.sqrt(1/len(self.X[0,:])))
+        self.W.append((2*np.random.random((self.I+1, self.h[0])) - 1)*np.sqrt(1/len(self.X[0,:])))
         for i in range(self.H):
-            self.W.append((2*np.random.random([self.h[i]+1, self.O]) - 1)*np.sqrt(1/self.h[i]))
-        
+            self.W.append((2*np.random.random((self.h[i]+1, self.h[i+1])) - 1)*np.sqrt(1/self.h[i]))
+
         
         
     def feed_forward(X, W, f1=none, f2=none):
         '''Feed forward'''
-        n_layers = len(W)
-        Out = [np.insert(X, 0, 1)]
-        for i in range(n_layers-1):
-            net = np.dot(Out[i], W[i])             # Net output to layer i
-            out = f2(net)                  # Output to layer i
-            Out.append(np.insert(out, 0, 1))       # Add bias
-        net = np.dot(Out[-1], W[-1])
+        out = np.insert(X, 0, 1)
+        Out = [out]
+        for i in range(len(W)-1):
+            net = np.dot(out, W[i])              # Net output to layer i
+            out = f2(net)                        # Output to layer i
+            out = np.insert(out, 0, 1)           # Add bias
+            Out.append(out)
+        net = np.dot(out, W[-1])
         Out.append(f1(net))
-        return Out                              # Output from network
+        return Out                              # Out contains all node values
         
         
-    def backward_propagation(X, t, out, f):
+    def backward_propagation(X, t, W, Out, f1, f2):
         '''Backward propagation'''
-        deltao = (out - t) * f(out, der=True)
-        return np.outer(np.transpose(np.insert(X, 0, 1)), deltao)
+        deltao = (Out[-1] - t) * f1(Out[-1], der=True)
+        deltah = [deltao]
+        
+        H = len(Out) - 2
+        for i in range(H):
+            delta = f2(Out[H-i], der=True) * np.dot(deltah[-1], np.transpose(W[-1]))
+            deltah.append(delta[:-1])
+        return deltah[::-1]
 
 
-    def linear(self, f=none):
+    def linear(self, f1=none, f2=none):
         '''Linear'''
         self.initialize()
         
         if self.opt == GD:
             for iter in tqdm(range(self.T)):
                 for i in range(self.M):
-                    Out = NeuralNetwork.feed_forward(self.X[i], self.W, f1=f)
-                    gradient = NeuralNetwork.backward_propagation(self.X[i], self.t[i], Out[-1], f)
-                    self.W -= self.eta * gradient
+                    Out = NeuralNetwork.feed_forward(self.X[i], self.W, f1=f1)
+                    deltah = NeuralNetwork.backward_propagation(self.X[i], self.t[i], self.W, Out, f1, f2)
+                    for j in range(self.H + 1):
+                        gradient = np.outer(np.transpose(Out[j]), deltah[j][0:])
+                        self.W[j] -= self.eta * gradient
                     
         elif self.opt == SGD:
             m = 2000
@@ -111,23 +121,21 @@ class NeuralNetwork():
                     Xi = self.X[random_index:random_index+1]
                     ti = self.t[random_index:random_index+1]
                     
-                    Out = NeuralNetwork.feed_forward(self.Xi, [self.W], f)
-                    gradient = NeuralNetwork.backward_propagation(self.Xi, self.ti, Out[-1], f)
+                    Out = NeuralNetwork.feed_forward(self.Xi, [self.W], f1, f2)
+                    deltah = NeuralNetwork.backward_propagation(self.Xi, self.ti, self.W, Out, f1, f2)
+                    gradient = np.outer(np.transpose(Out[0], deltah))
                     self.W -= self.eta * gradient
         return self.W
 
 
     def nonlinear2(self, f1=none, f2=none):
-        
         self.initialize()
 
         # Training
         if self.opt == GD:
             for iter in tqdm(range(self.T)):
                 for i in range(self.M):
-                
-                    # FORWARD PROPAGATION
-                    Out = NeuralNetwork.feed_forward(self.X[i], self.W, f1)
+                    Out = NeuralNetwork.feed_forward(self.X[i], self.W, f1, f2)
                     
                     # BACKWARD PROPAGATION
                     # Last weights
@@ -135,9 +143,13 @@ class NeuralNetwork():
                     
                     # First weights            
                     deltah = f2(Out[-2], der=True) * np.dot(deltao, np.transpose(self.W[-1]))
-                    
+
                     # Update weights
-                    self.W[0] -= self.eta * np.outer(self.X[i], deltah[:-1])
+                    #for j in range(H + 1):
+                    #    W[j] -= eta * np.outer(out[j], deltah[j])
+                    
+                    
+                    self.W[0] -= self.eta * np.outer(np.insert(self.X[i],0,1), deltah[:-1])
                     self.W[1] -= self.eta * np.outer(Out[-2], deltao)
                 
         '''
@@ -210,8 +222,6 @@ def nonlinear(self, f1=none, f2=none):
                 
                 # First weights            
                 deltah = f2(out_h, der=True) * np.dot(deltao, np.transpose(W2))
-                #print(np.outer(X[i], deltah).shape)
-                #print(W1.shape)
                 
                 # Update weights
                 W1 -= eta * np.outer(X[i], deltah[:-1])
@@ -356,11 +366,11 @@ def multilayer(X, t, T, h, eta = 0.001):
        
        
         
-def recall_linear(X, W, f=none):
+def recall_linear(X, W, f1=none, f2=none):
     
     Out = np.empty(len(X))
     for i in range(len(X)):
-        Out[i] = NeuralNetwork.feed_forward(X[i], [W], f)[-1]
+        Out[i] = NeuralNetwork.feed_forward(X[i], W, f1, f2)[-1]
     return Out
         
         

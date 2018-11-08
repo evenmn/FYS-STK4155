@@ -37,7 +37,8 @@ def k_fold(X, E, eta=1e-3, K=10):
         X_train = np.reshape(Xnew, (len(Xnew)*len(Enew[0]), len(X[0])))
         E_train = np.reshape(Enew, (len(Xnew)*len(Enew[0])))
         
-        W = nn.linear(X_train, E_train, 50, minimization='SGD')
+        obj = nn.NeuralNetwork(X_train, E_train, 4)
+        W = obj.linear()
         E_train_tilde = nn.recall_linear(X_train, W)
         E_test_tilde = nn.recall_linear(Xmat[i], W)
         

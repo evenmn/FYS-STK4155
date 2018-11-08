@@ -3,7 +3,7 @@
 import numpy as np
 
 def none(x, der=False):
-    '''No activation'''
+    '''Pure linear activation'''
     if der:
         return 1
     else:
@@ -30,27 +30,21 @@ def ReLU(x, der=False):
     else:
         return np.where(x>0, x, 0)
 
-def ELU(x, der=False, a=1e-5):
+def ELU(x, der=False, a=1e-6):
     '''ELU'''
     if der:
         return np.where(x<0, a*np.exp(x), x)
     else:
         return np.where(x<0, a*(np.exp(x)-1), x)
         
-def Leaky_ReLU(x):
+def Leaky_ReLU(x, der=False):
     '''Leaky ReLU'''
-    if x>0:
-        return x
+    if der:
+        return np.where(x>0, 1, 0.1)
     else:
-        return 0.1*x
+        return np.where(x<0, 0.1*x, x)
         
         
-def stepwise(x):
-    '''Stepwise function'''
-    if x>0:
-        return 1
-    else:
-        return 0
     
 
 
