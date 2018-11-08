@@ -5,6 +5,7 @@ from ising_data import *
 from regression import *
 from resampling import k_fold, k_fold_linreg
 from error_tools import *
+from activation_function import *
 
 # define Ising model params
 L = 40         # System size
@@ -97,17 +98,19 @@ plt.show()
     
 # Neural network
 import neural_network as nn
+
 '''
 # === Linear ===
-W = nn.linear(X[:n], E[:n], 5, minimization='GD')
-E_tilde_train = nn.recall_linear(X[:n], W)
-E_tilde_test = nn.recall_linear(X[n:], W)
+obj = nn.NeuralNetwork(X[:n], E[:n], 5)
+
+W = obj.linear()
+E_tilde_train = nn.recall_linear(X[:n], [W])
+E_tilde_test = nn.recall_linear(X[n:], [W])
 
 print('MSE_train: ', MSE(E_tilde_train, E[:n]))
 print('MSE_test: ', MSE(E_tilde_test, E[n:]))
 print('R2_train: ', R2(E_tilde_train, E[:n]))
 print('R2_test: ', R2(E_tilde_test, E[n:]))
-
 
 MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold(X, E, K=10)
 print('MSE_train_kfold: ', MSE_train_kfold)
@@ -116,17 +119,17 @@ print('R2_train_kfold: ', R2_train_kfold)
 print('R2_test_kfold: ', R2_test_kfold)
 
 '''
-
 # === Nonlinear ===
-W1, W2, b1, b2 = nn.nonlinear(X[:n], E[:n], 100, 10, minimization='GD')
-E_tilde_train = nn.recall_nonlinear(X[:n], W1, W2, b1, b2)
-E_tilde_test = nn.recall_nonlinear(X[n:], W1, W2, b1, b2)
+obj = nn.NeuralNetwork(X[:n], E[:n], 5, h=100)
+
+W = obj.nonlinear2()
+E_tilde_train = nn.recall_linear(X[:n], W)
+E_tilde_test = nn.recall_linear(X[n:], W)
 
 print('MSE_train: ', MSE(E_tilde_train, E[:n]))
 print('MSE_test: ', MSE(E_tilde_test, E[n:]))
 print('R2_train: ', R2(E_tilde_train, E[:n]))
 print('R2_test: ', R2(E_tilde_test, E[n:]))
-
 
 '''
 # === Multilayer ===

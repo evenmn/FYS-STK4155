@@ -4,6 +4,7 @@ import numpy as np
 from convert_pkl import ignore_tc
 from logistic_CE import *
 from error_tools import Accuracy
+from activation_function import *
 import neural_network as nn
 
 '''
@@ -43,7 +44,7 @@ t_test = data[:n,-1]
 
 T = 1000
 
-W = nn.linear(X_train, t_train, T, eta=1, minimization='GD', trans=False)
+W = nn.linear(X_train, t_train, T, eta=1, minimization='GD', f=logistic)
 y_test = nn.recall_linear(X_test, W, trans=False)
 
 print('Accuracy: ', Accuracy(y_test, t_test))

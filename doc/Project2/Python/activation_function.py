@@ -9,7 +9,7 @@ def none(x, der=False):
     else:
         return x
 
-def sigmoid(x, der=False):
+def logistic(x, der=False):
     '''Maps the argument x in the interval [0, 1]'''
     if der:
         return  x*(1 - x)
