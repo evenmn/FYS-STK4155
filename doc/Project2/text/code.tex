@@ -2,26 +2,37 @@
 The code is mainly implemented in Python, due to its neatness and flexibility. The numpy package has a lot of functions which are both fast and convenient for machine learning purposes, and there exist some packages that provide easy and fast machine learning tools such as Scikit-Learn, Keras and Tensorflow. However, the neural networks that we implement from scratch will not be as fast in Python as in a low-level language, and they where therefore implemented in C++ as well. 
 
 \subsection{Code structure} \label{sec:structure}
-
-\begin{figure}
+In order to reuse the code where possible, we ended up with several functions that communicate in criss-cross. The main functions are called \textit{find\_energy.py} and \textit{classifier.py}, where the former estimates the energy of a Ising lattice using linear regression and neural network, getting the data from \textit{Ising\_1D.py}. The latter estimates the phase of the Ising model using logistic regression and neural networks, getting the data from \textit{Ising\_2D.py} (taken from [3]). \textit{error\_tools.py} consists of functions that returns the error, including MSE, R2 and Accuracy, which communicates with \textit{resampling.py} as well. Both main functions are largely dependent on \textit{neural\_network.py}, which gets the optimization functions from \textit{optimization.py} and the activation functions from \textit{activation.py}.
+\begin{figure} [H]
 \centering
 \begin{tikzpicture}[auto,node distance=0.9cm]
 
-  % Create entity node
-  \node[entity] (node1) {fit\_terrain.py};
+  % Create main nodes
+  \node[entity] (node1) {find energy};
+  \node[entity] (rel1) [below right = of node1] {linear regression};
+  \node[entity] (node2) [above right = of rel1] {classifier};
+  \node[entity] (rel2) [below = of rel1, level distance=0.1cm] {Error tools};
+  \node[attribute] (att1) [below left = of node1] {Ising 1D};
+  \node[attribute] (att2) [below right = of node2] {Ising 2D};
+  \node[entity] (rel3) [below = of rel2] {Resampling};
+  \node[relationship] (rel4) [below = of rel3] {Neural Network};
+  \node[attribute] (att3) [right = of rel4] {Optimization};
+  \node[attribute] (att4) [left = of rel4] {Activation};
   
-  % Establish relationships
-  \node[relationship] (rel1) [below right = of node1] {regression\_2D.py};
-  \node[relationship] (rel2) [below left = of node1] {resampling.py};
-  
-  % Create another entity node
-  \node[entity] (node2) [below left = of rel1] {fit\_franke.py} child[grow=down,level distance=1.5cm] {node[attribute] {franke.py}};
   
   % Draw paths
-  \path (rel1) edge node {} (node1);
-  \path (rel2) edge node {} (node1);
-  \path (rel1) edge node {} (node2);
-  \path (rel2) edge node {} (node2);
+  \path (node1) edge node {} (att1);
+  \path (node2) edge node {} (att2);
+  \path (node1) edge node {} (rel1);
+  \path (node1) edge node {} (rel2);
+  \path (node1) edge node {} (rel3);
+  \path (node1) edge node {} (rel4);
+  \path (node2) edge node {} (rel2);
+  \path (node2) edge node {} (rel4);
+  \path (rel4) edge node {} (att3);
+  \path (rel4) edge node {} (att4);
+  \path (rel4) edge node {} (rel3);
+  \path (rel3) edge node {} (rel2);
 
 \end{tikzpicture}
 \caption{Code structure}

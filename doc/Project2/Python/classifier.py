@@ -1,14 +1,14 @@
 #!/usr/bin/python
 
 import numpy as np
-from convert_pkl import ignore_tc
+from Ising_2D import ignore_tc
 from error_tools import Accuracy
-from activation_function import *
+from activation import *
 import neural_network as nn
 
 
 # Some constants
-n = 120000                 # Number of training sets
+n = 100000                 # Number of training sets
 T = 1                      # Number of iterations
 eta = 0.0001               # Learning rate
 method = 1                 # 0 is logistic regression
@@ -37,12 +37,13 @@ if method == 0:
 
 elif method == 1:
     # Neural network
-    h = 100
-    obj = nn.NeuralNetwork(X_train, t_train, T, h, eta=eta, f1=logistic, f2=Leaky_ReLU)
+    h = 20
+    obj = nn.NeuralNetwork(X_train, t_train, T, h, eta=eta, f1=logistic, f2=tanh)
 
     obj.solver()                                      # Obtain optimal weights
     y_train = obj.recall(X_train)                     # Recall training energy
     y_test = obj.recall(X_test)                       # Recall test energy
 
+    print('\n', h)
     print('Accuracy train: ', Accuracy(y_train, t_train))
     print('Accuracy test: ', Accuracy(y_test, t_test))

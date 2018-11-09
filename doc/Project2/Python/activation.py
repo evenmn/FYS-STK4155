@@ -19,7 +19,7 @@ def logistic(x, der=False):
 def tanh(x, der=False):
     '''Maps the argument x in the interval [-1, 1]'''
     if der:
-        return (np.cosh)**(-2) 
+        return (np.cosh(x))**(-2) 
     else:
         return np.tanh(x) 
     
@@ -37,14 +37,19 @@ def ELU(x, der=False, a=1e-6):
     else:
         return np.where(x<0, a*(np.exp(x)-1), x)
         
-def Leaky_ReLU(x, der=False):
+def Leaky_ReLU(x, der=False, a=1.2):
     '''Leaky ReLU'''
     if der:
-        return np.where(x>0, 1, 0.1)
+        return np.where(x>0, 1, a)
     else:
-        return np.where(x<0, 0.1*x, x)
+        return np.where(x<0, a*x, x)
         
-        
+def Even_ReLU(x, der=False, a=100):
+    '''Even ReLU'''
+    if der:
+        return np.where(x<0, 1+x/a, 1)
+    else:
+        return np.where(x<0, x+x*x/(2*a), x)
     
 
 

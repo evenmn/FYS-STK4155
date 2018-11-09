@@ -91,9 +91,33 @@ Removed states around critical temperature.
 Add lambda as accuracy score plot
 
 \subsubsection{Neural networks}
+\begin{table} [H]
+	\caption{Mean Square Error and R$^2$-score presented for OLS, Ridge and Lasso on the Ising model. 'Train' means the results obtained from the training set, containing 8000 states, and 'Test' means the results obtained from the test set, containing 2000 states. The 'K-fold'-columns are results from K-fold resampling with 10 folds. For Ridge and Lasso, we used $\lambda=1e-3$ (penalty). See text for more information.}
+	\begin{tabularx}{\textwidth}{l|l|XXX} \hline\hline
+		\label{tab:nn}
+		&& \multicolumn{3}{c}{\textbf{Accuracy}}\\ \hline
+		&Hidden nodes&Train&Test&Critical\\ \hline
+		
+		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{ReLU}}}
+		&10 & 3.529e-4 & 4.454e-4 & 3.610e-4 \\
+		&10,10 & 0.009128 & 0.009651 & 0.009128 \\
+		&10,10,10 & 0.01439 & 0.01489 & 0.01555 \\ \hline
+		
+		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{Leaky}}}
+		&10 & 0.01439 & 0.01489 & 0.01555 \\
+		&10,10 & 0.01439 & 0.01489 & 0.01555 \\
+		&10,10,10 & 0.01439 & 0.01489 & 0.01555 \\ \hline
+		
+		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{ELU}}}
+		&10 & 0.01439 & 0.01489 & 0.01555 \\
+		&10,10 & 0.01439 & 0.01489 & 0.01555 \\
+		&10,10,10 & 0.01439 & 0.01489 & 0.01555 \\ \hline\hline
+	\end{tabularx}
+\end{table}
 
-
-
-
-
-
+\begin{figure} [H]
+	\centering
+	\includegraphics[scale=0.65]{../plots/h_vs_accuracy.png}
+	\caption{Accuracy as a function of number of hidden nodes, for both one and two layers. X-axis indicates number of hidden nodes in each layer, where the two-layer perceptron has an equal number of nodes in each layer.}
+	\label{fig:h_vs_accuracy}
+\end{figure} 

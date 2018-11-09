@@ -1,7 +1,6 @@
 import numpy as np
 from error_tools import *
 from sklearn import linear_model
-from ising_data import generate_J
 import neural_network as nn
 
 def bootstrap(data, K=1000):

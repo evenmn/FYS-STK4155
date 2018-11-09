@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from ising_data import *
 
 class Reg():
 
@@ -86,8 +85,8 @@ class Reg():
     
 
 if __name__ == '__main__':
-
-
+    from Ising_1D import *
+    
     # --- Simple running example ---
     # define Ising model params
     L = 4         # system size

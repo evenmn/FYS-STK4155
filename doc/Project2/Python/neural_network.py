@@ -2,13 +2,13 @@
 
 import numpy as np
 from numpy.random import random as rand
-from activation_function import *
+from activation import *
 from optimization import *
 from sys import exit
 from tqdm import tqdm
 
 class NeuralNetwork():
-    def __init__(self, X, t, T, h=0, eta=0.001, f1=none, f2=none, opt=GD):
+    def __init__(self, X, t, T, h=0, eta=0.001, lamb=1e-5, f1=none, f2=none, opt=GD):
         '''
         Arguments
         ---------
@@ -43,6 +43,7 @@ class NeuralNetwork():
         self.T = T
         self.h = h
         self.eta = eta
+        self.lamb = lamb
         self.f1 = f1
         self.f2 = f2
         self.opt = opt
@@ -97,7 +98,6 @@ class NeuralNetwork():
         self.out.append(self.f1(net))                 # Final output with f1
         
         
-        
     def backward_propagation(self, t):
         '''Backward propagation'''
         deltah = [(self.out[-1] - t) * self.f1(self.out[-1], der=True)]
@@ -116,7 +116,7 @@ class NeuralNetwork():
                     self.feed_forward(self.X[i])
                     self.backward_propagation(self.t[i])
                     for j in range(self.H + 1):
-                        gradient = np.outer((self.out[j]).T, self.deltah[j][0:])
+                        gradient = np.outer((self.out[j]).T, self.deltah[j][0:]) + self.lamb*self.W[j]
                         self.W[j] -= self.eta * gradient
                     
         elif self.opt == SGD:
@@ -131,7 +131,7 @@ class NeuralNetwork():
                     self.feed_forward(self.Xi)
                     self.backward_propagation(i)
                     for j in range(self.H + 1):
-                        gradient = np.outer((self.out[j]).T, self.deltah[j][0:])
+                        gradient = np.outer((self.out[j]).T, self.deltah[j][0:]) + self.lamb*self.W[j]
                         self.W[j] -= self.eta * gradient
         return self.W
         

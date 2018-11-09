@@ -133,14 +133,14 @@ In this report we will study only the MSE and R$^2$ score function.
 \subsubsection{Mean Square Error (MSE)} \label{sec:MSE}
 The most popular error estimation method is the mean square error, also called least squares. We study the MSE in order to compute the reduction of the cost function, because it is basically the standard cost function, used in OLS. 
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-\text{MSE}(\vec{\beta})=\frac{1}{N}\sum_{i=1}^N(y_i-\tilde{y}(\vec{\beta}))^2
+\text{MSE}(\vec{\beta})=\frac{1}{N}\sum_{i=1}^N(y_i-t_i)^2
 \end{empheq}
 Compared to least absolute value, the points far away from the fitted line are weighted stronger. 
 
 \subsubsection{R$^2$ score function} \label{sec:R2}
 The R$^2$ score function is a measure of how close the data are to the fitted regression line, and is a widely used quantity within statistics. In entirety it reads
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-R^2(\vec{y},\tilde{\vec{y}})=1-\frac{\sum_{i=1}^N(y_i-\tilde{y})^2}{\sum_{i=1}^N(y_i-\bar{y})^2}.
+R^2(\vec{y},\tilde{\vec{y}})=1-\frac{\sum_{i=1}^N(y_i-t_i)^2}{\sum_{i=1}^N(y_i-\bar{y})^2}.
 \end{empheq}
 and is a ratio between the explained variation and total variation. If it is, on one hand, able to explain all the variations the score is 1, which is the best. On the other hand, if it is not able to describe any of the variations, the R$^2$-score is low. We are therefore fighting for a high R$^2$-score.
 

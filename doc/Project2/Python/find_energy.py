@@ -1,17 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import linear_model
-from ising_data import *
+from Ising_1D import *
 from regression import *
 from resampling import k_fold, k_fold_linreg
 from error_tools import *
-from activation_function import *
+from activation import *
 
 # define Ising model params
-L = 40         # System size
-N = 10000      # Number of states
-T = 1000         # Temperature
-path = '../plots/'
+L = 40              # System size
+N = 10000           # Number of states
+T = 1000            # Temperature
+path = '../plots/'  # Path to plots
+method = 1          # 0 is linear regression
+                    # 1 is neural network
 
 # Generate random Ising states
 states = produce_states([N, L], T)
@@ -25,96 +27,99 @@ J = generate_J(L)
 E = ising_energies(states,J)
 
 n = int(N*0.8)                                  # Number of training states
+X_train = X[:n]
+X_test = X[n:]
+E_train = E[:n]
+E_test = E[n:]
 
-'''
-R2_train = np.zeros((12, 3))
-R2_test = np.zeros((12, 3))
+if method == 0:
+    R2_train = np.zeros((12, 3))
+    R2_test = np.zeros((12, 3))
 
-lambdas = np.logspace(-6,5,12)
+    lambdas = np.logspace(-6,5,12)
 
-i = 0
-for λ in lambdas:
+    i = 0
+    for λ in lambdas:
 
-    # Linear regression
-    ols=linear_model.LinearRegression()
-    ols.fit(X[:n], E[:n])
-    J_ols = ols.coef_
+        # Linear regression
+        ols=linear_model.LinearRegression()
+        ols.fit(X_train, E_train)
+        J_ols = ols.coef_
 
-    ridge=linear_model.Ridge()
-    ridge.set_params(alpha=λ)
-    ridge.fit(X[:n], E[:n])
-    J_ridge = ridge.coef_
+        ridge=linear_model.Ridge()
+        ridge.set_params(alpha=λ)
+        ridge.fit(X_train, E_train)
+        J_ridge = ridge.coef_
 
-    lasso=linear_model.Lasso()
-    lasso.set_params(alpha=λ)
-    lasso.fit(X[:n], E[:n])
-    J_lasso = lasso.coef_
+        lasso=linear_model.Lasso()
+        lasso.set_params(alpha=λ)
+        lasso.fit(X_train, E_train)
+        J_lasso = lasso.coef_
 
-    J_list = ['J_ols', 'J_ridge', 'J_lasso']
+        J_list = ['J_ols', 'J_ridge', 'J_lasso']
 
-    j = 0
-    for J_ in J_list:
-        J_eval = eval(J_)
-        R2_train[i,j] = R2_linreg(X[:n], J_eval, E[:n])
-        R2_test[i,j] = R2_linreg(X[n:], J_eval, E[n:])
-        
-        print('\n--- ', J_, ' ---')
-        #print('MSE_train: ', MSE_linreg(X[:n], J_eval, E[:n]))
-        #print('MSE_test: ', MSE_linreg(X[n:], J_eval, E[n:]))
-        print('R2_train: ', R2_train[i,j])
-        print('R2_test: ', R2_test[i,j])
-        
-        
-        MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold_linreg(X, E, λ, K=10, method=J_)
-        print('MSE_train_kfold: ', MSE_train_kfold)
-        print('MSE_test_kfold: ', MSE_test_kfold)
-        print('R2_train_kfold: ', R2_train_kfold)
-        print('R2_test_kfold: ', R2_test_kfold)
-        
-        
-        J_eval = J_eval.reshape(L,L)
-        plt.figure()
-        plt.imshow(J_eval)
-        plt.title(J_ + ' λ = {}'.format(λ))
-        cbar = plt.colorbar(cmap='coolwarm')
-        cbar.ax.tick_params(labelsize=22)
-        plt.savefig(path + J_ + '_lambda_{}.png'.format(int(-np.log10(λ))))
-        
-        j += 1
-    i += 1
+        j = 0
+        for J_ in J_list:
+            J_eval = eval(J_)
+            R2_train[i,j] = R2_linreg(X_train, J_eval, E_train)
+            R2_test[i,j] = R2_linreg(X_test, J_eval, E_test)
+            
+            print('\n--- ', J_, ' ---')
+            print('MSE_train: ', MSE_linreg(X_train, J_eval, E_train))
+            print('MSE_test: ', MSE_linreg(X_test, J_eval, E_test))
+            print('R2_train: ', R2_train[i,j])
+            print('R2_test: ', R2_test[i,j])
+            
+            
+            MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold_linreg(X, E, λ, K=10, method=J_)
+            print('MSE_train_kfold: ', MSE_train_kfold)
+            print('MSE_test_kfold: ', MSE_test_kfold)
+            print('R2_train_kfold: ', R2_train_kfold)
+            print('R2_test_kfold: ', R2_test_kfold)
+            
+            
+            J_eval = J_eval.reshape(L,L)
+            plt.figure()
+            plt.imshow(J_eval)
+            plt.title(J_ + ' λ = {}'.format(λ))
+            cbar = plt.colorbar(cmap='coolwarm')
+            cbar.ax.tick_params(labelsize=22)
+            plt.savefig(path + J_ + '_lambda_{}.png'.format(int(-np.log10(λ))))
+            
+            j += 1
+        i += 1
 
-plt.semilogx(lambdas, R2_train[:,0], label='OLS (train)')
-plt.semilogx(lambdas, R2_test[:,0], '--', label='OLS (test)')
-plt.semilogx(lambdas, R2_train[:,1], label='Ridge (train)')
-plt.semilogx(lambdas, R2_test[:,1], '--', label='Ridge (test)')
-plt.semilogx(lambdas, R2_train[:,2], label='Lasso (train)')
-plt.semilogx(lambdas, R2_test[:,2], '--', label='Lasso (test)')
-plt.legend(loc='best')
-plt.xlabel('$\lambda$',fontsize=16)
-plt.ylabel('R$^2$-score',fontsize=16)
-plt.grid()
-plt.show()
-'''
-    
-# Neural network
-import neural_network as nn
-h = [100,100]                 # Number of hidden nodes
-T = 5                         # Number of iterations
-eta = 0.0001
+    plt.semilogx(lambdas, R2_train[:,0], label='OLS (train)')
+    plt.semilogx(lambdas, R2_test[:,0], '--', label='OLS (test)')
+    plt.semilogx(lambdas, R2_train[:,1], label='Ridge (train)')
+    plt.semilogx(lambdas, R2_test[:,1], '--', label='Ridge (test)')
+    plt.semilogx(lambdas, R2_train[:,2], label='Lasso (train)')
+    plt.semilogx(lambdas, R2_test[:,2], '--', label='Lasso (test)')
+    plt.legend(loc='best')
+    plt.xlabel('$\lambda$',fontsize=16)
+    plt.ylabel('R$^2$-score',fontsize=16)
+    plt.grid()
+    plt.show()
 
-obj = nn.NeuralNetwork(X[:n], E[:n], T, h, eta)     # Define object 
+elif method == 1:    
+    # Neural network
+    import neural_network as nn
+    h = 10                         # Number of hidden nodes
+    T = 5                         # Number of iterations
+    eta = 0.0001
 
-obj.solver()                                        # Obtain optimal weights
-E_tilde_train = obj.recall(X[:n])                   # Recall training energy
-E_tilde_test = obj.recall(X[n:])                    # Recall test energy
+    obj = nn.NeuralNetwork(X_train, E_train, T, h, eta, f2=ReLU)     # Define object
+    obj.solver()                                            # Obtain optimal weights
+    E_tilde_train = obj.recall(X_train)                     # Recall training energy
+    E_tilde_test = obj.recall(X_test)                       # Recall test energy
 
-print('MSE_train: ', MSE(E_tilde_train, E[:n]))
-print('MSE_test: ', MSE(E_tilde_test, E[n:]))
-print('R2_train: ', R2(E_tilde_train, E[:n]))
-print('R2_test: ', R2(E_tilde_test, E[n:]))
+    print('MSE_train: ', MSE(E_tilde_train, E_train))
+    print('MSE_test: ', MSE(E_tilde_test, E_test))
+    print('R2_train: ', R2(E_tilde_train, E_train))
+    print('R2_test: ', R2(E_tilde_test, E_test))
 
-MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold(X, E, T, h, eta, K=10)
-print('MSE_train_kfold: ', MSE_train_kfold)
-print('MSE_test_kfold: ', MSE_test_kfold)
-print('R2_train_kfold: ', R2_train_kfold)
-print('R2_test_kfold: ', R2_test_kfold)
+    MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold(X, E, T, h, eta, K=10)
+    print('MSE_train_kfold: ', MSE_train_kfold)
+    print('MSE_test_kfold: ', MSE_test_kfold)
+    print('R2_train_kfold: ', R2_train_kfold)
+    print('R2_test_kfold: ', R2_test_kfold)
