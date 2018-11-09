@@ -28,7 +28,7 @@ def R2_linreg(X, J, E):
     
 def Accuracy(y_test, t_test):
     '''Accuracy score'''
-    y_test_int = np.where(y_test > 0.5, 1, 0)
+    y_test_int = np.where(y_test > 0.5, 1, -1)
     diff = np.sum(np.abs(y_test_int-t_test))
 
     return 1 - diff/len(t_test)

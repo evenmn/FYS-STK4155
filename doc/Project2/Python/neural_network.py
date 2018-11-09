@@ -12,29 +12,29 @@ class NeuralNetwork():
         '''
         Arguments
         ---------
-        X {Array}:     Inputs
-                       Size [M, I] where M is the number of training samples.
-                       Contains a set of training samples.
-                       NB: Needs to be a numpy array           
-        t {Array}:     Targets
-                       Size [M, O] where M is the number of training samples.
-                       Contains a set of targets which correspond to the
-                       input samples.
-                       NB: Needs to be a numpy array  
-        T {Int}:       Number of training cycles.
-                       Needs to be given by the user.
-        h {Int(s)}:    Number of hidden nodes.
-                       List of ints indicate multiple hidden layers.
-        eta {float}:   Learning rate.
-                       Usually in the interval [0, 0.5].
-        f1 {function}: Activation function on output.
-                       Pure linear as default. Supports 'ReLU', 'ELU',
-                       'Leaky_ReLU', 'logistic', 'tanh' and 'none'.
-        f2 {function}: Activation function on hidden layers.
-                       Pure linear as default. Supports 'ReLU', 'ELU',
-                       'Leaky_ReLU', 'logistic', 'tanh' and 'none'.
+        X {Array}:       Inputs
+                         Size [M, I] where M is the number of training samples.
+                         Contains a set of training samples.
+                         NB: Needs to be a numpy array           
+        t {Array}:       Targets
+                         Size [M, O] where M is the number of training samples.
+                         Contains a set of targets which correspond to the
+                         input samples.
+                         NB: Needs to be a numpy array  
+        T {Int}:         Number of training cycles.
+                         Needs to be given by the user.
+        h {Int(s)}:      Number of hidden nodes.
+                         List of ints indicate multiple hidden layers.
+        eta {float}:     Learning rate.
+                         Usually in the interval [0, 0.5].
+        f1 {function}:   Activation function on output.
+                         Pure linear by default. Supports 'ReLU', 'ELU',
+                         'Leaky_ReLU', 'logistic', 'tanh' and 'none'.
+        f2 {function}:   Activation function on hidden layers.
+                         Pure linear by default. Supports 'ReLU', 'ELU',
+                         'Leaky_ReLU', 'logistic', 'tanh' and 'none'.
         opt {function}:  Minimization function.
-                         Gradient descent 'GD' as default, supports 
+                         Gradient descent 'GD' by default, supports 
                          Stochastic Gradient Descent ('SGD') as well.
         '''
         
@@ -61,18 +61,18 @@ class NeuralNetwork():
         
         # Number of output nodes
         try:
-            self.O = len(self.t[0])
+            self.O = len(self.t[0])     # If multiple outputs
         except:
-            self.O = 1
+            self.O = 1                  # If only one output
             
         # Number of hidden layers
-        if isinstance(self.h, list):
+        if isinstance(self.h, list):    # If multiple hidden layers
             self.H = len(self.h)
             self.h.append(self.O)
-        elif self.h == 0:
+        elif self.h == 0:               # If no hidden layers
             self.H = 0
             self.h = [self.O]
-        elif isinstance(self.h, int):
+        elif isinstance(self.h, int):   # If one hidden layer
             self.H = 1
             self.h = [self.h, self.O]
         else:
@@ -80,49 +80,43 @@ class NeuralNetwork():
             
         # Initialize weights, including bias weights
         self.W=[]
-        self.W.append((2*np.random.random((self.I+1, self.h[0])) - 1)*np.sqrt(1/len(self.X[0,:])))
+        self.W.append((2*rand((self.I+1, self.h[0])) - 1)*np.sqrt(1/len(self.X[0,:])))
         for i in range(self.H):
-            self.W.append((2*np.random.random((self.h[i]+1, self.h[i+1])) - 1)*np.sqrt(1/self.h[i]))
+            self.W.append((2*rand((self.h[i]+1, self.h[i+1])) - 1)*np.sqrt(1/self.h[i]))
 
         
         
-    def feed_forward(X, W, f1=none, f2=none):
+    def feed_forward(self, X):
         '''Feed forward'''
-        out = np.insert(X, 0, 1)
-        Out = [out]
-        for i in range(len(W)-1):
-            net = np.dot(out, W[i])              # Net output to layer i
-            out = f2(net)                        # Output to layer i
-            out = np.insert(out, 0, 1)           # Add bias
-            Out.append(out)
-        net = np.dot(out, W[-1])
-        Out.append(f1(net))
-        return Out                              # Out contains all node values
+        self.out = [np.insert(X, 0, 1)]               # Add bias
+        for i in range(self.H):                       # Loop over hidden nodes
+            net = np.dot(self.out[-1], self.W[i])     # Net output to layer i
+            Out = self.f2(net)                        # Output to layer i
+            self.out.append(np.insert(Out, 0, 1))     # Add bias
+        net = np.dot(self.out[-1], self.W[-1])        # Final output
+        self.out.append(self.f1(net))                 # Final output with f1
         
         
-    def backward_propagation(X, t, W, Out, f1, f2):
+        
+    def backward_propagation(self, t):
         '''Backward propagation'''
-        deltao = (Out[-1] - t) * f1(Out[-1], der=True)
-        deltah = [deltao]
-        
-        H = len(Out) - 2
-        for i in range(H):
-            delta = W[H-i].dot(np.transpose(deltah[-1])) * f2(Out[H-i], der=True)
+        deltah = [(self.out[-1] - t) * self.f1(self.out[-1], der=True)]
+        for j in range(self.H):
+            delta = self.W[self.H-j].dot((deltah[-1]).T) * self.f2(self.out[self.H-j], der=True)
             deltah.append(delta[:-1])
-        return deltah[::-1]
+        self.deltah=deltah[::-1]
 
 
     def solver(self):
         '''Linear'''
         self.initialize()
-        
         if self.opt == GD:
             for iter in tqdm(range(self.T)):
                 for i in range(self.M):
-                    Out = NeuralNetwork.feed_forward(self.X[i], self.W, f1=self.f1, f2=self.f2)
-                    deltah = NeuralNetwork.backward_propagation(self.X[i], self.t[i], self.W, Out, self.f1, self.f2)
+                    self.feed_forward(self.X[i])
+                    self.backward_propagation(self.t[i])
                     for j in range(self.H + 1):
-                        gradient = np.outer(np.transpose(Out[j]), deltah[j][0:])
+                        gradient = np.outer((self.out[j]).T, self.deltah[j][0:])
                         self.W[j] -= self.eta * gradient
                     
         elif self.opt == SGD:
@@ -134,20 +128,18 @@ class NeuralNetwork():
                     Xi = self.X[random_index:random_index+1]
                     ti = self.t[random_index:random_index+1]
                     
-                    Out = NeuralNetwork.feed_forward(self.Xi, self.W, self.f1, self.f2)
-                    deltah = NeuralNetwork.backward_propagation(self.Xi, self.ti, self.W, Out, self.f1, self.f2)
-                    gradient = np.outer(np.transpose(Out[0], deltah))
-                    self.W -= self.eta * gradient
+                    self.feed_forward(self.Xi)
+                    self.backward_propagation(i)
+                    for j in range(self.H + 1):
+                        gradient = np.outer((self.out[j]).T, self.deltah[j][0:])
+                        self.W[j] -= self.eta * gradient
         return self.W
-
-
-    
-       
-       
         
-def recall(X, W, f1=none, f2=none):
-    '''Recall'''
-    Out = np.empty(len(X))
-    for i in range(len(X)):
-        Out[i] = NeuralNetwork.feed_forward(X[i], W, f1, f2)[-1]
-    return Out
+        
+    def recall(self, X):
+        '''Recall'''
+        Out = np.empty(len(X))
+        for i in range(len(X)):
+            self.feed_forward(X[i])
+            Out[i] = self.out[-1]
+        return Out

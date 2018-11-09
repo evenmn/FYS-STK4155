@@ -98,20 +98,22 @@ plt.show()
     
 # Neural network
 import neural_network as nn
-h = 0               # Number of hidden nodes
+h = [100,100]                 # Number of hidden nodes
+T = 5                         # Number of iterations
+eta = 0.0001
 
-obj = nn.NeuralNetwork(X[:n], E[:n], 2, h=h)
+obj = nn.NeuralNetwork(X[:n], E[:n], T, h, eta)     # Define object 
 
-W = obj.solver()
-E_tilde_train = nn.recall(X[:n], W)
-E_tilde_test = nn.recall(X[n:], W)
+obj.solver()                                        # Obtain optimal weights
+E_tilde_train = obj.recall(X[:n])                   # Recall training energy
+E_tilde_test = obj.recall(X[n:])                    # Recall test energy
 
 print('MSE_train: ', MSE(E_tilde_train, E[:n]))
 print('MSE_test: ', MSE(E_tilde_test, E[n:]))
 print('R2_train: ', R2(E_tilde_train, E[:n]))
 print('R2_test: ', R2(E_tilde_test, E[n:]))
 
-MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold(X, E, K=10)
+MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold(X, E, T, h, eta, K=10)
 print('MSE_train_kfold: ', MSE_train_kfold)
 print('MSE_test_kfold: ', MSE_test_kfold)
 print('R2_train_kfold: ', R2_train_kfold)
