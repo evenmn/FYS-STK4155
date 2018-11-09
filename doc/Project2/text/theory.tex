@@ -275,19 +275,13 @@ net_{h_l,j} = \bb{h^{(l-1)}}^T\bb{W}^{(l)}.
 \end{empheq}
 
 \subsubsection{Activation function}
-has traditionally been used as the activation function inspired by neuroscience. This function maps an arbitrary number between 0 and 1, which ensures that the outputs will not explode, and its derivative has an easy form. The derivative of this function is
-\begin{equation}
-f'(x)=f(1-f)
-\end{equation}
-and the derivation of it is shown carefully in Appendix A. 
+Before 2012, the logistic and the tanh functions where the standard activation functions, but then Alex Krizhevsky published an article where he introduced a new activation function called \textit{Rectified Linear Units (ReLU)} which outperformed the classical activation functions. [4] The network he used is now known as AlexNet, and helped to revolutionize the field of computer vision. [5] After that, the ReLU activation function has been modified several times (avoiding zero derivative among others), and example of innovations are \textit{leaky ReLU} and \textit{Exponential Linear Unit (ELU)}. All those networks are linear for positive numbers, and small for negative numbers. Often, especially in the output layer, a straight linear function is used as well.
 
-Before 2012, the sigmoid function and the tanh function where the standard activation functions, but then Alex Krizhevsky published an article where he introduced a new activation function called \textit{Rectified Linear Units (ReLU)} which outperformed the classical activation functions. [4] The network he used is now known as AlexNet, and helped to revolutionize the field of computer vision. [5] After that, the ReLU activation function has been modified several times (avoiding zero derivative among others), and example of innovations are \textit{leaky ReLU} and \textit{Exponential Linear Unit (ELU)}. 
-
-In figure (\ref{fig:activation_functions}), \textit{standard RELU, leaky RELU} and \textit{ELU} are plotted along with the sigmoid function.
+In figure (\ref{fig:activation_functions}), \textit{standard RELU, leaky RELU} and \textit{ELU} are plotted along with the logistic function.
 
 \begin{figure}
 	\centering
-	\subfloat[Sigmoid]{{\includegraphics[width=8cm]{../plots/sigmoid.png} }}
+	\subfloat[logistic]{{\includegraphics[width=8cm]{../plots/sigmoid.png} }}
 	\subfloat[ReLU]{{\includegraphics[width=8cm]{../plots/ReLU.png} }}\\
 	
 	\subfloat[Leaky ReLU]{{\includegraphics[width=8cm]{../plots/LeakyReLU.png} }}%

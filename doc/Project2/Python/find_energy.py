@@ -98,14 +98,13 @@ plt.show()
     
 # Neural network
 import neural_network as nn
+h = 0               # Number of hidden nodes
 
+obj = nn.NeuralNetwork(X[:n], E[:n], 2, h=h)
 
-# === Linear ===
-obj = nn.NeuralNetwork(X[:n], E[:n], 2, h=100)
-
-W = obj.linear(f1=none, f2=none)
-E_tilde_train = nn.recall_linear(X[:n], W)
-E_tilde_test = nn.recall_linear(X[n:], W)
+W = obj.solver()
+E_tilde_train = nn.recall(X[:n], W)
+E_tilde_test = nn.recall(X[n:], W)
 
 print('MSE_train: ', MSE(E_tilde_train, E[:n]))
 print('MSE_test: ', MSE(E_tilde_test, E[n:]))
@@ -117,23 +116,3 @@ print('MSE_train_kfold: ', MSE_train_kfold)
 print('MSE_test_kfold: ', MSE_test_kfold)
 print('R2_train_kfold: ', R2_train_kfold)
 print('R2_test_kfold: ', R2_test_kfold)
-
-
-'''
-# === Multilayer ===
-W, b = nn.multilayer(X[:n], E[:n], 500, [1])
-E_tilde_train = nn.recall_multilayer(X[:n], W, b)
-E_tilde_test = nn.recall_multilayer(X[n:], W, b)
-
-print('MSE_train: ', MSE(E_tilde_train, E[:n]))
-print('MSE_test: ', MSE(E_tilde_test, E[n:]))
-print('R2_train: ', R2(E_tilde_train, E[:n]))
-print('R2_test: ', R2(E_tilde_test, E[n:]))
-
-
-MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold(X, E, K=10)
-print('MSE_train_kfold: ', MSE_train_kfold)
-print('MSE_test_kfold: ', MSE_test_kfold)
-print('R2_train_kfold: ', R2_train_kfold)
-print('R2_test_kfold: ', R2_test_kfold)
-'''
