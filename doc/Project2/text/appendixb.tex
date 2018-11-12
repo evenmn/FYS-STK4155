@@ -19,11 +19,7 @@ and we have already found that
 \end{equation}
 Furthermore the netto output is given by equation (\ref{eq:forward}),
 \begin{equation}
-net_j = \sum_{i=1}^{I} X_i\cdot w_{ij} + b_j\cdot 1,
-\end{equation}
-which simply gives
-\begin{equation}
-\frac{\partial net_{j}}{\partial w_{ij}}=X_i.
+net_j = \sum_{i=1}^{I} X_i\cdot w_{ij} + b_j\cdot 1.
 \end{equation}
 We end up with 
 \begin{equation}
@@ -33,7 +29,7 @@ and the weight updating formula
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
 w_{ij}^{+}=w_{ij} + \eta\cdot(t_j-out_j)\cdot out_j(1-out_j)\cdot X_i
 \end{empheq}
-Similarly we need to update the bias weights, with a formula similar to that one in equation (\ref{eq:w_update}):
+Similarly we need to update the bias weights, with a formula similar to that one in equation (\ref{eq:forward}):
 \begin{equation}
 b_i^+=b_i - \eta\cdot\frac{\partial E_{TOT}}{\partial b_i}.
 \end{equation}
@@ -53,11 +49,11 @@ To work the partial derivative out, we need to do a change of variables. I will 
 \frac{\partial E_{TOT}}{\partial w_{ij}}&=\frac{\partial E_{TOT}}{\partial out_{oj}}\cdot\frac{\partial out_{oj}}{\partial net_{oj}}\cdot\frac{\partial net_{oj}}{\partial w_{ij}}\\
 &=\delta_{oj}\cdot\frac{\partial net_{oj}}{\partial w_{ij}}
 \end{align}
-where $\delta_{oj}$ is the same for all weights that go to the same output $oj$ $\Rightarrow$ we will have $O$ different $\delta_{oj}$'s. Further recall the error function from equation (\ref{eq:error_function}), and recognize that
+where $\delta_{oj}$ is the same for all weights that go to the same output $oj$ $\Rightarrow$ we will have $O$ different $\delta_{oj}$'s. Further recall the error function from equation (\ref{eq:cross_entropy}), and recognize that
 \begin{equation}
 \frac{\partial E_{TOT}}{\partial out_{oj}}=-(t_{oj}-out_{oj})
 \end{equation}
-where $t_{oj}$ are the targets. Then we have the sigmoid function where we get $out_{oj}$ when we send in $net_{oj}$:
+where $t_{oj}$ are the targets. Then we have the logistic function where we get $out_{oj}$ when we send in $net_{oj}$:
 \begin{equation}
 out_{oj}=\frac{1}{1+\exp(-net_{oj})}
 \end{equation}
@@ -89,7 +85,7 @@ with
 \begin{equation*}
 \delta_{oj}=-(t_{oj}-out_{oj})\cdot out_{oj}(1-out_{oj})
 \end{equation*}
-We are now set for updating the last weights W2, see section \ref{sec:multi_algorithm} for a overview of the algorithm, section \ref{sec:vectorization} for a short description of how to vectorize the algorithm, or if you want to go straight to the implementation, you should check out section \ref{sec:multi_implementation}. 
+We are now set for updating the last weights W2, see section \ref{sec:multi_algorithm} for a overview of the algorithm, section \ref{sec:vectorization} for a short description of how to vectorize the algorithm, or if you want to go straight to the implementation. 
 
 However, we also need to update the remaining weights, W1, what are we waiting for? The approach is the same as above with considering how much the total error will change when changing one of the weights and doing a change of variables
 \begin{equation}

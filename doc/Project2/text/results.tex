@@ -1,8 +1,8 @@
 \section{Results} \label{sec:results}
-Some general stuff here
+In this section all the results are collected, where we first determine the energy in the one-dimensional Ising model, and the find the phase. We use linear regression and neural networks, and logistic regression and neural networks respectively for the two cases.
 
 \subsection{Determine the energy in the Ising model}
-We have determined the energy of the Ising model using both linear regression (OLS, Ridge and Lasso) and neural networks, where we first train the model on a set, and then validate the model on a test set. In project 1, we found our implementation of OLS, Ridge and Lasso to give the same result as Scikit Learn, and we will in this project stick to Scikit Learn due to its quickness. [Ref. project 1] Let's start with linear regression. 
+We have determined the energy of the Ising model using both linear regression (OLS, Ridge and Lasso) and neural networks, where we first train the model on a set, and then validate the model on a test set. In project 1, we found our implementation of OLS, Ridge and Lasso to give the same result as Scikit Learn, and we will in this project stick to Scikit Learn due to its quickness. [1] Let's start with linear regression. 
 
 \subsubsection{Linear regression}
 We used linear regression to find the $\bb{J}$-matrix, and from that we found the energies. In table \eqref{tab:lin_reg}, the errors between obtained energy and true energy are listed for the training set, the test set and the K-fold cross-validation resampling. Further, the $\bb{J}$-matrix is visualized in figure \eqref{fig:J_matrix} and the R$^2$-score is plotted as function of $\lambda$ in figure \eqref{fig:lambda_vs_R2_linear}.
@@ -54,13 +54,13 @@ Finally, the R$^2$-score is plotted as a function of the penalty, $\lambda$, in 
 \end{figure} 
 
 \subsubsection{Neural networks}
-We now want to train a neural network on different Ising states, with the energies as the targets. In table \eqref{tab:nn}, the MSE and R$^2$-score are given for various activation function in the hidden layer and various number of hidden nodes for the training set, test set and using K-fold cross validation. By far the lowest MSE is obtained when using the pure linear cost function in the hidden layer, and apparently the more nodes the lower MSE. This does not apply for the other activation functions. 
+We now want to train a neural network on different Ising states, with the energies as the targets. In table \eqref{tab:nn}, the MSE and R$^2$-score are given for various activation functions in the hidden layer and various number of hidden nodes for the training set, test set and using K-fold cross validation. By far the lowest MSE is obtained when using the pure linear cost function in the hidden layer, and apparently the more nodes the lower MSE. This does not apply for the other activation functions. 
 \begin{table} [H]
-	\caption{Mean Square Error and R$^2$-score obtained using a neural network on the training set, test set and from K-fold cross validation with $K=10$. Various activation functions \textit{Pure linear}, \textit{ReLU}, \textit{Leaky ReLU} and \textit{ELU} were used in the hidden layer, and the number of hidden nodes (\textit{"Nodes"}) was set to 0, 5 and 10. The learning rate was set to $\eta=0.0001$ and we used $T=5$ minimization iteration in GD.}
+	\caption{Mean Square Error and R$^2$-score obtained using a neural network on the training set, test set and from K-fold cross validation with $K=10$. Various activation functions \textit{Pure linear}, \textit{ReLU}, \textit{Leaky ReLU} and \textit{ELU} were used in the hidden layer, and the number of hidden nodes, H, was set to 0, 5 and 10. The learning rate was set to $\eta=0.0001$ and we used $T=5$ minimization iteration in GD.}
 	\begin{tabularx}{\textwidth}{l|l|XXX|XXX} \hline\hline
 		\label{tab:nn}
 		&& \multicolumn{3}{c}{\textbf{MSE}}&\multicolumn{3}{c}{\textbf{R2}}\\ \hline
-		&Nodes&Train&Test&K-fold&Train&Test&K-fold\\ \hline
+		&H&Train&Test&K-fold&Train&Test&K-fold\\ \hline
 		
 		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{Linear}}}
 		&0 & 3.244e-4 & 5.573e-4 & 1.206e-4 & 1.000 & 1.000 & 1.000\\
@@ -89,7 +89,7 @@ We now want to train a neural network on different Ising states, with the energi
 We now turn to the classification problem, where we want to find whether a Ising lattice is ordered or disordered. We exclude Ising lattices around critical temperature in our training set ("Train"), and test our model on unseen data ("Test"). Additionally, we also test our model on lattices which are close to the critical temperature ("Critical"). We first use logistic regression with logistic activation, and thereafter turn to neural network with various activation functions on the hidden layer and logistic activation on the output. 
 
 \subsubsection{Logistic regression}
-Our first approach is the logistic regression. For this, we have calculate the accuracy for various learning rates and regularizations, given in figure \eqref{fig:class_logistic} for all three data sets. What we observe, is that the model is really sensitive and the accuracy vary a lot. 
+Our first approach is the logistic regression. For this, we calculate the accuracy for various learning rates and regularizations, given in figure \eqref{fig:class_logistic} for all three data sets. What we observe, is that the model is really sensitive and the accuracy vary a lot. For some specific learning rates and regularization parameters, we get good result even for the critical set.
 \newgeometry{left=2cm,right=2cm,top=1.5cm}
 \begin{figure} [H]%
 	\centering
@@ -107,7 +107,7 @@ Our first approach is the logistic regression. For this, we have calculate the a
 \subsubsection{Neural networks}
 Our second and final approach is classification using neural network. In the same way as when we used neural network in regression, we will investigate various activation functions in the hidden layer(s). 
 \begin{table} [H]
-	\caption{T=1, eta=1e-4, lamb=1e-3}
+	\caption{The accuracy obtained using neural network for classification. 'Train' is the training set, 'Test' is a test set far from critical temperature and 'Critical' is a test set close to the critical temperature. We used one minimization iteration ($T=1$), learning rate $\eta=1e-4$ and regularization parameter $\lambda=1e-3$.}
 	\begin{tabularx}{\textwidth}{l|l|XXX} \hline\hline
 		\label{tab:nn_class}
 		&& \multicolumn{3}{c}{\textbf{Accuracy}}\\ \hline
@@ -132,7 +132,7 @@ Our second and final approach is classification using neural network. In the sam
 
 \begin{figure} [H]
 	\centering
-	\includegraphics[scale=0.65]{../plots/h_vs_accuracy.png}
+	\includegraphics[scale=0.55]{../plots/h_vs_accuracy.png}
 	\caption{Accuracy as a function of number of hidden nodes, for both one and two layers. X-axis indicates number of hidden nodes in each layer, where the two-layer perceptron has an equal number of nodes in each layer.}
 	\label{fig:h_vs_accuracy}
 \end{figure} 

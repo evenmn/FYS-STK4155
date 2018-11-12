@@ -166,7 +166,7 @@ and obtain a weight update algorithm
 \end{empheq}
 where the bias weight is included implicitly in $\bb{w}$ and the same applies for $\bb{x}$.
 
-\subsection{Neural network}
+\subsection{Neural network} \label{sec:neural_network}
 If you have understood logistic regression, understanding a neural network should not be a difficult task. According to  \textbf{the universal approximation theorem}, a neural network with only one hidden layer can approximate any continuous function. [https://compphysics.github.io/MachineLearning/doc/pub/NeuralNet/html/NeuralNet.html] However, often multiple layers are used since this often gives fewer nodes in total. 
 
 In figure \eqref{fig:neural_network}, a two-layer neural network (one hidden layer) is illustrated. It has some similarities with the logistic regression model in figure \eqref{fig:single_perceptron}, but a hidden layer and multiple outputs are added. In addition, the output is no longer probabilities and can take any number. 
@@ -285,7 +285,7 @@ Before 2012, the logistic and the tanh functions where the standard activation f
 
 In figure (\ref{fig:activation_functions}), \textit{standard RELU, leaky RELU} and \textit{ELU} are plotted along with the logistic function.
 
-\begin{figure}
+\begin{figure} [H]
 	\centering
 	\subfloat[logistic]{{\includegraphics[width=8cm]{../plots/sigmoid.png} }}
 	\subfloat[ReLU]{{\includegraphics[width=8cm]{../plots/ReLU.png} }}\\
@@ -297,36 +297,39 @@ In figure (\ref{fig:activation_functions}), \textit{standard RELU, leaky RELU} a
 \end{figure}
 
 \subsubsection{Backward Propagation} \label{sec:backward}
-Backward propagation is probably the most used technique to update the weights, and is actually again based on equation (\ref{eq:w_update}). What differs, is the differentiation of the net input with respect to the weight, which gets more complex as we add more layers. For one hidden layer, we have two set of weights, where the last layer is updated in a similar way as for a network without hidden layer...
-
+Backward propagation is probably the most used technique for updating the weights, and is actually again based on equation (\ref{eq:w_update}). What differs, is the differentiation of the net input with respect to the weight, which gets more complex as we add more layers. For one hidden layer, we have two sets of weights, where the last layer is updated in a similar way as for a network without hidden layer, but the inputs are replaced with the values of the hidden nodes:
+\begin{empheq}[box={\mybluebox[5pt]}]{align}
+	w_{ij}^{(2)+}= w_{ij}^{(2)} - \eta\cdot[f(h_i^Tw_{ij})-y_j]^Th_i.
+\end{empheq}
 We recognize the first part as $\delta_{ok}$, such that
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-w_{ij}^{(1)}\rightarrow w_{ij}^{(1)} - \eta\cdot\sum_{k=1}^{O}\delta_{ok}\cdot w_{jk}^{(2)}\cdot out_{hj}(1-out_{hj})\cdot x_i
+w_{ij}^{(1)+} = w_{ij}^{(1)} - \eta\cdot\sum_{k=1}^{O}\delta_{ok}\cdot w_{jk}^{(2)}\cdot out_{hj}(1-out_{hj})\cdot x_i
 \end{empheq}
 where we recall $\delta_{ok}$ as
 \begin{equation*}
 \delta_{ok}=-(t_{ok}-out_{ok})\cdot out_{ok}(1-out_{ok}).
 \end{equation*}
+For more layers, the procedure is the same, but we keep on inserting the obtained outputs from various layers.
 
 \subsubsection{Summary}
-Since it will be quite a lot calculations, I will just express the results here, and move the calculations to Appendix C. Let us start with the forward propagation:
+Since it will be quite a lot calculations, I will just express the results here, and move the calculations to Appendix C. The forward phase in a three-layer perceptron is
 \begin{empheq}[box={\mybluebox[5pt]}]{align}
-net_{hi}&=\sum_jw_{ji}^{(1)}\cdot i_j + b_{1i}\cdot 1\notag\\
-out_{hi}&=\text{sig}(net_{hi})\notag\\
+net_{hi}&=\sum_jw_{ji}^{(1)}\cdot x_j\notag\\
+out_{hi}&=\text{f}(net_{hi})\notag\\
 \notag\\
-net_{ki}&=\sum_jw_{ji}^{(2)}\cdot out_{hj} + b_{2i}\cdot 1\\
-out_{ki}&=\text{sig}(net_{ki})\notag\\
+net_{ki}&=\sum_jw_{ji}^{(2)}\cdot out_{hj}\\
+out_{ki}&=\text{f}(net_{ki})\notag\\
 \notag\\
-net_{oi}&=\sum_jw_{ji}^{(3)}\cdot out_{kj} + b_{3i}\cdot 1\notag\\
-out_{oi}&=\text{sig}(net_{oi})\notag
+net_{oi}&=\sum_jw_{ji}^{(3)}\cdot out_{kj}\notag\\
+out_{oi}&=\text{f}(net_{oi})\notag
 \end{empheq}
 which can easily be turned into vector form. The backward propagation follows from the two-layer example, and we get
 \begin{empheq}[box={\mybluebox[5pt]}]{align}
 w_{ij}^{(3)}&=w_{ij}^{(3)}-\eta\cdot\delta_{oj}\cdot out_{ki}\notag\\
 \notag\\
-w_{ij}^{(2)}&=w_{ij}^{(2)}-\eta\sum_{k=1}^O\delta_{ok}\cdot w_{jk}^{(3)}\cdot out_{kj}(1-out_{kj})\cdot out_{hi}\notag\\
+w_{ij}^{(2)}&=w_{ij}^{(2)}-\eta\sum_{k=1}^O\delta_{ok}\cdot w_{jk}^{(3)}\cdot f'(out_{kj})\cdot out_{hi}\notag\\
 \notag\\
-w_{ij}^{(1)}&=w_{ij}^{(1)}-\eta\sum_{k=1}^O\sum_{l=1}^K\delta_{ok}\cdot w_{lk}^{(3)}\cdot out_{kl}(1-out_{kl})\cdot w_{jl}^{(2)}out_{hj}(1-out_{hj})\cdot x_i\notag
+w_{ij}^{(1)}&=w_{ij}^{(1)}-\eta\sum_{k=1}^O\sum_{l=1}^K\delta_{ok}\cdot w_{lk}^{(3)}\cdot f'(out_{kl})\cdot w_{jl}^{(2)}f'(out_{hj})\cdot x_i\notag
 \end{empheq}
 where we again use the short hand 
 \begin{equation*}
@@ -337,7 +340,7 @@ If we compare with the weight update formulas for the two-layer case, we recogni
 Now over to the problem we want to solve using neural networks.
 
 \subsection{Ising model}
-The Ising model is widely used to study phenomena in statistics, physics, economics etc.. 
+The Ising model is widely used to study phenomena in statistics, physics, economics etc.., and is a binary model with interactions based on the binary values. For instance, it can be used as a simple ferro magnetic model.
 
 \subsubsection{One dimension}
 In one dimension, it can be viewed as a sequence of two binary numbers, for instance $\pm1$, which we will call spins. Each element interacts with its nearest neighbors by the formula

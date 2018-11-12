@@ -12,14 +12,14 @@
 	\url{https://github.com/evenmn/FYS-STK4155}
 \end{center}
 \endgroup
-\vspace{2cm}
+\vspace{1.5cm}
 
 \begin{abstract}
-In this project we first determine the energy of the one-dimensional Ising model using linear regression and deep learning. We will investigate the performance of both Ordinary Least Square (OLS), Ridge regression and Lasso regression, before we turn to a deep feed-forward neural network (FNN) with various activation function and hyper parameters. Secondly, we classify a two-dimensional Ising model using logistic regression and deep learning, and vary the regularization parameter.
+In this project we first determine the energy in the one-dimensional Ising model using linear regression and deep learning. We will investigate the performance of both Ordinary Least Square (OLS), Ridge regression and Lasso regression, before we turn to a deep feed-forward neural network (FNN) with various activation function and hyper parameters. Secondly, we classify a two-dimensional Ising model using logistic regression and deep learning, and vary the regularization parameter.
 
 To estimate the error, Mean Square Error (MSE) and the R$^2$-score function are used in the regression case, and we find more reliable values by K-fold validation resampling. In the classification case, we will study the accuracy score since the outputs are binary. Gradient descent (GD) and stochastic gradient descent (SGD) are implemented as the minimization tools. 
 
-We found the...
+In linear regression, Lasso and Ridge regression gave smaller MSE (below $10^{-4}$), and only Lasso was able to recall the correct J-matrix. Using a neural network, a pure linear activation function on a hidden layer gave best results. For classification, logistic regression did not work well, but with a neural network we were able to obtain an accuracy above 99\% for a test set far from the critical temperature and above 96\% for a test set close to the critical temperature using three hidden layers with \textit{Rectified Linear Units} (ReLU) and \textit{leaky} ReLU activation functions.
 \end{abstract}
 
 \newpage

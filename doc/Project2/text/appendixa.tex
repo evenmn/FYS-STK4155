@@ -5,7 +5,7 @@ If we differentiate the sigmoid function
 \begin{equation}
 f(x)=\frac{1}{1+\exp(-x)}
 \end{equation}
-from equation (\ref{eq:sigmoid}), and we will get
+from equation (\ref{eq:logistic}), and we will get
 \begin{equation}
 f'(x)=f(1-f)
 \end{equation}
@@ -20,5 +20,3 @@ f'(x) &= -1\cdot(1+\exp(-x))^{-2}\cdot -1\cdot\exp(-x)\\
 &=\frac{1}{1+\exp(-x)}\bigg(1 - \frac{1}{1+\exp(-x)}\bigg)\\
 &=f(1-f)
 \end{align*}
-
-\subsection{Cross-entropy}

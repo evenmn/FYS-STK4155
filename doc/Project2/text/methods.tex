@@ -1,7 +1,7 @@
 \section{Methods} \label{sec:methods}
 
 \subsection{Resampling techniques} \label{sec:resampling}
-A resampling technique is a way of estimating the variance of data sets without calculating the covariance, which is very expensive calculating. There are various methods for this, including the K-fold cross-validation, Bootstrap and Blocking methods. In this particular project, we will focus on the K-fold cross-validation.
+A resampling technique is a way of estimating the variance of data sets without calculating the covariance, which is often is a very expensive calculation. There are various methods for this, including the K-fold cross-validation, Bootstrap and Blocking methods. In this particular project, we will focus on the K-fold cross-validation.
 
 \subsubsection{K-fold validation method} \label{sec:kfold}
 K-fold validation is a method which has more describing name than many of its fellow methods. The idea is to make the most use of our data by splitting it into $K$ folds and train our model $K$ times on it. Every time we train, we leave out one of the folds, which gonna be our validation data. This validation data needs to be different every time, and we are therefore restricted to $K$ unique training sessions. A typical overview looks like this:
@@ -49,38 +49,46 @@ def k_fold(X, E, T, h, eta, K):
 \end{lstlisting}
 
 \subsection{Minimization methods}\label{sec:minimization}
-Suppose we have a very simple model trying to fit a straight line to data points. In that case, we could manually vary the coefficients and find a line that fits the points quite good. However, when the model gets more complicated, this can be a time consuming activity. Would it not be good if the program could do this for us?
-
-In fact there are multiple techniques for doing this, where the most complicated ones obviously also are the best. Anyway, in this project we will have good initial guesses, and are therefore not in need for the most fancy algorithms. We will stick to gradient descent in this project, which might be the simplest method for our purposes.
+In many cases we are not able to obtain an analytical expression for the derivative of a function, and to minimize it we therefore need to apply numerical minimization methods. An example is minimum of the Lasso cost function, which does not have an analytical expression. In this section we will present two simple and similar methods, first ordinary gradient descent and then stochastic gradient descent. 
 
 \subsubsection{Gradient Descent} \label{sec:gd}
-The Gradient Descent method was mentioned already in the theory part, in equation \eqref{eq:w_update}, and this will therefore just be a quick reminder of the idea. 
-Perhaps the simplest and most intuitive method for finding the minimum is the gradient descent method (GD), which reads
+The Gradient Descent method was mentioned already in the theory part, in equation \eqref{eq:w_update}, and this will therefore just be a quick reminder of the idea. The though is that we need to move in the direction where the cost function is steepest, which will take us to the minimum. The gradient always points in the steepest direction, and since we want to move in opposite direction of the gradient, the gradient is subtracted from the weights in every iteration. Updating the weights using gradient descent therefore reads
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
 \label{eq:GD}
-\beta_i^{\text{new}}=\beta_i - \eta\cdot\frac{\partial Q(\beta_i)}{\partial\beta_i}
+W_{ij}^+=W_{ij} - \eta\cdot\frac{\partial c(\bb{W})}{\partial W_{ij}}
 \end{empheq}
-where $\beta_i^{\text{new}}$ is the updated $\beta$ and $\eta$ is a step size, in machine learning often refered to as the learning rate. The idea is to find the gradient of the cost function $Q(\vec{\beta})$ with respect to a certain $\beta_i$, and move in the direction which minimizes the cost function. This is repeated until a minimum is found, defined by either
-\begin{equation}
-Q(\beta_i)<\varepsilon
-\end{equation}
-or that the change in $\beta_i$ for the past $x$ steps is small. 
-The algorithm for this minimization method is thus as follows:
+where $W_{ij}^+$ is the updated $W_{ij}$ and $\eta$ is the learning rate. An example implementation looks like
 
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
-while dbeta > epsilon:
-e = z - X.dot(beta)
-debeta = 2*X.T.dot(e) -np.sign(beta)*q*lambda*np.power(abs(beta), q-1)
-beta += eta*dbeta
+for iter in range(T):
+	for i in range(N):
+		y[i] = feedforward(X[i])
+		gradient = (y[i] - t[i]) * df(y[i])
+		W -= self.eta * gradient
 \end{lstlisting}
 
 \subsubsection{Stochastic Gradient Descent (SGD)}
-It will probably not converge in fewer steps, but each step will be faster.
+We now turn to the stochastic gradient descent, which hence the name is stochastic. The idea is to calculate the gradient of just a few states, and hope that the gradient will work for the remaining states as well. 
+It will probably not converge in fewer steps, but each step will be faster. We can express the SGD updating algorithm as
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-\label{eq:SGD}
-\beta_i^{\text{new}}=\beta_i - \eta\cdot\frac{\partial Q(\beta_i)}{\partial\beta_i}
+	\label{eq:SGD}
+	W_{ij}^+=W_{ij} - \frac{\eta}{N}\sum_{k=1}^N\frac{\partial c_k(\bb{W})}{\partial W_{ij}}
 \end{empheq}
+where we sum over all states in a so-called minibatch. After going through all minibatches, we say that we have done an epoch. 
+
+Because of the stochasticity, we are less likely to be stuck in local minima, and the minimization will be significantly faster because we calculate just a fraction of the gradients compared to ordinary gradient descent. Anyway, we expect this method to require more iterations than standard gradient descent.
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+for epoch in range(T):
+	for i in range(m):
+		random_index = np.random.randint(m)
+		Xi = self.X[random_index:random_index+1]
+		ti = self.t[random_index:random_index+1]
+		yi = feedforward(Xi)
+		gradient = (yi - ti) * df(yi)
+		W -= self.eta * gradient
+\end{lstlisting}
 
 \subsection{Error analysis}
 \label{sec:error_analysis}
@@ -89,7 +97,7 @@ To find out how good our model is, we need to compare the outputs with the targe
 \subsubsection{Mean Square Error (MSE)} \label{sec:MSE}
 The most popular error estimation method is the mean square error, also called least squares. We study the MSE in order to compute the reduction of the cost function, because it is basically the standard cost function, used in OLS. 
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-\text{MSE}(\vec{\beta})=\frac{1}{N}\sum_{i=1}^N(y_i-t_i)^2
+\text{MSE}(\vec{y})=\frac{1}{N}\sum_{i=1}^N(y_i-t_i)^2
 \end{empheq}
 Compared to least absolute value, the points far away from the fitted line are weighted stronger. 
 
