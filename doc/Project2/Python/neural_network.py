@@ -128,8 +128,8 @@ class NeuralNetwork():
                     Xi = self.X[random_index:random_index+1]
                     ti = self.t[random_index:random_index+1]
                     
-                    self.feed_forward(self.Xi)
-                    self.backward_propagation(i)
+                    self.feed_forward(Xi)
+                    self.backward_propagation(ti)
                     for j in range(self.H + 1):
                         gradient = np.outer((self.out[j]).T, self.deltah[j][0:]) + self.lamb*self.W[j]
                         self.W[j] -= self.eta * gradient

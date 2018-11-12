@@ -73,22 +73,23 @@ We now repeat what we have done above, jump over to a neural network approach.
 \end{table}
 
 \subsection{Classifying the phase}
-Removed states around critical temperature.
+We used results 
 
 \subsubsection{Logistic regression}
-\begin{table} [H]
-	\caption{Accuracy score}
-	\begin{tabularx}{\textwidth}{l|XX|XX} \hline\hline
-		\label{tab:logistic_regression}
-		& \multicolumn{2}{c}{\textbf{GD}}&\multicolumn{2}{c}{\textbf{SGD}}\\ \hline
-		Iterations&Train&Test&Train&Test\\ \hline
-		10 & 3.529e-4 & 4.454e-4 & 3.610e-4 & 1.\\
-		100 & 0.009128 & 0.009651 & 0.009128 & 0.8977 \\
-		1000 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\ \hline\hline
-	\end{tabularx}
-\end{table}
-
-Add lambda as accuracy score plot
+Logistic function was used as activation function for the output.
+\newgeometry{left=2cm,right=2cm,top=2cm}
+\begin{figure} [H]%
+	\centering
+	\subfloat[Train]{{\includegraphics[width=13cm]{../plots/classification_logistic_train.png}}}\\
+	
+	\subfloat[Test]{{\includegraphics[width=13cm]{../plots/classification_logistic_test.png} }}\\
+	
+	\subfloat[Critical]{{\includegraphics[width=13cm]{../plots/classification_logistic_critical.png} }}\\
+	
+	\caption{}%
+	\label{fig:class_logistic}
+\end{figure}
+\restoregeometry
 
 \subsubsection{Neural networks}
 \begin{table} [H]

@@ -1,6 +1,16 @@
 \section{Introduction} \label{sec:introduction}
-As late as in 1944 Ising model, the Norwegian-American physicist Lars Onsager
+The Ising model is the simplest theoretical description of a ferro magnet, where the spins can either point up or down. Even though the phase transition in the two dimensional Ising model was known in the early part of the twentieth century, the phase transition was first described analytically by the Norwegian-American physicist Lars Onsager in 1944. He found the critical temperature to be at $T_c=2.269$ in units of energy.
 
-We will in this project classify whether a two-dimensional Ising grid is above or below the critical temperature with deep learning as a tool. Feed-Forward Neural Networks (FNN) is our tool of choice, and we investigate the performance as the sigmoid function is replaced with more modern activation functions and we adjust the hyperparameters. Various minimization methods will also be studied. 
+Given a spin lattice, one can in principle calculate the energy using the Ising energy formula
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+E=\sum_{<ij>}J_{i,j}s_is_j,
+\end{empheq}
+but this formula scales as $N^D$ where $N$ is the number of spins and $D$ is the number of spatial dimensions. Would it not be wonderful if we could train a model once, and then calculate the energy of all Ising configurations correctly? What is even worse, is determining the phase of the spin lattice, where lattices below the critical temperature are ordered and lattices above the critical temperature are disordered. It might be possible to train a model recognizing the phase as well?
+
+In this project we investigate different regression and classification approaches, where we first use linear regression to estimate the energy of a spin lattice including Ordinary Least Square (OLS), Ridge and Lasso regression. Thereafter, we see if we can repeat the exercise using a Feed-Forward Neural Network (FNN), where we focus on how the performance is dependent on the hyper parameters and the activation functions. The results were evaluated using Mean Square Error (MSE) and the R$^2$-score function, and we also used K-fold cross-validation to obtain more precise error estimations. 
+
+Furthermore, the classification problem is approached by logistic regression and again FNN. A regularization inspired by Ridge regression was added, giving us another hyper parameter to optimize. In classification, the output is binary, and we turn to the accuracy score to evaluate the results. Both Gradient Descent (GD) and Stochastic Gradient Descent (SGD) were used to minimize the cost function for both the regression and classification problems. 
+
+The background theory, including linear regression, logistic regression, neural network and Ising model, is described in the \textit{Theory} section. In the \textit{Methods} section, resampling techniques, minimization algorithms and methods for error estimation are detailed, and the code in described in section \ref{sec:code}, \textit{Code}. All the results are collected in the respective section, which are discussed in the \textit{Discussion} section. A brief conclusion is given in \textit{Conclusion}.
 
 

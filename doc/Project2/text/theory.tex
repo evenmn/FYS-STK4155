@@ -5,7 +5,7 @@ In linear regression, the dependent variable $y_i$ is a linear combination of th
 	\begin{equation}
 	y_i=\sum_jX_{ij}\beta_j.
 	\end{equation}
-	In principle, $x_{ij}$ can be an arbitrary function of the arguments $x_i$, and in this project the $x_{ij}$'s are all spin interactions in the Ising model ($x_{ij}=s_is_j$).
+	In principle, $x_{ij}$ can be an arbitrary function of the arguments $x_i$, and in this project the $x_{ij}$'s are all spin interactions in the Ising model ($x_{ij}=s_is_j$). The $\beta_j$'s are the variable coefficients.
 	
 	We will study Ordinary Least Square (OLS) regression, Ridge regression and Lasso regression. The OLS cost function is known as
 	\begin{empheq}[box={\mybluebox[5pt]}]{equation}
@@ -31,7 +31,7 @@ Linear regression is detailed in the project 1 report, [1].
 
 
 \subsection{Logistic regression}
-Despite its name, logistic regression is not a fitting tool, but rather a classification tool. Traditionally, the perceptron model was used for 'hard classification', which set the output directly to a binary value. However, often we are interested in the probability of a given category, which means that we need a continuous \textit{activation function}. Logistic regression can, like linear regression, be considered as a function where coefficients are adjusted with the intention to minimize the error. Here, the coefficients are called \textit{weights}. The process goes like this: The inputs are multiplied by several weights, and by adjusting those weights the model can solve every \textit{linear problem}. A drawing of the perceptron is found in figure (\ref{fig:single_perceptron}).
+Despite its name, logistic regression is not a fitting tool, but rather a classification tool. Traditionally, the perceptron model was used for 'hard classification', which sets the output directly to a binary value. However, often we are interested in the probability of a given category, which means that we need a continuous \textit{activation function}. Logistic regression can, like linear regression, be considered as a function where coefficients are adjusted with the intention to minimize the error. Here, the coefficients are called \textit{weights}. The process goes like this: The inputs are multiplied by several weights, and by adjusting those weights the model can classify every \textit{linear classification problem}. A drawing of the perceptron is found in figure (\ref{fig:single_perceptron}).
 
 \begin{figure} [H]
 	\centering
@@ -68,7 +68,7 @@ Despite its name, logistic regression is not a fitting tool, but rather a classi
 
 Initially, one needs to train the network such that it knows which outputs are correct, and for that one needs to know the outputs that correspond to the inputs. Every time the network is trained, the weights are adjusted such that the error is minimized.
 
-The very first step is to calculate the initial outputs, where the weights usually are set to small random numbers. Then the error is calculated, and the weights are updated to minimize the error. So far so good.
+The very first step is to calculate the initial outputs (forward phase), where the weights usually are set to small random numbers. Then the error is calculated, and the weights are updated to minimize the error (backward phase). So far so good.
 
 \subsubsection{Forward phase}\label{sec:forward}
 Let us look at it from a mathematical perspective, and calculate the net output. The net output seen from an output node is simply the sum of all the "arrows" that point towards the node, see figure (\ref{fig:single_perceptron}), where each "arrow" is given by the left-hand node multiplied with its respective weight. For example, the contribution from input node 2 to the output node follows from $X_2\cdot w_{2}$, and the total net output to the output $O$ is therefore
@@ -112,6 +112,12 @@ Working in the log space, we can define a log likelyhood function
 &=y\log\hat{y}+(1-y)\log(1-\hat{y})
 \end{align}
 which gives the log of the probability of obtaining $y$ given $x$. We want this quantity to increase then the cost function is decreased, so we define our cost function as the negative log likelyhood function. [https://towardsdatascience.com/logistic-regression-detailed-overview-46c4da4303bc]
+
+Additionally, including a regularization parameter $\lambda$ inspired by Ridge regression is often convenient, such that the cost function is
+\begin{equation}
+c(\bb{W})^+=c(\bb{W})+\lambda\bb{W}.
+\end{equation}
+We will later study how this regularization affects the classification accuracy. 
 
 \subsubsection{Activation function}\label{sec:sigmoid1}
 Above, we were talking about the activation function, which is used to activate the net output. In binary models, this is often just a step function firing when the net output is above a threshold. For continuous outputs, the logistic function given by

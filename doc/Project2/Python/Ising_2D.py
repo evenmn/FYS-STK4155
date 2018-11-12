@@ -14,14 +14,14 @@ def read_pkl(t, path='../data/', reshape=True):
     else:
         return data
      
+     
 def write_file(data, extension='.csv', path='../data/'):
     '''Write file'''
-    
     np.savetxt(path+'Ising2DFM_reSample_L40tcexcluded_shuffled%s'%extension, data, delimiter=',')
 
-def ignore_tc():
-    
 
+def ignore_tc():
+    '''All data but the critical'''
     # Load inputs and targets
     x = read_pkl('All')                          # Inputs
     t = read_pkl('All_labels', reshape=False)    # Targets
@@ -31,5 +31,28 @@ def ignore_tc():
 
     np.random.shuffle(data)
     return data
+    
+    
+def all_data():
+    '''All data'''
+    # Load inputs and targets
+    x = read_pkl('All')                          # Inputs
+    t = read_pkl('All_labels', reshape=False)    # Targets
 
-#write_file(data, extension='.csv')
+    data = np.int_(np.c_[x, t])                  # Merge x and t
+    
+    np.random.shuffle(data)
+    return data
+    
+    
+def tc():
+    '''Critical data'''
+    # Load inputs and targets
+    x = read_pkl('All')                          # Inputs
+    t = read_pkl('All_labels', reshape=False)    # Targets
+
+    data = np.int_(np.c_[x, t])                  # Merge x and t
+    data = data[70000:100000]
+
+    np.random.shuffle(data)
+    return data

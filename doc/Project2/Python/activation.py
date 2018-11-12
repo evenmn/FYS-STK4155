@@ -30,14 +30,14 @@ def ReLU(x, der=False):
     else:
         return np.where(x>0, x, 0)
 
-def ELU(x, der=False, a=1e-6):
+def ELU(x, der=False, a=1e-2):
     '''ELU'''
     if der:
         return np.where(x<0, a*np.exp(x), x)
     else:
         return np.where(x<0, a*(np.exp(x)-1), x)
         
-def Leaky_ReLU(x, der=False, a=1.2):
+def Leaky_ReLU(x, der=False, a=0.1):
     '''Leaky ReLU'''
     if der:
         return np.where(x>0, 1, a)
