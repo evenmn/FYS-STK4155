@@ -84,15 +84,7 @@ It will probably not converge in fewer steps, but each step will be faster.
 
 \subsection{Error analysis}
 \label{sec:error_analysis}
-To find out how good the fit is, we could potentially compare the polynomial plot to the data plot and decide whether the fit is good or not. However, that approach is risky in the sense that it is hard to determine how good a fit really is, and we therefore rely on error estimates. There are many ways to calculate the error, where some frequently used methods are
-\begin{itemize}
-	\item{the absolute error}
-	\item{the relative error}
-	\item{the mean square error (MSE)}
-	\item{the R$^2$ score function}
-	\item{the accuracy score function}
-\end{itemize}
-In this report we will study only the MSE and R$^2$ score function.
+To find out how good our model is, we need to compare the outputs with the targets in one way or another. For continuous outputs, we typically calculate absolute error, relative error or mean square error, and often the R$^2$-score is evaluated to estimate how much of the data that is described by the model. In classification the outputs are binary classes, and we should only care about whether the model choose correct class or not. Therefore, the error is either 0 or 1, and we apply the accuracy score. 
 
 \subsubsection{Mean Square Error (MSE)} \label{sec:MSE}
 The most popular error estimation method is the mean square error, also called least squares. We study the MSE in order to compute the reduction of the cost function, because it is basically the standard cost function, used in OLS. 

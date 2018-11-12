@@ -15,9 +15,11 @@
 \vspace{2cm}
 
 \begin{abstract}
-This project aims studying various regression and classification methods.  is to study the performance of linear regression in order to fit a two dimensional polynomial to terrain data. Both Ordinary Least Square (OLS), Ridge and Lasso regression methods were implemented, and for minimizing Lasso's cost function Gradient Descent (GD) was used. A fourth method was to minimize the cost function of Ridge using GD. The fitted polynomial was visualized and compared with the data, the Mean Square Error (MSE) and R$^2$-score were analyzed, and finally the polynomial coefficients were studied applying visualization tools and Confidence Intervals (CI). To benchmark the results, we used Scikit Learn.
+In this project we first determine the energy of the one-dimensional Ising model using linear regression and deep learning. We will investigate the performance of both Ordinary Least Square (OLS), Ridge regression and Lasso regression, before we turn to a deep feed-forward neural network (FNN) with various activation function and hyper parameters. Secondly, we classify a two-dimensional Ising model using logistic regression and deep learning, and vary the regularization parameter.
 
-We found the self-implemented OLS and Ridge regression functions to reproduce the benchmarks, and Lasso was close to reproducing the benchmark as well. However, the difference between results produced by standard Ridge regression and when minimizing its cost function is large. The OLS regression method is considered as the most successful due to its small MSE and high R$^2$-score.
+To estimate the error, Mean Square Error (MSE) and the R$^2$-score function are used in the regression case, and we find more reliable values by K-fold validation resampling. In the classification case, we will study the accuracy score since the outputs are binary. Gradient descent (GD) and stochastic gradient descent (SGD) are implemented as the minimization tools. 
+
+We found the...
 \end{abstract}
 
 \newpage

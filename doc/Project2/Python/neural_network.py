@@ -8,7 +8,7 @@ from sys import exit
 from tqdm import tqdm
 
 class NeuralNetwork():
-    def __init__(self, X, t, T, h=0, eta=0.001, lamb=1e-5, f1=none, f2=none, opt=GD):
+    def __init__(self, X, t, T, h=0, eta=1e-4, lamb=1e-4, f1=none, f2=none, opt=GD):
         '''
         Arguments
         ---------

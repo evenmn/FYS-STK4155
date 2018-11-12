@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from Ising_2D import ignore_tc, tc
+from Ising_2D import ignore_tc, tc, all_data
 from error_tools import Accuracy
 from activation import *
 from optimization import *
@@ -14,14 +14,14 @@ sns.set()
 n = 100000                 # Number of training sets
 T = 1                      # Number of iterations
 eta = 0.0001               # Learning rate
-method = 0                 # 0 is logistic regression
+method = 1                 # 0 is logistic regression
                            # 1 is neural networks
 
 # Generate training set and divide into training and test
-data = ignore_tc()
+data = all_data()
 data_critical = tc()
 data[np.where(data==0)] = -1
-data_critical[np.where(data==0)] = -1
+data_critical[np.where(data_critical==0)] = -1
 
 X_train = data[:n,:-1]
 t_train = data[:n,-1]
@@ -86,8 +86,8 @@ if method == 0:
 
 elif method == 1:
     # Neural network
-    h = 10
-    obj = nn.NeuralNetwork(X_train, t_train, T, h, eta=eta, f1=logistic, f2=Leaky_ReLU, opt=GD)
+    h = [10,10,10]
+    obj = nn.NeuralNetwork(X_train, t_train, T, h, eta=0.0001, lamb=0.001, f1=logistic, f2=Leaky_ReLU, opt=GD)
 
     obj.solver()                                      # Obtain optimal weights
     y_train = obj.recall(X_train)                     # Recall training phase

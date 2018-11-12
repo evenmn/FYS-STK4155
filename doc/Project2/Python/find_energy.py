@@ -104,22 +104,28 @@ if method == 0:
 elif method == 1:    
     # Neural network
     import neural_network as nn
-    h = 10                         # Number of hidden nodes
-    T = 5                         # Number of iterations
-    eta = 0.0001
+    h_list = [5,10]
+    f2_list = [ELU]
+    for f2 in f2_list:
+        for h in h_list:
+            print('=== {} === {} ==='.format(f2, h))
+            #h = [5,5]                         # Number of hidden nodes
+            T = 5                         # Number of iterations
+            eta = 0.0001
+            #f2=Leaky_ReLU
 
-    obj = nn.NeuralNetwork(X_train, E_train, T, h, eta, f2=ReLU)     # Define object
-    obj.solver()                                            # Obtain optimal weights
-    E_tilde_train = obj.recall(X_train)                     # Recall training energy
-    E_tilde_test = obj.recall(X_test)                       # Recall test energy
+            obj = nn.NeuralNetwork(X_train, E_train, T, h, eta, f2=f2)     # Define object
+            obj.solver()                                            # Obtain optimal weights
+            E_tilde_train = obj.recall(X_train)                     # Recall training energy
+            E_tilde_test = obj.recall(X_test)                       # Recall test energy
 
-    print('MSE_train: ', MSE(E_tilde_train, E_train))
-    print('MSE_test: ', MSE(E_tilde_test, E_test))
-    print('R2_train: ', R2(E_tilde_train, E_train))
-    print('R2_test: ', R2(E_tilde_test, E_test))
+            print('MSE_train: ', MSE(E_tilde_train, E_train))
+            print('MSE_test: ', MSE(E_tilde_test, E_test))
+            print('R2_train: ', R2(E_tilde_train, E_train))
+            print('R2_test: ', R2(E_tilde_test, E_test))
 
-    MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold(X, E, T, h, eta, K=10)
-    print('MSE_train_kfold: ', MSE_train_kfold)
-    print('MSE_test_kfold: ', MSE_test_kfold)
-    print('R2_train_kfold: ', R2_train_kfold)
-    print('R2_test_kfold: ', R2_test_kfold)
+            MSE_train_kfold, MSE_test_kfold, R2_train_kfold, R2_test_kfold = k_fold(X, E, T, h, f2, eta, K=10)
+            print('MSE_train_kfold: ', MSE_train_kfold)
+            print('MSE_test_kfold: ', MSE_test_kfold)
+            print('R2_train_kfold: ', R2_train_kfold)
+            print('R2_test_kfold: ', R2_test_kfold)

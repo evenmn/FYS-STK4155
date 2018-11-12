@@ -54,30 +54,43 @@ Finally, the R$^2$-score is plotted as a function of the penalty, $\lambda$, in 
 \end{figure} 
 
 \subsubsection{Neural networks}
-We now repeat what we have done above, jump over to a neural network approach. 
+We now want to train a neural network on different Ising states, with the energies as the targets. In table \eqref{tab:nn}, the MSE and R$^2$-score are given for various activation function in the hidden layer and various number of hidden nodes for the training set, test set and using K-fold cross validation. By far the lowest MSE is obtained when using the pure linear cost function in the hidden layer, and apparently the more nodes the lower MSE. This does not apply for the other activation functions. 
 \begin{table} [H]
-	\caption{Mean Square Error and R$^2$-score presented for OLS, Ridge and Lasso on the Ising model. 'Train' means the results obtained from the training set, containing 8000 states, and 'Test' means the results obtained from the test set, containing 2000 states. The 'K-fold'-columns are results from K-fold resampling with 10 folds. For Ridge and Lasso, we used $\lambda=1e-3$ (penalty). See text for more information.}
-	\begin{tabularx}{\textwidth}{l|XXX|XXX} \hline\hline
+	\caption{Mean Square Error and R$^2$-score obtained using a neural network on the training set, test set and from K-fold cross validation with $K=10$. Various activation functions \textit{Pure linear}, \textit{ReLU}, \textit{Leaky ReLU} and \textit{ELU} were used in the hidden layer, and the number of hidden nodes (\textit{"Nodes"}) was set to 0, 5 and 10. The learning rate was set to $\eta=0.0001$ and we used $T=5$ minimization iteration in GD.}
+	\begin{tabularx}{\textwidth}{l|l|XXX|XXX} \hline\hline
 		\label{tab:nn}
-		& \multicolumn{3}{c}{\textbf{MSE}}&\multicolumn{3}{c}{\textbf{R2}}\\ \hline
-		Hidden nodes&Train&Test&K-fold&Train&Test&K-fold\\ \hline
-		0 & 3.529e-4 & 4.454e-4 & 3.610e-4 & 1.000 & 1.000 & 1.000\\
-		2 & 0.009128 & 0.009651 & 0.009128 & 0.8977 \\
-		5 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\
-		10 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\
-		2 + 2 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\
-		5 + 5 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\ 
-		10 + 10 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\
-		10 + 10 + 10 & 0.01439 & 0.01489 & 0.01555 & 0.8387 \\ \hline\hline
+		&& \multicolumn{3}{c}{\textbf{MSE}}&\multicolumn{3}{c}{\textbf{R2}}\\ \hline
+		&Nodes&Train&Test&K-fold&Train&Test&K-fold\\ \hline
+		
+		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{Linear}}}
+		&0 & 3.244e-4 & 5.573e-4 & 1.206e-4 & 1.000 & 1.000 & 1.000\\
+		&5 & 1.545e-9 & 2.690e-9 & 2.375e-3 & 1.000 & 1.000 & 1.000 \\
+		&10 & 6.905e-11 & 7.848e-11 & 3.932e-10 & 1.000 & 1.000 & 1.000\\ \hline
+		
+		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{ReLU}}}
+		&0 & 3.196e-4 & 5.511e-4 & 1.188e-4 & 1.000 & 1.000 & 1.000 \\
+		&5 & 8.618e-1 & 1.107e-0 & 2.405e-1 & 0.9779 & 0.9712 & 0.9939 \\
+		&10 & 1.600e-1 & 1.797e-1 & 1.994e-1 & 0.9959 & 0.9953 & 0.9943\\ \hline
+		
+		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{Leaky}}}
+		&0 & 3.182e-4 & 5.481e-4 & 1.174e-4 & 1.000 & 1.000 & 1.000 \\
+		&5 & 4.128e-1 & 4.627e-1 & 2.230e-1 & 0.9894 & 0.9880 & 0.9943\\
+		&10 & 1.965e-1 & 2.115e-1 & 2.394e-1 & 0.9949 & 0.9945 & 0.9939\\ \hline
+		
+		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{ELU}}}
+		&0 & 3.449e-4 & 6.472e-4 & 1.198e-4 & 1.000 & 1.000 & 1.000\\
+		&5 & 2.414e-1 & 2.546e-1 & 1.463e-1 & 0.9405 & 0.9342 & 0.9535\\
+		&10 & 1.223e-1 & 2.281e-1 & 5.359e-1 & 0.9970 & 0.9941 & 0.9862\\ \hline\hline
 	\end{tabularx}
 \end{table}
 
+
 \subsection{Classifying the phase}
-We used results 
+We now turn to the classification problem, where we want to find whether a Ising lattice is ordered or disordered. We exclude Ising lattices around critical temperature in our training set ("Train"), and test our model on unseen data ("Test"). Additionally, we also test our model on lattices which are close to the critical temperature ("Critical"). We first use logistic regression with logistic activation, and thereafter turn to neural network with various activation functions on the hidden layer and logistic activation on the output. 
 
 \subsubsection{Logistic regression}
-Logistic function was used as activation function for the output.
-\newgeometry{left=2cm,right=2cm,top=2cm}
+Our first approach is the logistic regression. For this, we have calculate the accuracy for various learning rates and regularizations, given in figure \eqref{fig:class_logistic} for all three data sets. What we observe, is that the model is really sensitive and the accuracy vary a lot. 
+\newgeometry{left=2cm,right=2cm,top=1.5cm}
 \begin{figure} [H]%
 	\centering
 	\subfloat[Train]{{\includegraphics[width=13cm]{../plots/classification_logistic_train.png}}}\\
@@ -86,33 +99,34 @@ Logistic function was used as activation function for the output.
 	
 	\subfloat[Critical]{{\includegraphics[width=13cm]{../plots/classification_logistic_critical.png} }}\\
 	
-	\caption{}%
+	\caption{The accuracy score as function of the learning rate $\eta\in[1e-6,1e3]$ and regularization parameter $\lambda\in[1e-6,1e3]$ for the training set (a), test set (b) and critical set (c).}%
 	\label{fig:class_logistic}
 \end{figure}
 \restoregeometry
 
 \subsubsection{Neural networks}
+Our second and final approach is classification using neural network. In the same way as when we used neural network in regression, we will investigate various activation functions in the hidden layer(s). 
 \begin{table} [H]
-	\caption{Mean Square Error and R$^2$-score presented for OLS, Ridge and Lasso on the Ising model. 'Train' means the results obtained from the training set, containing 8000 states, and 'Test' means the results obtained from the test set, containing 2000 states. The 'K-fold'-columns are results from K-fold resampling with 10 folds. For Ridge and Lasso, we used $\lambda=1e-3$ (penalty). See text for more information.}
+	\caption{T=1, eta=1e-4, lamb=1e-3}
 	\begin{tabularx}{\textwidth}{l|l|XXX} \hline\hline
-		\label{tab:nn}
+		\label{tab:nn_class}
 		&& \multicolumn{3}{c}{\textbf{Accuracy}}\\ \hline
 		&Hidden nodes&Train&Test&Critical\\ \hline
 		
+		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{Linear}}}
+		&10 & 0.4371 & 0.4381 & 0.3333 \\
+		&10+10 & 0.4379 & 0.4367 & 0.3333 \\
+		&10+10+10 & 0.4371 & 0.4382 & 0.3333 \\ \hline
+		
 		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{ReLU}}}
-		&10 & 3.529e-4 & 4.454e-4 & 3.610e-4 \\
-		&10,10 & 0.009128 & 0.009651 & 0.009128 \\
-		&10,10,10 & 0.01439 & 0.01489 & 0.01555 \\ \hline
+		&10 & 0.9930 & 0.9929 & 0.9655 \\
+		&10+10 & 0.9935 & 0.9934 & 0.9679 \\
+		&10+10+10 & 0.9935 & \textbf{0.9938} & \textbf{0.9686} \\ \hline
 		
 		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{Leaky}}}
-		&10 & 0.01439 & 0.01489 & 0.01555 \\
-		&10,10 & 0.01439 & 0.01489 & 0.01555 \\
-		&10,10,10 & 0.01439 & 0.01489 & 0.01555 \\ \hline
-		
-		\parbox[t]{2mm}{\multirow{3}{*}{\rotatebox[origin=c]{90}{ELU}}}
-		&10 & 0.01439 & 0.01489 & 0.01555 \\
-		&10,10 & 0.01439 & 0.01489 & 0.01555 \\
-		&10,10,10 & 0.01439 & 0.01489 & 0.01555 \\ \hline\hline
+		&10 & 0.9931 & 0.9929 & 0.9656 \\
+		&10+10 & 0.9932 & 0.9933 & 0.9668 \\
+		&10+10+10 & \textbf{0.9936} & 0.9935 & 0.9685 \\ \hline\hline
 	\end{tabularx}
 \end{table}
 

@@ -18,7 +18,7 @@ def bootstrap(data, K=1000):
     return Avg, Var, Std
 
         
-def k_fold(X, E, T, h, eta=1e-3, K=10):
+def k_fold(X, E, T, h, f2, eta=1e-3, K=10):
     '''K-fold validation resampling based on neural netowrk'''
     
     MSE_train = 0
@@ -36,7 +36,7 @@ def k_fold(X, E, T, h, eta=1e-3, K=10):
         X_train = np.reshape(Xnew, (len(Xnew)*len(Enew[0]), len(X[0])))
         E_train = np.reshape(Enew, (len(Xnew)*len(Enew[0])))
         
-        obj = nn.NeuralNetwork(X_train, E_train, T, h, eta)
+        obj = nn.NeuralNetwork(X_train, E_train, T, h, eta, f2=f2)
         W = obj.solver()
         E_train_tilde = obj.recall(X_train)
         E_test_tilde = obj.recall(Xmat[i])
