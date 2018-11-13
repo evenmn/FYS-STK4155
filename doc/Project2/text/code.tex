@@ -8,16 +8,16 @@ In order to reuse the code where possible, we ended up with several functions th
 \begin{tikzpicture}[auto,node distance=0.9cm]
   \begin{scope}[scale=0.7, transform shape]
 	  % Create main nodes
-	  \node[entity] (node1) {find energy};
-	  \node[entity] (rel1) [below right = of node1] {linear regression};
-	  \node[entity] (node2) [above right = of rel1] {classifier};
-	  \node[entity] (rel2) [below = of rel1, level distance=0.1cm] {Error tools};
-	  \node[attribute] (att1) [below left = of node1] {Ising 1D};
-	  \node[attribute] (att2) [below right = of node2] {Ising 2D};
-	  \node[entity] (rel3) [below = of rel2] {Resampling};
-	  \node[relationship] (rel4) [below = of rel3] {Neural Network};
-	  \node[attribute] (att3) [right = of rel4] {Optimization};
-	  \node[attribute] (att4) [left = of rel4] {Activation};
+	  \node[entity] (node1) [top color= myblue, bottom color=myblue] {find energy};
+	  \node[entity] (rel1) [below right = of node1, top color= myblue, bottom color=myblue] {linear regression};
+	  \node[entity] (node2) [above right = of rel1, top color= myblue, bottom color=myblue] {classifier};
+	  \node[entity] (rel2) [below = of rel1, level distance=0.1cm, top color= myblue, bottom color=myblue] {Error tools};
+	  \node[attribute] (att1) [below left = of node1, top color= myblue, bottom color=myblue] {Ising 1D};
+	  \node[attribute] (att2) [below right = of node2, top color= myblue, bottom color=myblue] {Ising 2D};
+	  \node[entity] (rel3) [below = of rel2, top color= myblue, bottom color=myblue] {Resampling};
+	  \node[relationship] (rel4) [below = of rel3, top color= myblue, bottom color=myblue] {Neural Network};
+	  \node[attribute] (att3) [right = of rel4, top color= myblue, bottom color=myblue] {Optimization};
+	  \node[attribute] (att4) [left = of rel4, top color= myblue, bottom color=myblue] {Activation};
 	  
 	  
 	  % Draw paths

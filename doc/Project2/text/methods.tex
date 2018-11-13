@@ -7,8 +7,8 @@ A resampling technique is a way of estimating the variance of data sets without 
 K-fold validation is a method which has more describing name than many of its fellow methods. The idea is to make the most use of our data by splitting it into $K$ folds and train our model $K$ times on it. Every time we train, we leave out one of the folds, which gonna be our validation data. This validation data needs to be different every time, and we are therefore restricted to $K$ unique training sessions. A typical overview looks like this:
 \begin{itemize}
 	\item Split data set into $K$ equally sized folds
-	\item Use the $K-1$ first folds as training data, and leave the $K$'th fold for validation. Then calculate the MSE and the R$^2$-score of the training and test set.
-	\item Use the $K-2$ first folds plus the $K$-th fold as training data, and leave the $(K-1)$'th fold for validation. Calculate the MSE and R$^2$-score of training and test set
+	\item Use the $K-1$ first folds as training data, and leave the $K$'th fold for validation. Then calculate the MSE and the R$^2$-score of the training and validation set.
+	\item Use the $K-2$ first folds plus the $K$-th fold as training data, and leave the $(K-1)$'th fold for validation. Calculate the MSE and R$^2$-score of training and validation set
 	\item Continue until all folds are used as training data
 	\item Return the average training and test MSE, and the average training and test R$^2$-score. Typically one is interested in the average test errors. 
 \end{itemize}
@@ -49,9 +49,9 @@ def k_fold(X, E, T, h, eta, K):
 \end{lstlisting}
 
 \subsection{Minimization methods}\label{sec:minimization}
-In many cases we are not able to obtain an analytical expression for the derivative of a function, and to minimize it we therefore need to apply numerical minimization methods. An example is minimum of the Lasso cost function, which does not have an analytical expression. In this section we will present two simple and similar methods, first ordinary gradient descent and then stochastic gradient descent. 
+In many cases we are not able to obtain an analytical expression for the derivative of a function, and to minimize it we therefore need to apply numerical minimization methods. An example is the minimum of the Lasso cost function, which does not have an analytical expression. In this section we will present two simple and similar methods, first ordinary gradient descent and then stochastic gradient descent. 
 
-\subsubsection{Gradient Descent} \label{sec:gd}
+\subsubsection{Gradient Descent (GD)} \label{sec:gd}
 The Gradient Descent method was mentioned already in the theory part, in equation \eqref{eq:w_update}, and this will therefore just be a quick reminder of the idea. The though is that we need to move in the direction where the cost function is steepest, which will take us to the minimum. The gradient always points in the steepest direction, and since we want to move in opposite direction of the gradient, the gradient is subtracted from the weights in every iteration. Updating the weights using gradient descent therefore reads
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
 \label{eq:GD}

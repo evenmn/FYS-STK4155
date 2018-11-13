@@ -31,7 +31,7 @@ Linear regression is detailed in the project 1 report, [1].
 
 
 \subsection{Logistic regression}
-Despite its name, logistic regression is not a fitting tool, but rather a classification tool. Traditionally, the perceptron model was used for 'hard classification', which sets the output directly to a binary value. However, often we are interested in the probability of a given category, which means that we need a continuous \textit{activation function}. Logistic regression can, like linear regression, be considered as a function where coefficients are adjusted with the intention to minimize the error. Here, the coefficients are called \textit{weights}. The process goes like this: The inputs are multiplied by several weights, and by adjusting those weights the model can classify every \textit{linear classification problem}. A drawing of the perceptron is found in figure (\ref{fig:single_perceptron}).
+Despite its name, logistic regression is not a fitting tool, but rather a classification tool. Traditionally, the perceptron model was used for 'hard classification', which sets the outputs directly to binary values. However, often we are interested in the probability of a given category, which means that we need a continuous \textit{activation function}. Logistic regression can, like linear regression, be considered as a function where coefficients are adjusted with the intention to minimize the error. Here, the coefficients are called \textit{weights}. The process goes like this: The inputs are multiplied by several weights, and by adjusting those weights the model can classify every \textit{linear classification problem}. A drawing of the perceptron is found in figure (\ref{fig:single_perceptron}).
 
 \begin{figure} [H]
 	\centering
@@ -65,8 +65,9 @@ Despite its name, logistic regression is not a fitting tool, but rather a classi
 	\caption{Logistic regression model with $n$ inputs.}
 	\label{fig:single_perceptron}
 \end{figure}
+In logistic regression, we usually have one binary output node for each class, but for two categories one output node is sufficient, which can be fired or not fired. 
 
-Initially, one needs to train the network such that it knows which outputs are correct, and for that one needs to know the outputs that correspond to the inputs. Every time the network is trained, the weights are adjusted such that the error is minimized.
+Initially, one needs to train the perceptron such that it knows which outputs are correct, and for that one needs to know the outputs that correspond to the inputs. Every time the network is trained, the weights are adjusted such that the error is minimized.
 
 The very first step is to calculate the initial outputs (forward phase), where the weights usually are set to small random numbers. Then the error is calculated, and the weights are updated to minimize the error (backward phase). So far so good.
 
@@ -78,7 +79,7 @@ Let us look at it from a mathematical perspective, and calculate the net output.
 \end{empheq}
 Just some notation remarks: $x_i$ is the value of input node $i$ and $w_{i}$ is the weight which connects input $i$ to the output. $b$ is the bias weight, which we will discuss later.
 
-You might wonder why we talk about the net output all the time, do we have other outputs? If we look at the network mathematically, what we talk about as the net output should be our only output. Anyway, to make the algorithm easy to implement, mapping the net output to a final output is standard practice. You do not need to care too much about this right now, the mapping is done with an activation function and is explained further in section \ref{sec:sigmoid1}. The activation function, $f$, takes in the net output and gives the output, 
+You might wonder why we talk about the net output all the time, do we have other outputs? If we look at the network mathematically, what we talk about as the net output should be our only output. Anyway, it turns out to be convenient mapping the net output to a final output using an activation function, which is explained further in section \ref{sec:sigmoid1}. The activation function, $f$, takes in the net output and gives the output, 
 \begin{equation}
 out = f(net).
 \end{equation}
@@ -95,7 +96,7 @@ The bias value $B$ does not really matter since the network will adjust the bias
 In principle, the weights could be updated without adding any learning rate ($\eta=1$), but this can in practice be problematic. It is easy to imagine that the outputs can be fluctuating around the targets without decreasing the error, which is not ideal, and a learning rate can be added to avoid this. The downside is that with a low learning rate the network needs more training to obtain the correct results (and it takes more time), so we need to find a balance. 
 
 \subsubsection{Cost function}\label{sec:cost_function}
-The cost function is what defines the error, and we could in principle have used OLS, ridge and so on. However, in logistic regression, the cross-entropy function is known to give good results and we will mainly stick to it [3]:
+The cost function is what defines the error, and in logistic regression the cross-entropy function is a naturally choice. [3] It reads
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
 c(\boldsymbol{W}) = -\sum_{i=1}^n\Big[y_i\log f(\boldsymbol{x}_i^T\boldsymbol{W})+(1-y_i)\log[1-f(\boldsymbol{x}_i^T\boldsymbol{W})]\Big]
 \label{eq:cross_entropy}
@@ -111,11 +112,11 @@ Working in the log space, we can define a log likelyhood function
 \log\Big[p(y|x)\Big]&=\log\Big[\hat{y}^y\cdot(1-\hat{y})^{1-y}\Big]\\
 &=y\log\hat{y}+(1-y)\log(1-\hat{y})
 \end{align}
-which gives the log of the probability of obtaining $y$ given $x$. We want this quantity to increase then the cost function is decreased, so we define our cost function as the negative log likelyhood function. [https://towardsdatascience.com/logistic-regression-detailed-overview-46c4da4303bc]
+which gives the log of the probability of obtaining $y$ given $x$. We want this quantity to increase then the cost function is decreased, so we define our cost function as the negative log likelyhood function. [7]
 
 Additionally, including a regularization parameter $\lambda$ inspired by Ridge regression is often convenient, such that the cost function is
 \begin{equation}
-c(\bb{W})^+=c(\bb{W})+\lambda\bb{W}.
+c(\bb{W})^+=c(\bb{W})+\lambda||\bb{W}||_2^2.
 \end{equation}
 We will later study how this regularization affects the classification accuracy. 
 
@@ -134,7 +135,7 @@ is usually used in logistic regression to return a probability instead of a bina
 $tanh(x)$ is another popular activation function in logistic regression, which more or less holds the same properties as the logistic function. 
 
 \subsubsection{Backward phase}
-Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact results), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done by any minimization method, and we will look at a few gradient methods. To illustrate the point, we will stick to the \textbf{gradient descent} (GD) method in the calculations, even though other methods will be used later. The principle of GD is easy: each weight is "moved" in the direction of steepest slope,
+Now all the tools for finding the outputs are in place, and we can calculate the error. If the outputs are larger than the targets (which are the exact results), the weights need to be reduced, and if the error is large the weights need to be adjusted a lot. The weight adjustment can be done by any minimization method, and we will look at a couple of gradient methods. To illustrate the point, we will stick to the \textbf{gradient descent} (GD) method in the calculations, even though other methods will be used later. The principle of GD is easy: each weight is "moved" in the direction of steepest slope,
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
 \bb{w}^+= \bb{w} - \eta\cdot\frac{\partial c(\boldsymbol{w})}{\partial \bb{w}},
 \label{eq:w_update}
@@ -167,9 +168,9 @@ and obtain a weight update algorithm
 where the bias weight is included implicitly in $\bb{w}$ and the same applies for $\bb{x}$.
 
 \subsection{Neural network} \label{sec:neural_network}
-If you have understood logistic regression, understanding a neural network should not be a difficult task. According to  \textbf{the universal approximation theorem}, a neural network with only one hidden layer can approximate any continuous function. [https://compphysics.github.io/MachineLearning/doc/pub/NeuralNet/html/NeuralNet.html] However, often multiple layers are used since this often gives fewer nodes in total. 
+If you have understood logistic regression, understanding a neural network should not be a difficult task. According to  \textbf{the universal approximation theorem}, a neural network with only one hidden layer can approximate any continuous function. [8] However, often multiple layers are used since this tends to give fewer nodes in total. 
 
-In figure \eqref{fig:neural_network}, a two-layer neural network (one hidden layer) is illustrated. It has some similarities with the logistic regression model in figure \eqref{fig:single_perceptron}, but a hidden layer and multiple outputs are added. In addition, the output is no longer probabilities and can take any number. 
+In figure \eqref{fig:neural_network}, a two-layer neural network (one hidden layer) is illustrated. It has some similarities with the logistic regression model in figure \eqref{fig:single_perceptron}, but a hidden layer and multiple outputs are added. In addition, the output is no longer probabilities and can take any number, which means that we do not need to use the logistic function on the outputs anymore.
 
 \begin{figure} [H]
 	\centering
@@ -260,9 +261,9 @@ In figure \eqref{fig:neural_network}, a two-layer neural network (one hidden lay
 Without a hidden layer, we have seen that the update of weights is quite straight forward. For a neural network consisting of multiple layers, the question is: how do we update the weights when we do not know the values of the hidden nodes? And how do we know which layer causing the error? This will be explained in section \ref{sec:backward}, where one of the most popular techniques for that is discussed. Before that we will generalize the forward phase presented in logistic regression.
 
 \subsubsection{Forward phase}
-In section \ref{sec:forward}, we saw how the output is found for a single perceptron. Since we only had one output node, the weights could be stored in an array. When it comes to a neural network, it is more convenient to store the weights in matrices, since they will have indices related to both the node on left-hand side and the node on the right-hand side. For instance, the weight between input node $x_3$ and hidden node $h_5$ in figure \eqref{fig:neural_network} is usually labeled as $w_{35}$. Since we have two layers, we also need to denote which weight set it belongs to, which we will do by a superscript ($w_{35}\Rightarrow w_{35}^{(1)}$). In the same way, $\bb{W}^1$ is the matrix containing all $w_{ij}^{(1)}$, $\bb{x}$ is the vector containing all $x_i$'s and so on. We then find the net outputs at the hidden layer to be
+In section \ref{sec:forward}, we saw how the output is found for a single perceptron. Since we only had one output node, the weights could be stored in an array. Generally, it is more practical to store the weights in matrices, since they will have indices related to both the node on left-hand side and the node on the right-hand side. For instance, the weight between input node $x_3$ and hidden node $h_5$ in figure \eqref{fig:neural_network} is usually labeled as $w_{35}$. Since we have two layers, we also need to denote which weight set it belongs to, which we will do by a superscript ($w_{35}\Rightarrow w_{35}^{(1)}$). In the same way, $\bb{W}^1$ is the matrix containing all $w_{ij}^{(1)}$, $\bb{x}$ is the vector containing all $x_i$'s and so on. We then find the net outputs at the hidden layer to be
 \begin{empheq}{equation}
-net_{h,j} = \sum_{i=1}^{I} x_i\cdot w_{ij}^{(1)}=\bb{x}^T\bb{W}^{(1)}
+net_{h,j} = \sum_{i=1}^{I} x_i\cdot w_{ij}^{(1)}=\bb{x}^T\bb{W}_j^{(1)}
 \label{eq:forward_hidden}
 \end{empheq}
 where the $\bb{x}$ and $\bb{W}^{(1)}$ again are understood to take the biases. This will be the case henceforth. The real output to the hidden nodes will be
@@ -271,17 +272,17 @@ h_j = f(net_{h,j}).
 \end{equation}
 Further, we need to find the net output to the output nodes, which is obviously just
 \begin{empheq}{equation}
-net_{o,j} = \sum_{i=1}^{H} h_i\cdot w_{ij}^{(2)}=\bb{h}^T\bb{W}^{(2)}
+net_{o,j} = \sum_{i=1}^{H} h_i\cdot w_{ij}^{(2)}=\bb{h}^T\bb{W}_j^{(2)}
 \label{eq:forward_output}
 \end{empheq}
 We can easily generalize this. Looking at the net output to a hidden layer $l$, we get
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-net_{h_l,j} = \bb{h^{(l-1)}}^T\bb{W}^{(l)}.
+\bb{net}_{h_l} = \bb{h^{(l-1)}}^T\bb{W}^{(l)}.
 \label{eq:forward_general}
 \end{empheq}
 
 \subsubsection{Activation function}
-Before 2012, the logistic and the tanh functions where the standard activation functions, but then Alex Krizhevsky published an article where he introduced a new activation function called \textit{Rectified Linear Units (ReLU)} which outperformed the classical activation functions. [4] The network he used is now known as AlexNet, and helped to revolutionize the field of computer vision. [5] After that, the ReLU activation function has been modified several times (avoiding zero derivative among others), and example of innovations are \textit{leaky ReLU} and \textit{Exponential Linear Unit (ELU)}. All those networks are linear for positive numbers, and small for negative numbers. Often, especially in the output layer, a straight linear function is used as well.
+Before 2012, the logistic, the tanh and the pur linear functions where the standard activation functions, but then Alex Krizhevsky published an article where he introduced a new activation function called \textit{Rectified Linear Units (ReLU)} which outperformed the classical activation functions. [4] The network he used is now known as AlexNet, and helped to revolutionize the field of computer vision. [5] After that, the ReLU activation function has been modified several times (avoiding zero derivative among others), and example of innovations are \textit{leaky ReLU} and \textit{Exponential Linear Unit (ELU)}. All those networks are linear for positive numbers, and small for negative numbers. Often, especially in the output layer, a straight linear function is used as well.
 
 In figure (\ref{fig:activation_functions}), \textit{standard RELU, leaky RELU} and \textit{ELU} are plotted along with the logistic function.
 
@@ -303,16 +304,16 @@ Backward propagation is probably the most used technique for updating the weight
 \end{empheq}
 We recognize the first part as $\delta_{ok}$, such that
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
-w_{ij}^{(1)+} = w_{ij}^{(1)} - \eta\cdot\sum_{k=1}^{O}\delta_{ok}\cdot w_{jk}^{(2)}\cdot out_{hj}(1-out_{hj})\cdot x_i
+w_{ij}^{(1)+} = w_{ij}^{(1)} - \eta\cdot\sum_{k=1}^{O}\delta_{ok}\cdot w_{jk}^{(2)}\cdot f'(out_{hj})\cdot x_i
 \end{empheq}
 where we recall $\delta_{ok}$ as
 \begin{equation*}
-\delta_{ok}=-(t_{ok}-out_{ok})\cdot out_{ok}(1-out_{ok}).
+\delta_{ok}=-(t_{ok}-out_{ok})\cdot f'(out_{ok}).
 \end{equation*}
 For more layers, the procedure is the same, but we keep on inserting the obtained outputs from various layers.
 
 \subsubsection{Summary}
-Since it will be quite a lot calculations, I will just express the results here, and move the calculations to Appendix C. The forward phase in a three-layer perceptron is
+Since it will be quite a lot calculations, I will just express the results here, and move the calculations to Appendix B. The forward phase in a three-layer perceptron is
 \begin{empheq}[box={\mybluebox[5pt]}]{align}
 net_{hi}&=\sum_jw_{ji}^{(1)}\cdot x_j\notag\\
 out_{hi}&=\text{f}(net_{hi})\notag\\
@@ -333,7 +334,7 @@ w_{ij}^{(1)}&=w_{ij}^{(1)}-\eta\sum_{k=1}^O\sum_{l=1}^K\delta_{ok}\cdot w_{lk}^{
 \end{empheq}
 where we again use the short hand 
 \begin{equation*}
-\delta_{oj}=(t_j-out_{oj})\cdot out_{oj}(1-out_{oj}).
+\delta_{oj}=(t_j-out_{oj})\cdot f'(out_{oj}).
 \end{equation*}
 If we compare with the weight update formulas for the two-layer case, we recognize some obvious connections, and it is easy to imagine how we can construct a general weight update algorithm, no matter how many layers we have. 
 

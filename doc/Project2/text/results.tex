@@ -86,7 +86,7 @@ We now want to train a neural network on different Ising states, with the energi
 
 
 \subsection{Classifying the phase}
-We now turn to the classification problem, where we want to find whether a Ising lattice is ordered or disordered. We exclude Ising lattices around critical temperature in our training set ("Train"), and test our model on unseen data ("Test"). Additionally, we also test our model on lattices which are close to the critical temperature ("Critical"). We first use logistic regression with logistic activation, and thereafter turn to neural network with various activation functions on the hidden layer and logistic activation on the output. 
+We now turn to the classification problem, where we want to find whether an Ising lattice is ordered or disordered. We exclude Ising lattices around critical temperature in our training set ("Train", 100000 states), and test our model on unseen data ("Test", 30000 states). Additionally, we also test our model on lattices which are close to the critical temperature ("Critical", 30000 states).  We first use logistic regression with logistic activation, and thereafter turn to neural network with various activation functions on the hidden layer and logistic activation on the output. 
 
 \subsubsection{Logistic regression}
 Our first approach is the logistic regression. For this, we calculate the accuracy for various learning rates and regularizations, given in figure \eqref{fig:class_logistic} for all three data sets. What we observe, is that the model is really sensitive and the accuracy vary a lot. For some specific learning rates and regularization parameters, we get good result even for the critical set.
@@ -107,7 +107,7 @@ Our first approach is the logistic regression. For this, we calculate the accura
 \subsubsection{Neural networks}
 Our second and final approach is classification using neural network. In the same way as when we used neural network in regression, we will investigate various activation functions in the hidden layer(s). 
 \begin{table} [H]
-	\caption{The accuracy obtained using neural network for classification. 'Train' is the training set, 'Test' is a test set far from critical temperature and 'Critical' is a test set close to the critical temperature. We used one minimization iteration ($T=1$), learning rate $\eta=1e-4$ and regularization parameter $\lambda=1e-3$.}
+	\caption{The accuracy obtained using neural network for classification. 'Train' is the training set, 'Test' is a test set far from critical temperature and 'Critical' is a test set close to the critical temperature. We used one minimization iteration ($T=1$), learning rate $\eta=1e-4$ and regularization parameter $\lambda=1e-3$, used logistic activation function on output node and tried \textit{pure linear}, \textit{ReLU} and \textit{Leaky ReLU} on the hidden layers. Notation "10+10" means two layers of 10 hidden nodes each.}
 	\begin{tabularx}{\textwidth}{l|l|XXX} \hline\hline
 		\label{tab:nn_class}
 		&& \multicolumn{3}{c}{\textbf{Accuracy}}\\ \hline
@@ -132,7 +132,7 @@ Our second and final approach is classification using neural network. In the sam
 
 \begin{figure} [H]
 	\centering
-	\includegraphics[scale=0.55]{../plots/h_vs_accuracy.png}
+	\includegraphics[scale=0.45]{../plots/h_vs_accuracy.png}
 	\caption{Accuracy as a function of number of hidden nodes, for both one and two layers. X-axis indicates number of hidden nodes in each layer, where the two-layer perceptron has an equal number of nodes in each layer.}
 	\label{fig:h_vs_accuracy}
 \end{figure} 
