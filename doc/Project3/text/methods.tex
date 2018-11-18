@@ -1,0 +1,116 @@
+\section{Methods} \label{sec:methods}
+
+\subsection{Resampling techniques} \label{sec:resampling}
+A resampling technique is a way of estimating the variance of data sets without calculating the covariance, which is often is a very expensive calculation. There are various methods for this, including the K-fold cross-validation, Bootstrap and Blocking methods. In this particular project, we will focus on the K-fold cross-validation.
+
+\subsubsection{K-fold validation method} \label{sec:kfold}
+K-fold validation is a method which has more describing name than many of its fellow methods. The idea is to make the most use of our data by splitting it into $K$ folds and train our model $K$ times on it. Every time we train, we leave out one of the folds, which gonna be our validation data. This validation data needs to be different every time, and we are therefore restricted to $K$ unique training sessions. A typical overview looks like this:
+\begin{itemize}
+	\item Split data set into $K$ equally sized folds
+	\item Use the $K-1$ first folds as training data, and leave the $K$'th fold for validation. Then calculate the MSE and the R$^2$-score of the training and validation set.
+	\item Use the $K-2$ first folds plus the $K$-th fold as training data, and leave the $(K-1)$'th fold for validation. Calculate the MSE and R$^2$-score of training and validation set
+	\item Continue until all folds are used as training data
+	\item Return the average training and test MSE, and the average training and test R$^2$-score. Typically one is interested in the average test errors. 
+\end{itemize}
+[7]. An example implementation of K-fold validation, and in fact the function used in the regression case, can be seen below.
+
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+def k_fold(X, E, T, h, eta, K):
+	'''K-fold validation resampling based on neural netowrk'''
+	
+	MSE_train = 0
+	MSE_test = 0
+	R2_train = 0
+	R2_test = 0
+	
+	Xmat = np.reshape(X, (K, int(len(X)/K), len(X[0])))
+	Emat = np.reshape(E, (K, int(len(X)/K)))
+	
+	for i in range(K):
+		Xnew = np.delete(Xmat, i, 0)
+		Enew = np.delete(Emat, i, 0)
+		
+		X_train = np.reshape(Xnew, (len(Xnew)*len(Enew[0]), len(X[0])))
+		E_train = np.reshape(Enew, (len(Xnew)*len(Enew[0])))
+		
+		obj = nn.NeuralNetwork(X_train, E_train, T, h, eta)
+		W = obj.solver()
+		E_train_tilde = obj.recall(X_train)
+		E_test_tilde = obj.recall(Xmat[i])
+	
+	MSE_train += MSE(E_train_tilde, E_train)
+	MSE_test += MSE(E_test_tilde, Emat[i])
+	
+	R2_train += R2(E_train_tilde, E_train)
+	R2_test += R2(E_test_tilde, Emat[i])
+	
+	return MSE_train/K, MSE_test/K, R2_train/K, R2_test/K
+\end{lstlisting}
+
+\subsection{Minimization methods}\label{sec:minimization}
+In many cases we are not able to obtain an analytical expression for the derivative of a function, and to minimize it we therefore need to apply numerical minimization methods. An example is the minimum of the Lasso cost function, which does not have an analytical expression. In this section we will present two simple and similar methods, first ordinary gradient descent and then stochastic gradient descent. 
+
+\subsubsection{Gradient Descent (GD)} \label{sec:gd}
+The Gradient Descent method was mentioned already in the theory part, in equation \eqref{eq:w_update}, and this will therefore just be a quick reminder of the idea. The though is that we need to move in the direction where the cost function is steepest, which will take us to the minimum. The gradient always points in the steepest direction, and since we want to move in opposite direction of the gradient, the gradient is subtracted from the weights in every iteration. Updating the weights using gradient descent therefore reads
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+\label{eq:GD}
+W_{ij}^+=W_{ij} - \eta\cdot\frac{\partial c(\bb{W})}{\partial W_{ij}}
+\end{empheq}
+where $W_{ij}^+$ is the updated $W_{ij}$ and $\eta$ is the learning rate. An example implementation looks like
+
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+for iter in range(T):
+	for i in range(N):
+		y[i] = feedforward(X[i])
+		gradient = (y[i] - t[i]) * df(y[i])
+		W -= self.eta * gradient
+\end{lstlisting}
+
+\subsubsection{Stochastic Gradient Descent (SGD)}
+We now turn to the stochastic gradient descent, which hence the name is stochastic. The idea is to calculate the gradient of just a few states, and hope that the gradient will work for the remaining states as well. 
+It will probably not converge in fewer steps, but each step will be faster. We can express the SGD updating algorithm as
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+	\label{eq:SGD}
+	W_{ij}^+=W_{ij} - \frac{\eta}{N}\sum_{k=1}^N\frac{\partial c_k(\bb{W})}{\partial W_{ij}}
+\end{empheq}
+where we sum over all states in a so-called minibatch. After going through all minibatches, we say that we have done an epoch. 
+
+Because of the stochasticity, we are less likely to be stuck in local minima, and the minimization will be significantly faster because we calculate just a fraction of the gradients compared to ordinary gradient descent. Anyway, we expect this method to require more iterations than standard gradient descent.
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+for epoch in range(T):
+	for i in range(m):
+		random_index = np.random.randint(m)
+		Xi = self.X[random_index:random_index+1]
+		ti = self.t[random_index:random_index+1]
+		yi = feedforward(Xi)
+		gradient = (yi - ti) * df(yi)
+		W -= self.eta * gradient
+\end{lstlisting}
+
+\subsection{Error analysis}
+\label{sec:error_analysis}
+To find out how good our model is, we need to compare the outputs with the targets in one way or another. For continuous outputs, we typically calculate absolute error, relative error or mean square error, and often the R$^2$-score is evaluated to estimate how much of the data that is described by the model. In classification the outputs are binary classes, and we should only care about whether the model choose correct class or not. Therefore, the error is either 0 or 1, and we apply the accuracy score. 
+
+\subsubsection{Mean Square Error (MSE)} \label{sec:MSE}
+The most popular error estimation method is the mean square error, also called least squares. We study the MSE in order to compute the reduction of the cost function, because it is basically the standard cost function, used in OLS. 
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+\text{MSE}(\vec{y})=\frac{1}{N}\sum_{i=1}^N(y_i-t_i)^2
+\end{empheq}
+Compared to least absolute value, the points far away from the fitted line are weighted stronger. 
+
+\subsubsection{R$^2$ score function} \label{sec:R2}
+The R$^2$ score function is a measure of how close the data are to the fitted regression line, and is a widely used quantity within statistics. In entirety it reads
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+R^2(\vec{y},\tilde{\vec{y}})=1-\frac{\sum_{i=1}^N(y_i-t_i)^2}{\sum_{i=1}^N(y_i-\bar{y})^2}.
+\end{empheq}
+and is a ratio between the explained variation and total variation. If it is, on one hand, able to explain all the variations the score is 1, which is the best. On the other hand, if it is not able to describe any of the variations, the R$^2$-score is low. We are therefore fighting for a high R$^2$-score.
+
+\subsubsection{Accuracy score}
+The accuracy score is a very intuitive error estimation, and is just number of correctly classified images divided by the total number of images,
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+\text{Accuracy}=\frac{\sum_{i=1}^nI(y_i=t_i)}{n}.
+\end{empheq}
+It is typically used to determine the error in classification, since the error is binary (the classification is either correct, or wrong).
