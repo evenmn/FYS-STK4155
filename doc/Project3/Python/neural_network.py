@@ -138,7 +138,7 @@ class NeuralNetwork():
         
     def recall(self, X):
         '''Recall'''
-        Out = np.empty(len(X))
+        Out = np.empty((len(X), self.O))
         for i in range(len(X)):
             self.feed_forward(X[i])
             Out[i] = self.out[-1]
