@@ -8,7 +8,7 @@ from sys import exit
 from tqdm import tqdm
 
 class NeuralNetwork():
-    def __init__(self, X, t, T, h=0, eta=1e-4, lamb=1e-4, f1=none, f2=none, opt=GD):
+    def __init__(self, X, t, T, h=0, eta=1e-4, lamb=1e-4, f1=none, f2=none, opt=GD, W='random'):
         '''
         Arguments
         ---------
@@ -41,6 +41,7 @@ class NeuralNetwork():
         self.X = X
         self.t = t
         self.T = T
+        self.W = W
         self.h = h
         self.eta = eta
         self.lamb = lamb
@@ -80,10 +81,11 @@ class NeuralNetwork():
             raise TypeError('h needs to be a list or int')
             
         # Initialize weights, including bias weights
-        self.W=[]
-        self.W.append((2*rand((self.I+1, self.h[0])) - 1)*np.sqrt(1/len(self.X[0,:])))
-        for i in range(self.H):
-            self.W.append((2*rand((self.h[i]+1, self.h[i+1])) - 1)*np.sqrt(1/self.h[i]))
+        if self.W == 'random':
+            self.W=[]
+            self.W.append((2*rand((self.I+1, self.h[0])) - 1)*np.sqrt(1/len(self.X[0,:])))
+            for i in range(self.H):
+                self.W.append((2*rand((self.h[i]+1, self.h[i+1])) - 1)*np.sqrt(1/self.h[i]))
 
         
         

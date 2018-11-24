@@ -14,10 +14,13 @@ Sometimes, a frequency domain rather than the time domain gives a better picture
 
 INSERT FIGURE
 
-\subsection{Urban Sound Challenge}
-The Urban Sound Challenge is a classification challenge provided by Analytics Vidhya with the purpose of introducing curious people to a real-world classification problem. To receive the data set, one needs to register for the challenge and is then expected to summit the solutions in 31st of Desember 2018. For more practical information, see [\url{https://datahack.analyticsvidhya.com/contest/practice-problem-urban-sound-classification/}]
+\subsubsection{Extract features}
+\textbf{Mel Frequency Cepstral Coefficient (MFCC)}
 
-The data set consists of 8732 sound samples with a constant sampling rate of 22050Hz and the lengths are maximum 4 seconds, but vary. This makes the training session difficult, since we will get input arrays of different lengths. The samplings are distributed between ten classes, namely
+\subsection{Urban Sound Challenge}
+The Urban Sound Challenge is a classification contest provided by Analytics Vidhya with the purpose of introducing curious people to a real-world classification problem. After registered, one is provided with a dataset containing sounds from ten classes. For the training data set, the classes (targets) are given, but there is also a test dataset where the targets are unknown. Our task is to classify the test dataset correctly, and by uploading our results to Analytics Vidhya's webpage, they will return the accuracy score. Participants are expected to summit their answers by 31st of December 2018, and there will be a leaderboard. For more practical information, see [\url{https://datahack.analyticsvidhya.com/contest/practice-problem-urban-sound-classification/}]
+
+The data sets consists of a total number of 8732 sound samples (5434 training sets and 3298 test sets) with a constant sampling rate of 22050Hz. The length of each sampling is maximum 4 seconds, and they are distributed between ten classes, namely
 \begin{multicols}{2}
 \begin{itemize}
 	\setlength\itemsep{0.2em}

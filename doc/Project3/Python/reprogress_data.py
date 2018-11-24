@@ -1,11 +1,6 @@
-import os
-import pandas as pd
 import librosa
-import glob 
 import pandas as pd
-from tqdm import tqdm
 import numpy as np
-import csv
 
 def class2binary(class_):
     if class_ == "air_conditioner":
@@ -28,47 +23,33 @@ def class2binary(class_):
         return [0, 0, 0, 0, 0, 0, 0, 0, 1, 0]
     elif class_ == "street_music":
         return [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
-    else:
-        raise NameError("Class %s does not exist" % class_)
-
 
 
 train = pd.read_csv("../data/train.csv")
 
-N = 4000
-data_train2 = np.zeros((N, 88200))
+N = len(train) -2
+data_train = np.zeros((N, 88200))
+t_train = np.zeros((N, 10))
+
 
 i = 0
 j = 0
+count = 0
 while i < N:
-    #print(train.ID[j])
+    print(j)
     
     if j != 1986 and j != 5312:
         x, sr = librosa.load('../data/Train/' + str(train.ID[j]) + '.wav')
-        print(sr)
-        if x.shape[0] == 88200:
-            data_train2[i] = x
-            print(i)
-            i += 1
+        target = class2binary(train.Class[i])
+        
+        data_train[i,:len(x)] = x
+        t_train[i] = np.array(target)
+        
+        i += 1
     j += 1
 
-#np.savetxt('../data/data_train.dat', data_train2)
+np.savetxt('../data/data_train.dat', data_train)
+np.savetxt('../data/t_train.dat', t_train)
 
-with open('../data/data_train.csv', 'w') as f:
-     csv.writer(f, delimiter=' ').writerows(data_train2)
-
-'''
-test = pd.read_csv("../data/test.csv")
-data_test = []
-t_test = []
-for i in tqdm(range(test.shape[0])):
-    print(i)
-
-    x, sr = librosa.load('../data/Test/' + str(test.ID[i]) + '.wav')
-
-    data_test.append(x)
-    t_test.append(test.Class[i])
-
-np.savetxt(np.array(data_test), '../data/data_test.dat')
-np.savetxt(np.array(t_test), '../data/t_test.dat')
-'''
+#with open('../data/data_train.csv', 'w') as f:
+#     csv.writer(f, delimiter=' ').writerows(data_train2)
