@@ -18,3 +18,7 @@ plt.title("%s"%train.Class[i], fontsize=FS)
 plt.xlabel("Time [s]", fontsize=FS)
 plt.ylabel("Amplitude", fontsize=FS)
 plt.show()
+
+
+# Frequency domain
+print(np.fft.fft(x))

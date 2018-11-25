@@ -25,17 +25,17 @@ def parser(ID, Class, n_mfcc):
  
    return feature, label
 
-n_mfcc = 40
+n_mfcc = 50
 train = pd.read_csv("../data/train.csv")
 
 X = np.zeros((len(train), n_mfcc))
-f = open("../data/t.txt", "w")
+#f = open("../data/t.txt", "w")
 
 for i in range(len(train)):
     feature, label = parser(train.ID[i], train.Class[i], n_mfcc)
     X[i] = feature
-    f.write(str(label)+'\n')
+    #f.write(str(label)+'\n')
 
-np.savetxt("../data/X.txt", X)
-f.close()
+np.savetxt("../data/X_50.txt", X)
+#f.close()
 
