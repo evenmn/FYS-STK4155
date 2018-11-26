@@ -5,9 +5,9 @@ import pandas as pd
 import os
 import csv
 
-def parser(ID, Class, n_mfcc):
+def parser(ID, Class, n_mfcc, filename):
    # function to load files and extract features
-   file_name = os.path.join(os.path.abspath('../data/'), 'Train', str(ID) + '.wav')
+   file_name = os.path.join(filename, str(ID) + '.wav')
 
    # handle exception to check if there isn't a file which is corrupted
    try:
@@ -25,17 +25,31 @@ def parser(ID, Class, n_mfcc):
  
    return feature, label
 
-n_mfcc = 50
+n_mfcc = 40
+'''
+# Training data
 train = pd.read_csv("../data/train.csv")
 
 X = np.zeros((len(train), n_mfcc))
 #f = open("../data/t.txt", "w")
 
 for i in range(len(train)):
-    feature, label = parser(train.ID[i], train.Class[i], n_mfcc)
+    feature, label = parser(train.ID[i], train.Class[i], n_mfcc, "../data/Train/")
     X[i] = feature
     #f.write(str(label)+'\n')
 
-np.savetxt("../data/X_50.txt", X)
+#np.savetxt("../data/X_40.txt", X)
+#f.close()
+'''
+# Test data
+test = pd.read_csv("../data/test.csv")
+
+X = np.zeros((len(test), n_mfcc))
+
+for i in range(len(test)):
+    feature, label = parser(test.ID[i], test.Class[i], n_mfcc, '../data/Test/')
+    X[i] = feature
+
+np.savetxt("../data/X_test_40.txt", X)
 #f.close()
 

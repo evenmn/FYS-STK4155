@@ -138,7 +138,7 @@ class NeuralNetwork():
         return self.W
         
         
-    def recall(self, X):
+    def predict(self, X):
         '''Recall'''
         Out = np.empty((len(X), self.O))
         for i in range(len(X)):

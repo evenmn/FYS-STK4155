@@ -1,6 +1,4 @@
-\section{Methods} \label{sec:methods}
-
-\subsection{Classification methods}
+\section{Classification methods} \label{sec:methods}
 
 \subsection{Logistic regression}
 Despite its name, logistic regression is not a fitting tool, but rather a classification tool. Traditionally, the perceptron model was used for 'hard classification', which sets the outputs directly to binary values. However, often we are interested in the probability of a given category, which means that we need a continuous \textit{activation function}. Logistic regression can, like linear regression, be considered as a function where coefficients are adjusted with the intention to minimize the error. Here, the coefficients are called \textit{weights}. The process goes like this: The inputs are multiplied by several weights, and by adjusting those weights the model can classify every \textit{linear classification problem}. A drawing of the perceptron is found in figure (\ref{fig:single_perceptron}).
@@ -139,7 +137,7 @@ and obtain a weight update algorithm
 \end{empheq}
 where the bias weight is included implicitly in $\bb{w}$ and the same applies for $\bb{x}$.
 
-\subsection{Neural network} \label{sec:neural_network}
+\subsection{Feed-forward Neural Network (FNN)} \label{sec:neural_network}
 If you have understood logistic regression, understanding a neural network should not be a difficult task. According to  \textbf{the universal approximation theorem}, a neural network with only one hidden layer can approximate any continuous function. [8] However, often multiple layers are used since this tends to give fewer nodes in total. 
 
 In figure \eqref{fig:neural_network}, a two-layer neural network (one hidden layer) is illustrated. It has some similarities with the logistic regression model in figure \eqref{fig:single_perceptron}, but a hidden layer and multiple outputs are added. In addition, the output is no longer probabilities and can take any number, which means that we do not need to use the logistic function on the outputs anymore.
@@ -310,57 +308,9 @@ where we again use the short hand
 \begin{equation*}
 \delta_{oj}=(t_j-out_{oj})\cdot f'(out_{oj}).
 \end{equation*}
-If we compare with the weight update formulas for the two-layer case, we recognize some obvious connections, and it is easy to imagine how we can construct a general weight update algorithm, no matter how many layers we have. 
+If we compare with the weight update formulas for the two-layer case, we recognize some obvious connections, and it is easy to imagine how we can construct a general weight update algorithm, no matter how many layers we have.
 
-\subsection{Minimization methods}\label{sec:minimization}
-In many cases we are not able to obtain an analytical expression for the derivative of a function, and to minimize it we therefore need to apply numerical minimization methods. An example is the minimum of the Lasso cost function, which does not have an analytical expression. In this section we will present two simple and similar methods, first ordinary gradient descent and then stochastic gradient descent. 
+\subsection{Decision trees}
 
-\subsubsection{Gradient Descent (GD)} \label{sec:gd}
-The Gradient Descent method was mentioned already in the theory part, in equation \eqref{eq:w_update}, and this will therefore just be a quick reminder of the idea. The though is that we need to move in the direction where the cost function is steepest, which will take us to the minimum. The gradient always points in the steepest direction, and since we want to move in opposite direction of the gradient, the gradient is subtracted from the weights in every iteration. Updating the weights using gradient descent therefore reads
-\begin{empheq}[box={\mybluebox[5pt]}]{equation}
-\label{eq:GD}
-W_{ij}^+=W_{ij} - \eta\cdot\frac{\partial c(\bb{W})}{\partial W_{ij}}
-\end{empheq}
-where $W_{ij}^+$ is the updated $W_{ij}$ and $\eta$ is the learning rate. An example implementation looks like
+\subsection{Recurrent Neural Networks (RNN)}
 
-\lstset{basicstyle=\scriptsize}
-\begin{lstlisting}
-for iter in range(T):
-	for i in range(N):
-		y[i] = feedforward(X[i])
-		gradient = (y[i] - t[i]) * df(y[i])
-		W -= self.eta * gradient
-\end{lstlisting}
-
-\subsubsection{Stochastic Gradient Descent (SGD)}
-We now turn to the stochastic gradient descent, which hence the name is stochastic. The idea is to calculate the gradient of just a few states, and hope that the gradient will work for the remaining states as well. 
-It will probably not converge in fewer steps, but each step will be faster. We can express the SGD updating algorithm as
-\begin{empheq}[box={\mybluebox[5pt]}]{equation}
-	\label{eq:SGD}
-	W_{ij}^+=W_{ij} - \frac{\eta}{N}\sum_{k=1}^N\frac{\partial c_k(\bb{W})}{\partial W_{ij}}
-\end{empheq}
-where we sum over all states in a so-called minibatch. After going through all minibatches, we say that we have done an epoch. 
-
-Because of the stochasticity, we are less likely to be stuck in local minima, and the minimization will be significantly faster because we calculate just a fraction of the gradients compared to ordinary gradient descent. Anyway, we expect this method to require more iterations than standard gradient descent.
-\lstset{basicstyle=\scriptsize}
-\begin{lstlisting}
-for epoch in range(T):
-	for i in range(m):
-		random_index = np.random.randint(m)
-		Xi = self.X[random_index:random_index+1]
-		ti = self.t[random_index:random_index+1]
-		yi = feedforward(Xi)
-		gradient = (yi - ti) * df(yi)
-		W -= self.eta * gradient
-\end{lstlisting}
-
-\subsection{Error analysis}
-\label{sec:error_analysis}
-To find out how good our model is, we need to compare the outputs with the targets in one way or another. For continuous outputs, we typically calculate absolute error, relative error or mean square error, and often the R$^2$-score is evaluated to estimate how much of the data that is described by the model. In classification the outputs are binary classes, and we should only care about whether the model choose correct class or not. Therefore, the error is either 0 or 1, and we apply the accuracy score. 
-
-\subsubsection{Accuracy score}
-The accuracy score is a very intuitive error estimation, and is just number of correctly classified images divided by the total number of images,
-\begin{empheq}[box={\mybluebox[5pt]}]{equation}
-\text{Accuracy}=\frac{\sum_{i=1}^nI(y_i=t_i)}{n}.
-\end{empheq}
-It is typically used to determine the error in classification, since the error is binary (the classification is either correct, or wrong).

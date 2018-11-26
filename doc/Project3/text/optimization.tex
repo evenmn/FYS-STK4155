@@ -1,0 +1,41 @@
+\section{Optimization}\label{sec:optimization}
+In many cases we are not able to obtain an analytical expression for the derivative of a function, and to minimize it we therefore need to apply numerical minimization methods. An example is the minimum of the Lasso cost function, which does not have an analytical expression. In this section we will present two simple and similar methods, first ordinary gradient descent and then stochastic gradient descent. 
+
+\subsubsection{Gradient Descent (GD)} \label{sec:gd}
+The Gradient Descent method was mentioned already in the theory part, in equation \eqref{eq:w_update}, and this will therefore just be a quick reminder of the idea. The though is that we need to move in the direction where the cost function is steepest, which will take us to the minimum. The gradient always points in the steepest direction, and since we want to move in opposite direction of the gradient, the gradient is subtracted from the weights in every iteration. Updating the weights using gradient descent therefore reads
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+\label{eq:GD}
+W_{ij}^+=W_{ij} - \eta\cdot\frac{\partial c(\bb{W})}{\partial W_{ij}}
+\end{empheq}
+where $W_{ij}^+$ is the updated $W_{ij}$ and $\eta$ is the learning rate. An example implementation looks like
+
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+for iter in range(T):
+	for i in range(N):
+		y[i] = feedforward(X[i])
+		gradient = (y[i] - t[i]) * df(y[i])
+		W -= self.eta * gradient
+\end{lstlisting}
+
+\subsubsection{Stochastic Gradient Descent (SGD)}
+We now turn to the stochastic gradient descent, which hence the name is stochastic. The idea is to calculate the gradient of just a few states, and hope that the gradient will work for the remaining states as well. 
+It will probably not converge in fewer steps, but each step will be faster. We can express the SGD updating algorithm as
+\begin{empheq}[box={\mybluebox[5pt]}]{equation}
+	\label{eq:SGD}
+	W_{ij}^+=W_{ij} - \frac{\eta}{N}\sum_{k=1}^N\frac{\partial c_k(\bb{W})}{\partial W_{ij}}
+\end{empheq}
+where we sum over all states in a so-called minibatch. After going through all minibatches, we say that we have done an epoch. 
+
+Because of the stochasticity, we are less likely to be stuck in local minima, and the minimization will be significantly faster because we calculate just a fraction of the gradients compared to ordinary gradient descent. Anyway, we expect this method to require more iterations than standard gradient descent.
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+for epoch in range(T):
+	for i in range(m):
+		random_index = np.random.randint(m)
+		Xi = self.X[random_index:random_index+1]
+		ti = self.t[random_index:random_index+1]
+		yi = feedforward(Xi)
+		gradient = (yi - ti) * df(yi)
+		W -= self.eta * gradient
+\end{lstlisting}
