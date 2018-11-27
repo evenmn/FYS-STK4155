@@ -5,7 +5,7 @@ import pandas as pd
 import os
 import csv
 
-def parser(ID, Class, n_mfcc, filename):
+def parser(ID, n_mfcc, filename):
    # function to load files and extract features
    file_name = os.path.join(filename, str(ID) + '.wav')
 
@@ -15,15 +15,14 @@ def parser(ID, Class, n_mfcc, filename):
       X, sample_rate = librosa.load(file_name, res_type='kaiser_fast') 
       # we extract mfcc feature from data
       mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=n_mfcc).T,axis=0)
-   except Exception as e:
+      
+   except:
       print("Error encountered while parsing file: ", file_name)
-      return None, None
+      return None
  
-   feature = mfccs
-   label = Class
    print(ID)
  
-   return feature, label
+   return mfccs
 
 n_mfcc = 40
 '''
@@ -47,7 +46,7 @@ test = pd.read_csv("../data/test.csv")
 X = np.zeros((len(test), n_mfcc))
 
 for i in range(len(test)):
-    feature, label = parser(test.ID[i], test.Class[i], n_mfcc, '../data/Test/')
+    feature = parser(test.ID[i], n_mfcc, '../data/Test/')
     X[i] = feature
 
 np.savetxt("../data/X_test_40.txt", X)
