@@ -8,8 +8,9 @@ from sklearn import metrics
 from keras.utils import np_utils
 
 from keras.models import Sequential
+from keras.regularizers import l1, l2
 from keras.layers import Dense, Dropout, Activation         # FNN
-from keras.layers import RNN, SimpleRNN, GRU, LSTM          # RNN
+from keras.layers import GRU, LSTM, Embedding               # RNN
 from keras.layers import Conv2D, Flatten, MaxPooling2D      # CNN
 from keras.optimizers import Adam
 
@@ -45,7 +46,7 @@ def load_spectrogram():
     for line in text_file:
         t.append(line)
         
-    X = np.reshape(X, (5433, 40, 173, 1))
+    X = np.reshape(X, (5433, 40, 173, 1))       #CNN needs 4D array as input
         
     # One hot encode
     lb = LabelEncoder()
@@ -71,11 +72,11 @@ def Logistic():
 
     model = Sequential()
 
-    model.add(Dense(num_labels, input_shape=(40,)))
+    model.add(Dense(num_labels, input_shape=(40,), W_regularizer=l2(1.0)))
     model.add(Activation('softmax'))
 
     model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
-    model.fit(X_train, t_train, batch_size=32, epochs=200, validation_data=(X_val, t_val))
+    model.fit(X_train, t_train, batch_size=32, epochs=50, validation_data=(X_val, t_val))
     
     # Examine test dataset
     #X_val = np.loadtxt('../data/X_test_40.txt')
@@ -86,7 +87,7 @@ def Logistic():
     #    print(cat)
     
 
-def Neural_network():
+def FNN():
     X_train, t_train, X_val, t_val = load_mfcc()
 
     num_labels = t_train.shape[1]
@@ -104,12 +105,17 @@ def Neural_network():
     model.add(Dense(1024))
     model.add(Activation('sigmoid'))
     model.add(Dropout(0.5))
+    
+    model.add(Dense(1024))
+    model.add(Activation('sigmoid'))
+    model.add(Dropout(0.5))
+    
 
     model.add(Dense(num_labels))
     model.add(Activation('softmax'))
 
     model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
-    model.fit(X_train, t_train, batch_size=32, epochs=200, validation_data=(X_val, t_val))
+    model.fit(X_train, t_train, batch_size=32, epochs=100, validation_data=(X_val, t_val))
     
     # Examine test dataset
     #X_val = np.loadtxt('../data/X_test_40.txt')
@@ -119,31 +125,6 @@ def Neural_network():
     #for cat in categories:
     #    print(cat)
     
-    
-def Recurrent():
-    X_train, t_train, X_val, t_val = load_mfcc()
-    
-    num_labels = t_train.shape[1]
-
-    model = Sequential()
-
-    model.add(Dense(1024, input_shape=(40,)))
-    model.add(Activation('sigmoid'))
-    model.add(Dropout(0.5))
-
-    model.add(Dense(1024))
-    model.add(Activation('sigmoid'))
-    model.add(Dropout(0.5))
-    
-    model.add(Dense(1024))
-    model.add(Activation('sigmoid'))
-    model.add(Dropout(0.5))
-
-    model.add(Dense(num_labels, activation='softmax'))
-
-    model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
-
-    model.fit(X_train, t_train, batch_size=32, epochs=200, validation_data=(X_val, t_val))
 
 
 def Convolutional():
@@ -164,21 +145,83 @@ def Convolutional():
     model.add(Dropout(0.20))
     model.add(Flatten())
     
-    model.add(Dense(512))
+    model.add(Dense(1024))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     
+    '''
     model.add(Dense(512))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
+    '''
     
     model.add(Dense(num_labels, activation='softmax'))
 
     model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
-    model.fit(X_train, t_train, batch_size=64, epochs=20, validation_data=(X_val, t_val))
+    model.fit(X_train, t_train, batch_size=64, epochs=100, validation_data=(X_val, t_val))
+    
+    
+    
+def Long_short():
+    X_train, t_train, X_val, t_val = load_mfcc()
+    
+    X_train = np.reshape(X_train, (len(X_train), len(X_train[0]), 1))
+    X_val = np.reshape(X_val, (len(X_val), len(X_val[0]), 1))
+    
+    num_labels = t_train.shape[1]
+
+    model = Sequential()
+    
+    #model.add(Embedding(1000, 512, input_length = X_train.shape[1]))
+    
+    model.add(LSTM(256,input_shape=(40,1),return_sequences=False))
+    
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    
+    #model.add(TimeDistributed(Dense(vocabulary)))
+    model.add(Dense(num_labels, activation='softmax'))
+
+    model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
+
+    model.fit(X_train, t_train, batch_size=32, epochs=1000, validation_data=(X_val, t_val))
+    
+    
+    
+def Gated():
+    X_train, t_train, X_val, t_val = load_mfcc()
+    
+    X_train = np.reshape(X_train, (len(X_train), len(X_train[0]), 1))
+    X_val = np.reshape(X_val, (len(X_val), len(X_val[0]), 1))
+    
+    num_labels = t_train.shape[1]
+
+    model = Sequential()
+    
+    model.add(GRU(256, activation='relu', recurrent_activation='hard_sigmoid'))
+    
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    
+    model.add(Dense(512, activation='relu'))
+    model.add(Dropout(0.5))
+    
+    #model.add(TimeDistributed(Dense(vocabulary)))
+    model.add(Dense(num_labels, activation='softmax'))
+
+    model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
+
+    model.fit(X_train, t_train, batch_size=32, epochs=1000, validation_data=(X_val, t_val))
+    
 
     
 if __name__ == '__main__':
     #Logistic()
-    #Neural_network()
-    Convolutional()
+    #FNN()
+    #Convolutional()
+    #Recurrent()
+    #Long_short()
+    Gated()

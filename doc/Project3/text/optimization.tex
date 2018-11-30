@@ -40,5 +40,20 @@ for epoch in range(T):
 		W -= self.eta * gradient
 \end{lstlisting}
 
-\subsection{Adam}
-Stochastic optimization
+\subsection{ADAM}
+ADAM is often the preferred optimization method in machine learning, due to its computational efficiency, little memory occupation and implementation ease. Since it was introduced in a paper by D. P. Kingma and J. Ba in 2015 [\url{https://arxiv.org/abs/1412.6980}], the paper has collected more than 15000 citations! So what is so special about ADAM?
+
+ADAM is a momentum based method that only rely on the first derivative of the cost function. Required inputs are exponential decay rates $\beta_1$ and $\beta_2$, cost function $c(\theta)$ and initial weights $\theta$, in addition to the learning rate $\eta$ and eventually a regularization $\lambda$. Interatively, we first calculate the gradient of the cost function, and use this to calculate the first and second moment estimates. Further, we bias-correct the moments before we use this to update the weights. An implementation may look like this
+\lstset{basicstyle=\scriptsize}
+\begin{lstlisting}
+def ADAM(eta, b1, b2, c, theta):
+    m = 0
+    v = 0
+    for i in range(100):
+        grad = d(c)/d(theta)
+        m = b1*m + (1 - b1)*grad
+        v = b2*v + (1 - b2)*grad*grad
+        m_ = m/(1 - b1**i)
+        v_ = v/(1 - b2**i)
+        theta -= eta * m_/(sqrt(v_) + lambda)
+\end{lstlisting}

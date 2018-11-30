@@ -1,7 +1,8 @@
 \section{Classification methods} \label{sec:methods}
+Classification is very important in everyday life, and we often use classification even without thing about it. A simple example is when we distinguish between people, which is usually an easy task for a human. For a computer, on the other hand, classification is difficult, but fortunately some great methods are developed mainly based on neural networks. In this contest we will investigate several methods, spanning from logistic regression to various neural networks like \textbf{Feed-forward Neural Networks}, \textbf{Convolutional Neural Networks} and \textbf{Recurrent Neural Networks}. 
 
 \subsection{Logistic regression}
-Despite its name, logistic regression is not a fitting tool, but rather a classification tool. Traditionally, the perceptron model was used for 'hard classification', which sets the outputs directly to binary values. However, often we are interested in the probability of a given category, which means that we need a continuous \textit{activation function}. Logistic regression can, like linear regression, be considered as a function where coefficients are adjusted with the intention to minimize the error. Here, the coefficients are called \textit{weights}. The process goes like this: The inputs are multiplied by several weights, and by adjusting those weights the model can classify every \textit{linear classification problem}. A drawing of the perceptron is found in figure (\ref{fig:single_perceptron}).
+Logistic regression is a linear model, where...
 
 \begin{figure} [H]
 	\centering
@@ -256,10 +257,33 @@ where we again use the short hand
 If we compare with the weight update formulas for the two-layer case, we recognize some obvious connections, and it is easy to imagine how we can construct a general weight update algorithm, no matter how many layers we have.
 
 \subsection{Convolutional Neural Networks (CNN)}
-Convolutional neural networks are known to be good at image classification, but how can we use it on sound classification? The idea is to turn the samples into images, and for that one can for example use a spectrogram, as described in ...
+Convolutional neural networks are known to be good at image classification, but how can we use it on sound classification? The idea is to turn the samples into images, and for that one can for example use a mel spectrogram, as described in the theory section. 
+
+CNNs are based on FNNs, but the image is initially feed through a few layers that extract the most important information. 
+
+\subsubsection*{Convolutional layer}
+Initially, the image is sent into a convolutional layer, which is meant to reveal structures and shapes in the image. The way we do it, is to introduce a filter that we slide over the entire image and multiply with all pixels (with overlap). Every time the filter is multiplied with a set of pixels, we sum all the multiplications and add the value to an activation map. The activation map is completed after we have multiplied the filter with the entire image. A typical filter has dimensions 16x16, but depends on the image shape. It is important to choose a filter that is big enough to cover structures. 
+
+\subsubsection*{Pooling layer}
+It is common to insert a pooling layer in-between convolutional layers, but why do we do that? A pooling layer is just a way to reduce the dimensionality of the representation such that we do not need to optimize that many parameters, but also helps to control overfitting. It works the way that we divide the representation (usually an activation map) into regions of equal size and represent each region with one single number. Max pooling is apparently the most popular technique, which just represents each region with the largest number in that region, but it is also possible to use average pooling, min pooling etc.. [\url{http://cs231n.github.io/convolutional-networks/}]
+
+As an example, we can divide the image into 2x2 regions, which will reduce the size of the representation with 75\%. 
+
+\subsubsection*{Dropout}
+Dropout is widely used in neural network layers, and is another method to prevent overfitting. The way it works is just to drop out units in the current layer.
+
+To understand the idea, we need to take a close look at why overfitting occurs. Overfitting occurs when neighbor nodes collaborate, and become a powerful cluster which fits the model too specifically for the training set. To brake up those evil clusters, we can simply set random nodes to zero. [\url{https://medium.com/@amarbudhiraja/https-medium-com-amarbudhiraja-learning-less-to-learn-better-dropout-in-deep-machine-learning-74334da4bfc5}]
+
+\subsubsection*{Fully connected layer}
+The last part of a convolutional network is often refereed to as a fully connected layer, which is just a FNN. To be able to feed this layer with a input, we need to flatten out the reference. 
 
 \subsection{Recurrent Neural Networks (RNN)}
 Last, but not least, we will examine recurrent neural networks. In the time domain, the sound at one time is dependent on sounds at other times, but the methods above are not able to utilize that because they lack memory. 
 
-RNNs...
+In RNNs, information is shared between the different nodes, in that sense they have a short memory. This has 
+
+\subsubsection{Long Short-Term Memory (LSTM)}
+
+
+\subsubsection{Gated Recurrent Unit (GRU)}
 
