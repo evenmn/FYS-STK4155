@@ -1,24 +1,19 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
-\usepackage{biblatex}
-\usepackage{csquotes}
-\usepackage{graphicx} %for å inkludere grafikk
-\usepackage{verbatim} %for å inkludere filer med tegn LaTeX ikke liker
-\usepackage{tabularx}
-\usepackage{booktabs}
-\usepackage{amsmath}
-\usepackage{float}
-\usepackage{color}
-\usepackage{listings}
-\usepackage{hyperref}
-\usepackage{amsmath}
-\usepackage{tikz}
-	\usetikzlibrary{positioning}
+%\usepackage{biblatex}
+\usepackage{csquotes}	% Supports babel
+\usepackage{graphicx} 	% Images
+\usepackage{verbatim} 	% Weird letters
+\usepackage{tabularx}	% Beautiful tables
+\usepackage{booktabs}	% Wonderful tables
+\usepackage{float}		% Stick images to prefered spot
+\usepackage{color}		% For different colors
+\usepackage{listings}	% Inserting code
+\usepackage{hyperref}	% URLs
+\usepackage{amsmath}	% Math symbols
+\usepackage{tikz}		% Design figures
 \usepackage{enumitem}	% Itemize settings
-\usepackage{amssymb}    % Boldsymbol
-\usepackage{titlesec}
-\usepackage{comment}
 \usepackage{subfig}		% Sub figures
 \usepackage{geometry}	% Change margins on each page
 \usepackage{empheq}		% Beautiful boxes
@@ -28,14 +23,14 @@
 \usepackage{arydshln}   % Dashed lines in table
 
 %biblatex
-\iffalse
+%\iffalse
 \usepackage[
-backend=bibtex
+backend=bibtex,
 style=alphabetic,
 sorting=ynt
 ]{biblatex}
-\fi
-%\addbibresource{refs.bib}
+%\fi
+\addbibresource{refs.bib}
 
 %listings
 \definecolor{myblue}{rgb}{0.2, 0.6, 1}

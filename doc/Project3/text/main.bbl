@@ -1,0 +1,238 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.9 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{ynt/global//global/global}
+  \entry{BootstrapEfron}{article}{}
+    \name{author}{1}{}{%
+      {{hash=EB}{%
+         family={Efron},
+         familyi={E\bibinitperiod},
+         given={B.},
+         giveni={B\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {The Institute of Mathematical Statistics}%
+    }
+    \strng{namehash}{EB1}
+    \strng{fullhash}{EB1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Efr79}
+    \field{sortinit}{1}
+    \field{sortinithash}{1}
+    \verb{doi}
+    \verb 10.1214/aos/1176344552
+    \endverb
+    \field{howpublished}{\url{https://doi.org/10.1214/aoms/1177729893}}
+    \field{title}{Bootstrap Methods: Another Look at the Jackknife}
+    \field{volume}{7}
+    \field{journaltitle}{The Annals of Statistics}
+    \field{year}{1979}
+  \endentry
+
+  \entry{hastie01statisticallearning}{book}{}
+    \name{author}{3}{}{%
+      {{hash=HT}{%
+         family={Hastie},
+         familyi={H\bibinitperiod},
+         given={Trevor},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=TR}{%
+         family={Tibshirani},
+         familyi={T\bibinitperiod},
+         given={Robert},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=FJ}{%
+         family={Friedman},
+         familyi={F\bibinitperiod},
+         given={Jerome},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Springer New York Inc.}%
+    }
+    \keyw{ml statistics}
+    \strng{namehash}{HTTRFJ1}
+    \strng{fullhash}{HTTRFJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{HTF01}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+    \field{series}{Springer Series in Statistics}
+    \field{title}{The Elements of Statistical Learning}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{2001}
+  \endentry
+
+  \entry{GriffQuan}{book}{}
+    \name{author}{1}{}{%
+      {{hash=GD}{%
+         family={Griffiths},
+         familyi={G\bibinitperiod},
+         given={D.J.},
+         giveni={D\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Pearson PH}%
+    }
+    \strng{namehash}{GD1}
+    \strng{fullhash}{GD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Gri05}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+    \field{edition}{2nd Edition}
+    \field{isbn}{0131911759}
+    \field{title}{Introduction to quantum mechanics}
+    \field{year}{2005}
+  \endentry
+
+  \entry{mfcc}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=LJ}{%
+         family={Lyons},
+         familyi={L\bibinitperiod},
+         given={James},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Practical Cryptography}%
+    }
+    \strng{namehash}{LJ1}
+    \strng{fullhash}{LJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Lyo13}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+  \field{howpublished}{\url{http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/}}
+    \field{note}{[Online; accessed 06-December-2018]}
+    \field{title}{{Mel Frequency Cepstral Coefficient (MFCC) tutorial.}}
+    \field{year}{2013}
+  \endentry
+
+  \entry{spectrograms}{article}{}
+    \name{author}{1}{}{%
+      {{hash=PK}{%
+         family={Prahallad},
+         familyi={P\bibinitperiod},
+         given={K.},
+         giveni={K\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {International Institute of Information Technology Hyderabad}%
+    }
+    \strng{namehash}{PK1}
+    \strng{fullhash}{PK1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Pra15}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+    \field{title}{Speech Technology: A Practical Introduction.}
+    \field{year}{2015}
+  \endentry
+
+  \entry{Medium}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=GA}{%
+         family={Geitgey},
+         familyi={G\bibinitperiod},
+         given={Adam},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Medium}%
+    }
+    \strng{namehash}{GA1}
+    \strng{fullhash}{GA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Gei16}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+  \field{howpublished}{\url{https://medium.com/@ageitgey/machine-learning-is-fun-part-6-how-to-do-speech-recognition-with-deep-learning-28293c162f7a}}
+    \field{note}{[Online; accessed 06-December-2018]}
+    \field{title}{{How to do Speech Recognition with Deep Learning.}}
+    \field{year}{2016}
+  \endentry
+
+  \entry{USC}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=VA}{%
+         family={Vidhya},
+         familyi={V\bibinitperiod},
+         given={Analytics},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Analytics Vidhya}%
+    }
+    \strng{namehash}{VA1}
+    \strng{fullhash}{VA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Vid17}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+  \field{howpublished}{\url{https://datahack.analyticsvidhya.com/contest/practice-problem-urban-sound-classification/}}
+    \field{note}{[Online; accessed 06-December-2018]}
+    \field{title}{{Practice Problem: Urban Sound Challenge.}}
+    \field{year}{2017}
+  \endentry
+
+  \entry{Feloni}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=FR}{%
+         family={Feloni},
+         familyi={F\bibinitperiod},
+         given={R.},
+         giveni={R\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Business insider}%
+    }
+    \strng{namehash}{FR1}
+    \strng{fullhash}{FR1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Fel18}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+  \field{howpublished}{\url{https://nordic.businessinsider.com/ai-assistants-will-run-our-lives-20-years-from-now-2018-1?r=US&IR=T}"}
+    \field{note}{[Online; accessed 06-December-2018]}
+    \field{title}{{20 years from now, regular people will have the personal
+  assistants currently reserved for the rich and famous - through tech.}}
+    \field{year}{2018}
+  \endentry
+\enddatalist
+\endinput
