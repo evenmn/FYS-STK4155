@@ -111,6 +111,32 @@
     \field{year}{2005}
   \endentry
 
+  \entry{pooling}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=LJ}{%
+         family={Lyons},
+         familyi={L\bibinitperiod},
+         given={James},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Practical Cryptography}%
+    }
+    \strng{namehash}{LJ1}
+    \strng{fullhash}{LJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Lyo13}
+    \field{extraalpha}{1}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+    \field{howpublished}{\url{http://cs231n.github.io/convolutional-networks/}}
+    \field{note}{[Online; accessed 06-December-2018]}
+    \field{title}{{Convolutional Neural Networks for Visual Recognition.}}
+    \field{year}{2013}
+  \endentry
+
   \entry{mfcc}{misc}{}
     \name{author}{1}{}{%
       {{hash=LJ}{%
@@ -128,6 +154,7 @@
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
     \field{labelalpha}{Lyo13}
+    \field{extraalpha}{2}
     \field{sortinit}{2}
     \field{sortinithash}{2}
   \field{howpublished}{\url{http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/}}
