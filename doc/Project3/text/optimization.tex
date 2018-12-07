@@ -1,13 +1,13 @@
 \section{Optimization}\label{sec:optimization}
-In many cases we are not able to obtain an analytical expression for the derivative of a function, and to minimize it we therefore need to apply numerical minimization methods. An example is the minimum of the Lasso cost function, which does not have an analytical expression. In this section we will present two simple and similar methods, first ordinary gradient descent and then stochastic gradient descent. 
+In data science, we are surrounded by large data sets and functions to extract information from them. After a function describing the data set is found, one typical wants to find its minimum or maximum to optimize various parameters. Since the extremes seldomly are available analytically, one has to rely on numerical optimization methods. There exist loads of methods, but we will only look at two gradient methods: Gradient Descent and ADAM, where the latter is preferred. 
 
 \subsection{Gradient Descent (GD)} \label{sec:gd}
-The Gradient Descent method was mentioned already in the theory part, in equation \eqref{eq:w_update}, and this will therefore just be a quick reminder of the idea. The though is that we need to move in the direction where the cost function is steepest, which will take us to the minimum. The gradient always points in the steepest direction, and since we want to move in opposite direction of the gradient, the gradient is subtracted from the weights in every iteration. Updating the weights using gradient descent therefore reads
+The gradient descent method is the simplest optimization method available. It simply moves the steepest slope towards the extreme with constant step length (learning rate), calculating the gradient based on the entire data set. Mathematically, we can write it as 
 \begin{empheq}[box={\mybluebox[5pt]}]{equation}
 \label{eq:GD}
-W_{ij}^+=W_{ij} - \eta\cdot\frac{\partial c(\bb{W})}{\partial W_{ij}}
+{\theta}_{ij}^+={\theta}_{ij} - \eta\cdot\frac{\partial c(\bb{\theta})}{\partial {\theta}_{ij}}
 \end{empheq}
-where $W_{ij}^+$ is the updated $W_{ij}$ and $\eta$ is the learning rate. An example implementation looks like
+where ${\theta}_{ij}^+$ is the updated ${\theta}_{ij}$ and $\eta$ is the learning rate, in the same way as in section \ref{sec:methods}. GD has some major cons: it is likely to be stuck in a local extreme and because of its lack of adaptiveness, it is either really slow or likely to walk past the extreme.  An example implementation looks like
 
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
@@ -15,35 +15,13 @@ for iter in range(T):
 	for i in range(N):
 		y[i] = feedforward(X[i])
 		gradient = (y[i] - t[i]) * df(y[i])
-		W -= self.eta * gradient
-\end{lstlisting}
-
-\subsection{Stochastic Gradient Descent (SGD)}
-We now turn to the stochastic gradient descent, which hence the name is stochastic. The idea is to calculate the gradient of just a few states, and hope that the gradient will work for the remaining states as well. 
-It will probably not converge in fewer steps, but each step will be faster. We can express the SGD updating algorithm as
-\begin{empheq}[box={\mybluebox[5pt]}]{equation}
-	\label{eq:SGD}
-	W_{ij}^+=W_{ij} - \frac{\eta}{N}\sum_{k=1}^N\frac{\partial c_k(\bb{W})}{\partial W_{ij}}
-\end{empheq}
-where we sum over all states in a so-called minibatch. After going through all minibatches, we say that we have done an epoch. 
-
-Because of the stochasticity, we are less likely to be stuck in local minima, and the minimization will be significantly faster because we calculate just a fraction of the gradients compared to ordinary gradient descent. Anyway, we expect this method to require more iterations than standard gradient descent.
-\lstset{basicstyle=\scriptsize}
-\begin{lstlisting}
-for epoch in range(T):
-	for i in range(m):
-		random_index = np.random.randint(m)
-		Xi = self.X[random_index:random_index+1]
-		ti = self.t[random_index:random_index+1]
-		yi = feedforward(Xi)
-		gradient = (yi - ti) * df(yi)
-		W -= self.eta * gradient
+		theta -= self.eta * gradient
 \end{lstlisting}
 
 \subsection{ADAM}
-ADAM is often the preferred optimization method in machine learning, due to its computational efficiency, little memory occupation and implementation ease. Since it was introduced in a paper by D. P. Kingma and J. Ba in 2015 [\url{https://arxiv.org/abs/1412.6980}], the paper has collected more than 15000 citations! So what is so special about ADAM?
+ADAM is often the preferred optimization method in machine learning, due to its computational efficiency, little memory occupation and implementation ease. Since it was introduced in a paper by D. P. Kingma and J. Ba in 2015 \cite{adam}, the paper has collected more than 15000 citations! So what is so special about ADAM?
 
-ADAM is a momentum based method that only rely on the first derivative of the cost function. Required inputs are exponential decay rates $\beta_1$ and $\beta_2$, cost function $c(\theta)$ and initial weights $\theta$, in addition to the learning rate $\eta$ and eventually a regularization $\lambda$. Interatively, we first calculate the gradient of the cost function, and use this to calculate the first and second moment estimates. Further, we bias-correct the moments before we use this to update the weights. An implementation may look like this
+ADAM is a momentum based method that only rely on the first derivative of the cost function. Required inputs are exponential decay rates $\beta_1$ and $\beta_2$, cost function $c(\bb{\theta})$ and initial weights $\bb{\theta}$, in addition to the learning rate $\eta$ and eventually a regularization $\lambda$. Interatively, we first calculate the gradient of the cost function, and use this to calculate the first and second moment estimates. Further, we bias-correct the moments before we use this to update the weights. An implementation may look like this
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
 def ADAM(eta, b1, b2, c, theta):

@@ -17,118 +17,23 @@
 \endgroup
 
 \datalist[entry]{ynt/global//global/global}
-  \entry{BootstrapEfron}{article}{}
-    \name{author}{1}{}{%
-      {{hash=EB}{%
-         family={Efron},
-         familyi={E\bibinitperiod},
-         given={B.},
-         giveni={B\bibinitperiod},
-      }}%
-    }
-    \list{publisher}{1}{%
-      {The Institute of Mathematical Statistics}%
-    }
-    \strng{namehash}{EB1}
-    \strng{fullhash}{EB1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{labelalpha}{Efr79}
-    \field{sortinit}{1}
-    \field{sortinithash}{1}
-    \verb{doi}
-    \verb 10.1214/aos/1176344552
-    \endverb
-    \field{howpublished}{\url{https://doi.org/10.1214/aoms/1177729893}}
-    \field{title}{Bootstrap Methods: Another Look at the Jackknife}
-    \field{volume}{7}
-    \field{journaltitle}{The Annals of Statistics}
-    \field{year}{1979}
-  \endentry
-
-  \entry{hastie01statisticallearning}{book}{}
-    \name{author}{3}{}{%
-      {{hash=HT}{%
-         family={Hastie},
-         familyi={H\bibinitperiod},
-         given={Trevor},
-         giveni={T\bibinitperiod},
-      }}%
-      {{hash=TR}{%
-         family={Tibshirani},
-         familyi={T\bibinitperiod},
-         given={Robert},
-         giveni={R\bibinitperiod},
-      }}%
-      {{hash=FJ}{%
-         family={Friedman},
-         familyi={F\bibinitperiod},
-         given={Jerome},
-         giveni={J\bibinitperiod},
-      }}%
-    }
-    \list{publisher}{1}{%
-      {Springer New York Inc.}%
-    }
-    \keyw{ml statistics}
-    \strng{namehash}{HTTRFJ1}
-    \strng{fullhash}{HTTRFJ1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{labelalpha}{HTF01}
-    \field{sortinit}{2}
-    \field{sortinithash}{2}
-    \field{series}{Springer Series in Statistics}
-    \field{title}{The Elements of Statistical Learning}
-    \list{location}{1}{%
-      {New York, NY, USA}%
-    }
-    \field{year}{2001}
-  \endentry
-
-  \entry{GriffQuan}{book}{}
-    \name{author}{1}{}{%
-      {{hash=GD}{%
-         family={Griffiths},
-         familyi={G\bibinitperiod},
-         given={D.J.},
-         giveni={D\bibinitperiod},
-      }}%
-    }
-    \list{publisher}{1}{%
-      {Pearson PH}%
-    }
-    \strng{namehash}{GD1}
-    \strng{fullhash}{GD1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{labelalpha}{Gri05}
-    \field{sortinit}{2}
-    \field{sortinithash}{2}
-    \field{edition}{2nd Edition}
-    \field{isbn}{0131911759}
-    \field{title}{Introduction to quantum mechanics}
-    \field{year}{2005}
-  \endentry
-
   \entry{pooling}{misc}{}
     \name{author}{1}{}{%
-      {{hash=LJ}{%
-         family={Lyons},
-         familyi={L\bibinitperiod},
-         given={James},
-         giveni={J\bibinitperiod},
+      {{hash=KA}{%
+         family={Karpathy},
+         familyi={K\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
       }}%
     }
     \list{publisher}{1}{%
       {Practical Cryptography}%
     }
-    \strng{namehash}{LJ1}
-    \strng{fullhash}{LJ1}
+    \strng{namehash}{KA1}
+    \strng{fullhash}{KA1}
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
-    \field{labelalpha}{Lyo13}
-    \field{extraalpha}{1}
+    \field{labelalpha}{Kar13}
     \field{sortinit}{2}
     \field{sortinithash}{2}
     \field{howpublished}{\url{http://cs231n.github.io/convolutional-networks/}}
@@ -142,7 +47,7 @@
       {{hash=LJ}{%
          family={Lyons},
          familyi={L\bibinitperiod},
-         given={James},
+         given={J.},
          giveni={J\bibinitperiod},
       }}%
     }
@@ -154,13 +59,158 @@
     \field{labelnamesource}{author}
     \field{labeltitlesource}{title}
     \field{labelalpha}{Lyo13}
-    \field{extraalpha}{2}
     \field{sortinit}{2}
     \field{sortinithash}{2}
   \field{howpublished}{\url{http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/}}
     \field{note}{[Online; accessed 06-December-2018]}
     \field{title}{{Mel Frequency Cepstral Coefficient (MFCC) tutorial.}}
     \field{year}{2013}
+  \endentry
+
+  \entry{gru}{article}{}
+    \name{author}{6}{}{%
+      {{hash=CK}{%
+         family={Cho},
+         familyi={C\bibinitperiod},
+         given={K.},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=MB}{%
+         family={Merrienboer},
+         familyi={M\bibinitperiod},
+         given={B.},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=GC}{%
+         family={G{\"{u}}l{\c{c}}ehre},
+         familyi={G\bibinitperiod},
+         given={{\c{C}}.},
+         giveni={{\c{C}}\bibinitperiod},
+      }}%
+      {{hash=BF}{%
+         family={Bougares},
+         familyi={B\bibinitperiod},
+         given={F.},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=SH}{%
+         family={Schwenk},
+         familyi={S\bibinitperiod},
+         given={H.},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=BY}{%
+         family={Bengio},
+         familyi={B\bibinitperiod},
+         given={Y.},
+         giveni={Y\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CK+1}
+    \strng{fullhash}{CKMBGCBFSHBY1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Cho+14}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+    \verb{eprint}
+    \verb 1406.1078
+    \endverb
+    \field{title}{Learning Phrase Representations using {RNN} Encoder-Decoder
+  for Statistical Machine Translation}
+    \verb{url}
+    \verb http://arxiv.org/abs/1406.1078
+    \endverb
+    \field{volume}{abs/1406.1078}
+    \field{journaltitle}{CoRR}
+    \field{eprinttype}{arXiv}
+    \field{year}{2014}
+  \endentry
+
+  \entry{adam}{article}{}
+    \name{author}{2}{}{%
+      {{hash=KDP}{%
+         family={Kingma},
+         familyi={K\bibinitperiod},
+         given={D.\bibnamedelima P.},
+         giveni={D\bibinitperiod\bibinitdelim P\bibinitperiod},
+      }}%
+      {{hash=BJ}{%
+         family={Ba},
+         familyi={B\bibinitperiod},
+         given={J.},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{KDPBJ1}
+    \strng{fullhash}{KDPBJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{KB14}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+    \verb{eprint}
+    \verb 1412.6980
+    \endverb
+    \field{title}{Adam: {A} Method for Stochastic Optimization}
+    \verb{url}
+    \verb http://arxiv.org/abs/1412.6980
+    \endverb
+    \field{volume}{abs/1412.6980}
+    \field{journaltitle}{CoRR}
+    \field{eprinttype}{arXiv}
+    \field{year}{2014}
+  \endentry
+
+  \entry{Dropout}{article}{}
+    \name{author}{5}{}{%
+      {{hash=SN}{%
+         family={Srivastava},
+         familyi={S\bibinitperiod},
+         given={N.},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=HG}{%
+         family={Hinton},
+         familyi={H\bibinitperiod},
+         given={G.},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Krizhevsky},
+         familyi={K\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=SI}{%
+         family={Sutskever},
+         familyi={S\bibinitperiod},
+         given={I.},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=RS}{%
+         family={R.},
+         familyi={R\bibinitperiod},
+         given={Salakhutdinov},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SN+1}
+    \strng{fullhash}{SNHGKASIRS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Sri+14}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+    \field{pages}{1929\bibrangedash 1958}
+    \field{title}{Dropout: A Simple Way to Prevent Neural Networks from
+  Overfitting}
+    \verb{url}
+    \verb http://jmlr.org/papers/v15/srivastava14a.html
+    \endverb
+    \field{volume}{15}
+    \field{journaltitle}{Journal of Machine Learning Research}
+    \field{year}{2014}
   \endentry
 
   \entry{spectrograms}{article}{}
@@ -191,7 +241,7 @@
       {{hash=GA}{%
          family={Geitgey},
          familyi={G\bibinitperiod},
-         given={Adam},
+         given={A.},
          giveni={A\bibinitperiod},
       }}%
     }
@@ -236,6 +286,31 @@
     \field{year}{2017}
   \endentry
 
+  \entry{lstm}{misc}{}
+    \name{author}{1}{}{%
+      {{hash=DN}{%
+         family={Donges},
+         familyi={D\bibinitperiod},
+         given={N.},
+         giveni={N\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Towards Data Science}%
+    }
+    \strng{namehash}{DN1}
+    \strng{fullhash}{DN1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Don18}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+  \field{howpublished}{\url{https://towardsdatascience.com/recurrent-neural-networks-and-lstm-4b601dd822a5}}
+    \field{note}{[Online; accessed 07-December-2018]}
+    \field{title}{{Recurrent Neural Networks and LSTM.}}
+    \field{year}{2018}
+  \endentry
+
   \entry{Feloni}{misc}{}
     \name{author}{1}{}{%
       {{hash=FR}{%
@@ -259,6 +334,27 @@
     \field{note}{[Online; accessed 06-December-2018]}
     \field{title}{{20 years from now, regular people will have the personal
   assistants currently reserved for the rich and famous - through tech.}}
+    \field{year}{2018}
+  \endentry
+
+  \entry{Nordhagen}{book}{}
+    \name{author}{1}{}{%
+      {{hash=NEM}{%
+         family={Nordhagen},
+         familyi={N\bibinitperiod},
+         given={E.\bibnamedelima M.},
+         giveni={E\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{NEM1}
+    \strng{fullhash}{NEM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Nor18}
+    \field{sortinit}{2}
+    \field{sortinithash}{2}
+    \field{edition}{1nd Edition}
+    \field{title}{FYS-STK4155 - Applied data analysis and machine learning}
     \field{year}{2018}
   \endentry
 \enddatalist

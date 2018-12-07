@@ -1,10 +1,10 @@
 \section{Sound analysis}
-In sound analysis, one can either analyze the raw sound files directly or convert them to simpler files and hope we have not lost any essential features. A big advantage with the latter, is that the dimensionality and complexity of the data set is significantly reduced, but we will also loose some information. In this section we will first introduce the Urban Sound Challenge, and then look at the sounds from a time perspective, frequency perspective and finally see how to extract information. 
+In sound analysis, one can either analyze the raw sound files directly or convert them to simpler files and hope we have not lost any essential features. A big advantage with the latter, is that the dimensionality and complexity of the data set is significantly reduced, but we will also loose some information. In this section we will first introduce the Urban Sound Challenge, and then look at the sounds from a time perspective, frequency perspective and see how to extract information. Finally, we take a look at some of the samplings and see if we can classify them with the naked eye.
 
 \subsection{The Urban Sound Challenge (USC)}
 The Urban Sound Challenge is a classification contest provided by Analytics Vidhya with the purpose of introducing curious people to a real-world classification problem. After registered, one is provided with a dataset containing sounds from ten classes. For the training data set, the classes (targets) are given, but there is also a test dataset where the targets are unknown. Our task is to classify the test dataset correctly, and by uploading our results to Analytics Vidhya's webpage, they will return the accuracy score. Participants are expected to summit their answers by 31st of December 2018, and there will be a leaderboard. We are allowed to use all possible tools, including open-source libraries like TensorFlow/Keras and Scikit-Learn. For more practical information, see \cite{USC}.
 
-The data sets consist of a total number of 8732 sound samples (5434 training sets and 3298 test sets) with a constant sampling rate of 22050Hz. The length of each sampling is maximum 4 seconds, and they are distributed between ten classes, namely
+The data sets consist of a total number of 8732 sound samplings (5434 training samplings and 3298 test samplings) with a constant sampling rate of 22050Hz. The length of each sampling is maximum 4 seconds, and they are distributed between ten classes, namely
 \begin{multicols}{2}
 	\begin{itemize}
 		\setlength\itemsep{0.2em}
@@ -37,8 +37,8 @@ Sounds are longitudinal waves which actually are different pressures in the air.
 
 \begin{figure} [H]
 	\centering
-	\includegraphics[scale=0.8]{../plots/sampling_rate.png}
-	\caption{When sampling sound, we need to choose a high enough sampling. Here, the red line is the true sound and the blue dots are sampling points.}
+	\includegraphics[scale=0.9]{../plots/sampling_rate.png}
+	\caption{When sampling sound, we need to choose a high enough sampling. Here, the red line is the true sound and the blue dots are sampling points. The sampling rate here is 40 Hz, which is quite low and just for illustration.}
 	\label{fig:sr}
 \end{figure} 
 
@@ -53,7 +53,7 @@ where $f(t)$ is the time function and $\hat{f}(x)$ is the frequency function. Fo
 
 \begin{figure} [H]
 	\centering
-	\includegraphics[scale=0.8]{../plots/frequency_domain.png}
+	\includegraphics[scale=0.9]{../plots/frequency_domain.png}
 	\caption{Time picture of three harmonic functions; $\sin(2\pi t)$, $\sin(4\pi t)$ and $\sin(8\pi t)$ (upper part) and the corresponding frequency pictures (lower part).}
 	\label{fig:freq}
 \end{figure} 
@@ -73,12 +73,23 @@ MFCCs are features widely used in automatic speech and speaker recognition. \cit
 It actually takes advantage of the spectrogram, and use it to reveal the most dominant frequencies. Thereafter, we sum the energy in each frame and take the logarithm, which is the way an ear works. Those energies are then what we call the Mel Frequency Ceptral Coefficients. Unlike the spectrogram, we are now left with a single array of information from the spectrum. 
 
 \subsection{Examples from USC}
-We will end this section with a few examples of what a sound file may look like. 
-ADD SOME EXAMPLES
+We will end this section with a few examples of what a sound file may look like. In figure \eqref{fig:comparison}, we compare one of the dog bark sounds with one of the jackhammer sounds. On the top, we have the time domain, in the middle the spectrogram is presented and on the bottom we have plotted the MFCCs. As we can see, they are quite different, and distinguish between those two should not be too hard. The spectrograms also really makes sense, but it is hard for a human eye to extract information from the MFCCs. 
 
-\begin{figure} [H]
+\begin{figure} [H]%
 	\centering
-	\includegraphics[scale=0.4]{../plots/dog_bark_freq.png}
-	\caption{}
-	\label{fig:dog}
-\end{figure} 
+	\subfloat[Dog bark]{{\includegraphics[width=7.5cm]{../plots/dog_bark_comp.png}}}
+	\subfloat[Jackhammer]{{\includegraphics[width=7.5cm]{../plots/jackhammer_comp.png}}}
+	
+	\caption{Time domains (top), spectrograms (middle) and MFCCs (bottom) for two random sound files, more specifically dog bark on the left and jackhammer on the right.}%
+	\label{fig:comparison}
+\end{figure}
+However, sometimes two time domains in the same category look totally different, for example if one compares the jackhammer in \eqref{fig:comparison2} with the one in \eqref{fig:comparison}. Will it be possible for our program to understand that they are in the same category? Also sometimes two time domain from different categories look similar, as we can see in \eqref{fig:comparison2}. Can we really distinguish between them?
+
+\begin{figure} [H]%
+	\centering
+	\subfloat[Jackhammer]{{\includegraphics[width=7.5cm]{../plots/jackhammer_comp2.png}}}
+	\subfloat[Drilling]{{\includegraphics[width=7.5cm]{../plots/drilling_comp2.png}}}
+	
+	\caption{Time domains (top), spectrograms (middle) and MFCCs (bottom) for two random sound files, more specifically jackhammer on the left and drilling on the right.}%
+	\label{fig:comparison2}
+\end{figure}
