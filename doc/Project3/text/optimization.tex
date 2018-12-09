@@ -12,10 +12,10 @@ where ${\theta}_{ij}^+$ is the updated ${\theta}_{ij}$ and $\eta$ is the learnin
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
 for iter in range(T):
-	for i in range(N):
-		y[i] = feedforward(X[i])
-		gradient = (y[i] - t[i]) * df(y[i])
-		theta -= self.eta * gradient
+    for i in range(N):
+        y[i] = feedforward(X[i])
+        gradient = (y[i] - t[i]) * df(y[i])
+        theta -= self.eta * gradient
 \end{lstlisting}
 
 \subsection{ADAM}

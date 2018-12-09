@@ -1,14 +1,7 @@
 \section{Results} \label{sec:results}
+Finally we are ready to present the results, where the accuracy score is in our focus. We will evaluate each method separately, starting with the logistic regression and moving on to the neural network based methods. What is common for all methods, is that the softmax function was used as output activation function and ADAM was used as minimization tool with a batch size of 32 and a various number of epochs.
 
 \subsection{Logistic regression}
-\iffalse
-\begin{figure} [H]
-	\centering
-	\includegraphics[scale=0.65]{../plots/lambda_vs_R2_linear.png}
-	\caption{The R$^2$-score as a function of the penalty. }
-	\label{fig:lambda_vs_R2_linear}
-\end{figure} 
-\fi
 
 \begin{table} [H]
 	\caption{Accuracy, softmax output}
@@ -21,7 +14,7 @@
 		20 & 0.4572 & 0.4802 & 0.2927 & 0.2843 & 0.3320 & 0.3238 & 0.4135 & 0.3919\\
 		30 & 0.5741 & 0.5842 & 0.2948 & 0.2815 & 0.3387 & 0.3395 & 0.4393 & 0.4186\\
 		40 & 0.5780 & 0.5603 & 0.2948 & 0.2861 & 0.3433 & 0.3385 & 0.4402 & 0.4103\\
-		50 & 0.5916 & 0.5998 & 0.3007 & 0.2833 & 0.3389 & 0.3395 & 0.4590 & 0.4453\\ \hline\hline
+		50 & \textbf{0.5916} & \textbf{0.5998} & 0.3007 & 0.2833 & 0.3389 & 0.3395 & 0.4590 & 0.4453\\ \hline\hline
 	\end{tabularx}
 \end{table}
 
@@ -37,7 +30,7 @@
 		40& 0.9245 & 0.8924 & 0.9204 & 0.8942 & 0.9195 & 0.8868 & 0.8990 & 0.8924\\
 		60& 0.9416 & 0.9062 & 0.9508 & 0.9154 & 0.9317 & 0.9016 & 0.9254 & 0.8960\\
 		80& 0.9572 & 0.8942 & 0.9556 & 0.9163 & 0.9508 & 0.9172 & 0.9418 & 0.9016\\
-		100& 0.9607 & 0.9016 & 0.9579 & 0.9126 & 0.9627 & 0.9181 & 0.9510 & 0.9200\\ \hline\hline
+		100& \textbf{0.9607} & 0.9016 & 0.9579 & 0.9126 & 0.9627 & 0.9181 & 0.9510 & \textbf{0.9200}\\ \hline\hline
 	\end{tabularx}
 \end{table}
 

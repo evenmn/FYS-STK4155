@@ -87,7 +87,7 @@ def Logistic():
     #    print(cat)
     
 
-def FNN():
+def FNN(N=1):
     X_train, t_train, X_val, t_val = load_mfcc()
 
     num_labels = t_train.shape[1]
@@ -98,18 +98,10 @@ def FNN():
     model.add(Activation('sigmoid'))
     model.add(Dropout(0.5))
 
-    model.add(Dense(1024))
-    model.add(Activation('sigmoid'))
-    model.add(Dropout(0.5))
-    
-    model.add(Dense(1024))
-    model.add(Activation('sigmoid'))
-    model.add(Dropout(0.5))
-    
-    model.add(Dense(1024))
-    model.add(Activation('sigmoid'))
-    model.add(Dropout(0.5))
-    
+    for i in range(N-1):
+        model.add(Dense(1024))
+        model.add(Activation('sigmoid'))
+        model.add(Dropout(0.5))
 
     model.add(Dense(num_labels))
     model.add(Activation('softmax'))
@@ -220,8 +212,8 @@ def Gated():
     
 if __name__ == '__main__':
     #Logistic()
-    #FNN()
+    FNN(3)
     #Convolutional()
     #Recurrent()
     #Long_short()
-    Gated()
+    #Gated()

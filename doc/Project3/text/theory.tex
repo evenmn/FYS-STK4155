@@ -62,12 +62,12 @@ where $f(t)$ is the time function and $\hat{f}(x)$ is the frequency function. Fo
 \subsection{Extract features}
 There are many ways we can extract features from sound, but the most interesting are those that are based on how humans extract information. First the spectrogram method will be described briefly, and we thereafter turn to the mel frequency ceptral coefficients method. 
 
-\subsubsection{Spectrograms}
+\subsubsection*{Spectrograms}
 As we have seen above, we are missing the frequency information in the time domain, and time information in the frequency domain. Is it possible to get the best of both worlds? This is what we try when creating a spectrogram, which is a time-frequency representation. 
 
 The procedure goes like this: we divide the spectrum into $N$ frames and Fourier transform each frame. Thereafter we collect all the frequency domains in a $NxM$-matrix, where $M$ is the length of each frequency domain. We are then left with an image which hopefully hold the important information, and since Hidden Markov Models are known to implicity model spectrograms for speech recognition, we have a reason to believe it will work. \cite{spectrograms}
 
-\subsubsection{Mel Frequency Cepstral Coefficients (MFCCs)}
+\subsubsection*{Mel Frequency Cepstral Coefficients (MFCCs)}
 MFCCs are features widely used in automatic speech and speaker recognition. \cite{mfcc} They are inspired by how the human ear extracts features, and has been the main feature extraction tool for sound recognition since it was introduced in the 1980's. 
 
 It actually takes advantage of the spectrogram, and use it to reveal the most dominant frequencies. Thereafter, we sum the energy in each frame and take the logarithm, which is the way an ear works. Those energies are then what we call the Mel Frequency Ceptral Coefficients. Unlike the spectrogram, we are now left with a single array of information from the spectrum. 
@@ -77,8 +77,8 @@ We will end this section with a few examples of what a sound file may look like.
 
 \begin{figure} [H]%
 	\centering
-	\subfloat[Dog bark]{{\includegraphics[width=7.5cm]{../plots/dog_bark_comp.png}}}
-	\subfloat[Jackhammer]{{\includegraphics[width=7.5cm]{../plots/jackhammer_comp.png}}}
+	\subfloat[Dog bark]{{\includegraphics[width=7.8cm]{../plots/dog_bark_comp.png}}}
+	\subfloat[Jackhammer]{{\includegraphics[width=7.8cm]{../plots/jackhammer_comp.png}}}
 	
 	\caption{Time domains (top), spectrograms (middle) and MFCCs (bottom) for two random sound files, more specifically dog bark on the left and jackhammer on the right.}%
 	\label{fig:comparison}
@@ -87,8 +87,8 @@ However, sometimes two time domains in the same category look totally different,
 
 \begin{figure} [H]%
 	\centering
-	\subfloat[Jackhammer]{{\includegraphics[width=7.5cm]{../plots/jackhammer_comp2.png}}}
-	\subfloat[Drilling]{{\includegraphics[width=7.5cm]{../plots/drilling_comp2.png}}}
+	\subfloat[Jackhammer]{{\includegraphics[width=7.8cm]{../plots/jackhammer_comp2.png}}}
+	\subfloat[Drilling]{{\includegraphics[width=7.8cm]{../plots/drilling_comp2.png}}}
 	
 	\caption{Time domains (top), spectrograms (middle) and MFCCs (bottom) for two random sound files, more specifically jackhammer on the left and drilling on the right.}%
 	\label{fig:comparison2}
