@@ -1,5 +1,5 @@
 \section{Classification methods} \label{sec:methods}
-Classification is very important in everyday life, and we often use classification even without thing about it. A simple example is when we distinguish between people, which is usually an easy task for a human. For a computer, on the other hand, classification is difficult, but fortunately some great methods are developed mainly based on neural networks. In this contest we will investigate several methods, spanning from \textbf{Logistic regression} to various neural networks like \textbf{Feed-forward Neural Networks}, \textbf{Convolutional Neural Networks} and \textbf{Recurrent Neural Networks}. 
+Classification is very important in everyday life, and we often classify even without thinking about it. An example is when we distinguish between people, which is usually an easy task for a human. For a computer, on the other hand, classification is difficult, but fortunately some great methods are developed mainly based on neural networks. In this contest we will investigate several methods, spanning from \textbf{Logistic regression} to various neural networks like \textbf{Feed-forward Neural Networks}, \textbf{Convolutional Neural Networks} and \textbf{Recurrent Neural Networks}. 
 
 \subsection{Logistic regression}
 Logistic regression is a linear model, which means that each input node is multiplied with only one weight to get the net output. Since we want the probability of each class as a number between 0 and 1, we typically use the logistic function as activation function, and one hot encoder is often used to represent classes as arrays. In figure \eqref{fig:single_perceptron}, logistic regression is illustrated as a single layer perceptron, with inputs on the left and side and outputs on right hand side. 
@@ -45,11 +45,11 @@ z = \sum_{i=1}^{n} x_i\cdot w_i + b\equiv \sum_{i=1}^{n} \text{x}_i\cdot \text{w
 \end{empheq}
 where $\text{x}\equiv [1,x]$, $\text{w}\equiv [b,w]$ and the bias node value is set to 1. We get the real output by sending the net output through the activation function $f$, $y=f(z)$.
 
-What we really want to find is the optimal weight values, which is not necessary unambiguous. Initially the weight are set to random, preferably small values, and they are updated with the formula
+What we really want to find is the optimal weight values, which is not necessarily unambiguous. Initially the weight are set to random, preferably small values, and they are updated with the formula
 \begin{empheq}[box={\mybluebox[5pt]}]{align}
-\text{w}_i^+= \text{w}_i - \eta\cdot[f(\text{x}_i\cdot\text{w}_i)-t_i]\text{x}_i
+\text{w}_i^+= \text{w}_i - \eta\Big([f(\text{x}_i\cdot\text{w}_i)-t_i]\text{x}_i + \lambda\text{w}_i\Big)
 \end{empheq}
-with $\eta$ as the learning rate, $t_i$ as a target and $\text{w}_i^+$ as an updated weight. This formula was derived from the cross entropy cost function and makes use of gradient descent, see \cite{Nordhagen}. 
+with $\eta$ as the learning rate, $t_i$ as a target and $\text{w}_i^+$ as an updated weight. $\lambda$ is a regularization parameter inspired by Ridge linear regression. This formula was derived from the cross entropy cost function and makes use of gradient descent. 
 
 \subsection{Feed-forward Neural Networks (FNN)} \label{sec:neural_network}
 Feed-forward neural networks work mostly in the same way as the single layer perceptron, but the difference is that the perceptron model is not single anymore. With two sets of weights, we call it a double layer perceptron, and with more layers it is called a multi layer perceptron model. In figure \eqref{fig:neural_network}, we have illustrated a double layer perceptron.

@@ -15,7 +15,7 @@ for iter in range(T):
     for i in range(N):
         y[i] = feedforward(X[i])
         gradient = (y[i] - t[i]) * df(y[i])
-        theta -= self.eta * gradient
+        theta -= eta * gradient
 \end{lstlisting}
 
 \subsection{ADAM}
@@ -24,10 +24,9 @@ ADAM is often the preferred optimization method in machine learning, due to its 
 ADAM is a momentum based method that only rely on the first derivative of the cost function. Required inputs are exponential decay rates $\beta_1$ and $\beta_2$, cost function $c(\bb{\theta})$ and initial weights $\bb{\theta}$, in addition to the learning rate $\eta$ and eventually a regularization $\lambda$. Interatively, we first calculate the gradient of the cost function, and use this to calculate the first and second moment estimates. Further, we bias-correct the moments before we use this to update the weights. An implementation may look like this
 \lstset{basicstyle=\scriptsize}
 \begin{lstlisting}
-def ADAM(eta, b1, b2, c, theta):
-    m = 0
-    v = 0
-    for i in range(100):
+def ADAM(eta, b1, b2, c, theta, n_epochs):
+    m, v = 0, 0
+    for i in range(n_epochs):
         grad = d(c)/d(theta)
         m = b1*m + (1 - b1)*grad
         v = b2*v + (1 - b2)*grad*grad

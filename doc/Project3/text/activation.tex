@@ -6,12 +6,13 @@ Traditionally, the logistic function and the tanh function have been used as act
 \subsection{Logistic}
 The logistic activation function, also called the sigmoid function, is already mentioned several times in this report. It is widely used in classification, because it maps the outputs between 0 and 1 such that they represent probabilities for the different classes. The function reads
 \begin{empheq}[box={\mybluebox[5pt]}]{align}
-f(x)=\frac{1}{1+\exp(-x)}.
+f(x)=\big[1+\exp(-x)\big]^{-1}.
 \end{empheq}
 Another important property is that the derivative has a simple form, which is just
 \begin{empheq}[box={\mybluebox[5pt]}]{align}
 \frac{\partial f(x)}{\partial x}=f(x)\big(1-f(x)\big)
 \end{empheq}
+The softmax function is like a normalized version of the logistic function. 
 
 \subsection{ReLU}
 The ReLU function is a modification of the pure linear function, where the function is pure linear for positive values and 0 else. This makes the function able to recognize the non-linearity in the model. \cite{relu} The standard ReLU function is given by 
@@ -68,7 +69,7 @@ f(x) + \alpha & \text{if} \quad x<0.
 \end{empheq}
 
 \subsection{Illustration}
-In figure (\ref{fig:activation_functions}), \textit{standard RELU, leaky RELU} and \textit{ELU} are plotted along with the logistic function.
+In figure (\ref{fig:activation_functions}), standard RELU, Leaky RELU and ELU are plotted along with the logistic function.
 
 \begin{figure} [H]
 	\centering
