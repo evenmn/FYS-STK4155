@@ -2,9 +2,9 @@
 Finally we are ready to present the results, where the accuracy score is in our focus. We will evaluate each method separately, starting with the logistic regression and moving on to the neural network based methods. What is common for all methods, is that the softmax function was used as output activation function and ADAM was used as minimization tool with a batch size of 32 and a various number of epochs.
 
 \subsection{Logistic regression}
-
+For logistic regression, we examined how the accuracy was dependent on the regularization parameter with the values $10^{-1}$, $10^{-3}$, $10^{-5}$ and 0. In addition, the number of epochs was varied in the range $[10,50]$. The results can be found below in table \eqref{tab:logistic}.
 \begin{table} [H]
-	\caption{Accuracy, softmax output}
+	\caption{The accuracy-score for the training set (Train) and test set (Test) with a changing regularization parameter. The number of epochs was set to 10, 20, 30, 40 and 50. As optimization tool, ADAM was used, and we used the softmax activation function.}
 	\begin{tabularx}{\textwidth}{c|XX:XX:XX:XX} \hline\hline
 		\label{tab:logistic}
 		\textbf{Epochs}& \multicolumn{8}{c}{\textbf{Regularization}}\\ \hline
@@ -17,10 +17,12 @@ Finally we are ready to present the results, where the accuracy score is in our 
 		50 & \textbf{0.5916} & \textbf{0.5998} & 0.3007 & 0.2833 & 0.3389 & 0.3395 & 0.4590 & 0.4453\\ \hline\hline
 	\end{tabularx}
 \end{table}
+As we can see, the more epochs the higher accuracy, but when increasing the number of epochs further, the score does not improve much. Apparently, there is no such linear dependency when it comes to the regularization, but we observe that 0.1 works best. 
 
 \subsection{Feed-forward Neural Networks}
+We found the FNNs to work best without regularization, and will not present results with various regularization parameters. Instead, we vary the number of hidden layers, where each has 1024 nodes. Also here we present the accuracy-score for different number of epochs, going from 20 to 100. See table \eqref{tab:fnn} for the actual accuracy.
 \begin{table} [H]
-	\caption{Accuracy, sigmoid function was used in hidden layers, softmax on output. Dropout was used.}
+	\caption{The accuracy-score for the training set (Train) and test set (Test) with 1-4 hidden layers with 1024 nodes each. The number of epochs was set to 20, 40, 60, 80 and 100. As optimization tool, ADAM was used, with a batch size of 32. On the output layer we used softmax activation, and on the hidden layers the logistic function was used. A dropout of 50\% was used in all layers.}
 	\begin{tabularx}{\textwidth}{c|XX:XX:XX:XX} \hline\hline
 		\label{tab:fnn}
 		\textbf{Epochs}& \multicolumn{8}{c}{\textbf{Hidden nodes}}\\ \hline
@@ -34,7 +36,7 @@ Finally we are ready to present the results, where the accuracy score is in our 
 	\end{tabularx}
 \end{table}
 
-We could go further and increase the number of epochs. With 3x1024 hidden nodes and 1000 epochs, we were able to get an accuracy of 0.99 for the training set and 0.94 for the test set. 
+Again we see that the more epochs the higher accuracy. We went further increasing the number of epochs to 1000, and got a training accuracy of 0.99 and a test accuracy of 0.94 for a network with three hidden layers. Apparently, the test accuracy is more sensitive to the number of hidden layers then the training accuracy. 
 
 \subsection{Convolutional Neural Networks}
 \begin{table} [H]
