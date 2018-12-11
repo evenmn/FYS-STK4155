@@ -15,3 +15,10 @@ To estimate the error, Mean Square Error (MSE) and the R$^2$-score function are 
 In linear regression, Lasso and Ridge regression gave smaller MSE (below $10^{-4}$) compared to OLS, and only Lasso was able to recall the correct J-matrix. Using a neural network, a pure linear activation function on a hidden layer gave best results. For classification, logistic regression did not work well, but with a neural network we were able to obtain an accuracy above 99\% for a test set far from the critical temperature and above 96\% for a test set close to the critical temperature using three hidden layers with \textit{Rectified Linear Units} (ReLU) and \textit{leaky} ReLU activation functions.
 
 ## Project 3
+The aim of this project is to divide various sounds into ten categories, inspired by the [Urban Sound Challenge](https://datahack.analyticsvidhya.com/contest/practice-problem-urban-sound-classification/). For that we have investigated the performance of logistic regression and various neural networks, like Feed-forward Neural Networks (FNNs), Convolutional Neural Networks (CNNs) and Recurrent Neural Networks (RNNs). 
+
+When it comes to error estimation, accuracy score is a natural choice. Various activation functions were investigated, and regularization was added for the logistic case. Since we mostly used ADAM as optimization tool, we did not bother about the learning rate.
+	
+To extract features from our dataset (dimensionality reduction), we used a spectrogram in the CNN case, and Mel Frequency Ceptral Coefficients (MFCCs) for FNN and RNN. We also tried two RNN networks, mainly the Long Short-Term Memory (LSTM) network and the Gated Recurrent Unit (GRU) network. 
+
+All the neural networks were more or less able to recognize the training set, but it was a significantly difference in validation accuracy. FNN provided the highest validation accuracy of 94%, followed by LSTM (88%), GRU (86%) and CNN (82%). Our linear model, logistic regression, was only able to classify 60% of the test set correctly. 
