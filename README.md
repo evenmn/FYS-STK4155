@@ -1,5 +1,5 @@
-# FYS-STK4155 - Applied statistics and machine learning
-In this course we focus on how machine learning can be used in real-world applications, in particular how we can fit a model to real terrain data (Project 1) and how we can determine the energy and phase of the two-dimensional Ising model. In a third project, we..
+# FYS-STK4155 - Applied Data Analysis and Machine Learning
+In this course we focus on how machine learning can be used in real-world applications, in particular how we can fit a model to real terrain data (Project 1) and how we can determine the energy and phase of the two-dimensional Ising model (Project 2). In a third project, we classify sound.
 
 ## Project 1
 The aim of this project is to study the performance of linear regression in order to fit a two dimensional polynomial to terrain data. Both Ordinary Least Square (OLS), Ridge and Lasso regression methods were implemented, and for minimizing Lasso’s cost function Gradient Descent (GD) was used. A fourth method was to minimize the cost function of Ridge using GD. The fitted polynomial was visualized and compared with the data, the Mean Square Error (MSE) and R2-score were analyzed, and finally the polynomial coefficients were studied applying visualization tools and Confidence Intervals (CI). To benchmark the results, we used Scikit Learn. 
